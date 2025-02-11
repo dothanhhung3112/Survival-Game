@@ -16,6 +16,12 @@ public class PlayerController : MonoBehaviour {
 	bool move;
 	public static bool canMove;
 	public bool GmRun,die,chwya,win;
+
+	[Header("Animation")]
+	Animator animator;
+	float velocity = 0f;
+	public float acceleration = 0.2f;
+	int veclocityHash;
 	
 	// Use this for initialization
 	void Start () {
@@ -23,6 +29,9 @@ public class PlayerController : MonoBehaviour {
 		// Store some values
 		Application.targetFrameRate = 60;
 		canMove = true;
+
+		animator = GetComponent<Animator>();
+		veclocityHash = Animator.StringToHash("velocity");
 	}
 	
 	void Update () {
@@ -39,17 +48,21 @@ public class PlayerController : MonoBehaviour {
                 }
 				// Move Player
 				move = true;
-				GetComponent<Animator>().Play("run");
-				transform.forward = new Vector3(joystick.HorizintalAxis.Value * Time.deltaTime, 0, joystick.VerticalAxis.Value * Time.deltaTime);
+				animator.Play("Run");
+				velocity = 0;
+                animator.SetFloat(veclocityHash, velocity);
+                transform.forward = new Vector3(joystick.HorizintalAxis.Value * Time.deltaTime, 0, joystick.VerticalAxis.Value * Time.deltaTime);
 				GetComponent<Animator>().speed = 1;
 			}
 			else
 			{
 				move = false;
-                GetComponent<Animator>().Play("Sitting");
                 GetComponent<Animator>().speed = 0;
-			}
-		}
+				velocity += Time.deltaTime * acceleration;
+				animator.SetFloat(veclocityHash, velocity);
+
+            }
+        }
 
 		if(die && !chwya)
         {
@@ -57,9 +70,9 @@ public class PlayerController : MonoBehaviour {
 			{
 				// Move Player
 				move = true;
-				
-				GetComponent<Animator>().Play("run");
-				transform.forward = new Vector3(joystick.HorizintalAxis.Value * Time.deltaTime, 0, joystick.VerticalAxis.Value * Time.deltaTime);
+
+                animator.Play("Run");
+                transform.forward = new Vector3(joystick.HorizintalAxis.Value * Time.deltaTime, 0, joystick.VerticalAxis.Value * Time.deltaTime);
 				GetComponent<Animator>().speed = 1;
 			}
 			else
@@ -108,6 +121,8 @@ public class PlayerController : MonoBehaviour {
 			}
 		}
 	}
+
+
 
 	float elapsedTime = 0;
 	public void Move()

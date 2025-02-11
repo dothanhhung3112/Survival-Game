@@ -17454,6 +17454,7 @@ MonoBehaviour:
   die: 0
   chwya: 0
   win: 0
+  acceleration: 3
 --- !u!65 &919132148175504134
 BoxCollider:
   m_ObjectHideFlags: 0
