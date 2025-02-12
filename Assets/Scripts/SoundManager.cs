@@ -14,8 +14,8 @@ public class SoundManager : MonoBehaviour
     [SerializeField] AudioClip timeCountClip;
 
     [Header("GreenRedLight")]
+    [SerializeField] AudioSource enemySound;
     [SerializeField] AudioClip walkSound;
-    [SerializeField] AudioClip enemySound;
     [SerializeField] AudioClip enemySearching;
     [SerializeField] AudioClip[] gunShooting;
     [SerializeField] AudioClip maleHited;
@@ -36,11 +36,12 @@ public class SoundManager : MonoBehaviour
 
     }
 
-    public void PlaySound(AudioClip clip,float volume = 1f)
+    public void PlaySound(AudioClip clip,float volume = 1f,float pitch = 1f)
     {
         if (GameManager.Instance.IsMuteSound) return;
 
         if(clip != null)
+        soundSource.pitch = pitch;
         soundSource.PlayOneShot(clip,volume);
     }
 
@@ -79,9 +80,10 @@ public class SoundManager : MonoBehaviour
         PlaySound(walkSound);
     }
 
-    public void PlaySoundEnemy()
+    public void PlaySoundEnemy(float pitch)
     {
-        PlaySound(enemySound);
+        enemySound.pitch = pitch;
+        enemySound.Play();
     }
 
     public void PlaySoundEnemySearching()

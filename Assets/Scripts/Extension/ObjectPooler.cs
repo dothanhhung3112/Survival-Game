@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -58,7 +57,7 @@ public class ObjectPooler : MonoBehaviour
             {
                 obj.SetActive(true);
 
-                obj.transform.position = new Vector3(position.x, position.y, obj.transform.position.z);
+                obj.transform.position = position;
                 prefab = obj;
                 return prefab;
             }
@@ -71,7 +70,7 @@ public class ObjectPooler : MonoBehaviour
                 if (pool.tag == tag)
                 {
                     prefab = Instantiate(pool.prefab, pool.parent);
-                    prefab.transform.position = new Vector3(position.x, position.y, prefab.transform.position.z);
+                    prefab.transform.position = position;
                     return prefab.gameObject;
                 }
             }

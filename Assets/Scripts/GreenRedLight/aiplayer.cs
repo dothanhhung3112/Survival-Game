@@ -10,6 +10,17 @@ public class aiplayer : MonoBehaviour
     float a;
     bool die,onetime,win;
     public bool femal;
+
+    [Header("Animation")]
+    Animator animator;
+    float velocity = 0f;
+    public float acceleration = 0.2f;
+    int veclocityHash;
+    bool canRandom = false;
+    string[] runPoses = { "runfe", "rundynamicpose", "rundancepose" };
+    int randomePoseIndex;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -18,6 +29,8 @@ public class aiplayer : MonoBehaviour
         pc = FindObjectOfType<PlayerController>();
         int tt = Random.Range(1, 6);
         GetComponent<Animator>().Play("idle"+tt.ToString());
+        animator = GetComponent<Animator>();
+        veclocityHash = Animator.StringToHash("velocity");
     }
 
     // Update is called once per frame
@@ -32,11 +45,11 @@ public class aiplayer : MonoBehaviour
                 {
                     firsttime = true;
                     a = Random.Range(1, 1.3f);
-                    GetComponent<Animator>().Play("run", 0,Random.Range(0,20f));
+                    SetRandomPoseWhileRunning(false);
                 }
                 else
                 {
-                    GetComponent<Animator>().Play("run");
+                    SetRandomPoseWhileRunning(false);
                 }
                 transform.Translate(Vector3.forward * speed * Time.deltaTime);
                 GetComponent<Animator>().speed = a;
@@ -48,12 +61,42 @@ public class aiplayer : MonoBehaviour
                 {
                     StartCoroutine(stayordie());
                 }
+                if (!die)
+                {
+                    SetRandomPoseWhileRunning(true);
+                }
             }
         }
         if (UIGreenRedLightController.Instance.time <= 0 && !win && !die)
         {
             die = true;
             StartCoroutine(stayordie());
+        }
+    }
+
+    void SetRandomPoseWhileRunning(bool enable)
+    {
+        if (enable)
+        {
+            canRandom = true;
+            velocity += Time.deltaTime * acceleration;
+            if (velocity > 1) velocity = 1;
+            animator.SetFloat(veclocityHash, velocity);
+        }
+        else
+        {
+            if (canRandom)
+            {
+                randomePoseIndex = Random.Range(0, runPoses.Length);
+                canRandom = false;
+            }
+            velocity -= Time.deltaTime * acceleration * 2;
+            if (velocity <= 0)
+            {
+                animator.Play(runPoses[randomePoseIndex]);
+                velocity = 0;
+            }
+            animator.SetFloat(veclocityHash, velocity);
         }
     }
 
@@ -91,7 +134,7 @@ public class aiplayer : MonoBehaviour
                 SoundManager.Instance.PlaySoundMaleHited();
             }
             GameObject gm = ObjectPooler.instance.SetObject("bloodEffect", transform.position);
-            gm.transform.localPosition = new Vector3(0, 1.3f, 0);
+            gm.transform.position = transform.position;
             int bb = Random.Range(1, 5);
             GetComponent<HighlightPlus.HighlightEffect>().highlighted = false;
             GetComponent<Animator>().Play("die" + bb.ToString());

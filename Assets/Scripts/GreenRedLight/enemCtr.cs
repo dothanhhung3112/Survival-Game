@@ -1,7 +1,5 @@
 ﻿using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.UIElements;
 
 public class enemCtr : MonoBehaviour
 {
@@ -31,7 +29,7 @@ public class enemCtr : MonoBehaviour
                 }
                 
                 firsttime = true;
-                SoundManager.Instance.PlaySoundEnemy();
+                SoundManager.Instance.PlaySoundEnemy(a);
                 if (a<2)
                 {
                     a = 1 + (0.2f * i);

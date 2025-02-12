@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
 using CnControls;
-using UnityEngine.Events;
 
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerController : MonoBehaviour {
@@ -22,6 +21,9 @@ public class PlayerController : MonoBehaviour {
 	float velocity = 0f;
 	public float acceleration = 0.2f;
 	int veclocityHash;
+	bool canRandom = false;
+    string[] runPoses = { "runfe", "rundynamicpose", "rundancepose" };
+	int randomePoseIndex;
 	
 	// Use this for initialization
 	void Start () {
@@ -48,9 +50,7 @@ public class PlayerController : MonoBehaviour {
                 }
 				// Move Player
 				move = true;
-				animator.Play("Run");
-				velocity = 0;
-                animator.SetFloat(veclocityHash, velocity);
+				SetRandomPoseWhileRunning(false);
                 transform.forward = new Vector3(joystick.HorizintalAxis.Value * Time.deltaTime, 0, joystick.VerticalAxis.Value * Time.deltaTime);
 				GetComponent<Animator>().speed = 1;
 			}
@@ -58,9 +58,7 @@ public class PlayerController : MonoBehaviour {
 			{
 				move = false;
                 GetComponent<Animator>().speed = 0;
-				velocity += Time.deltaTime * acceleration;
-				animator.SetFloat(veclocityHash, velocity);
-
+                SetRandomPoseWhileRunning(true);
             }
         }
 
@@ -87,6 +85,32 @@ public class PlayerController : MonoBehaviour {
 			die = true;
 			StartCoroutine(dieplayer());
 		}
+	}
+
+	void SetRandomPoseWhileRunning(bool enable)
+	{
+		if (enable)
+		{
+			canRandom = true;
+            velocity += Time.deltaTime * acceleration;
+			if (velocity > 1) velocity = 1;
+            animator.SetFloat(veclocityHash, velocity);
+        }
+		else
+		{
+			if (canRandom)
+			{
+				randomePoseIndex = Random.Range(0, runPoses.Length);
+				canRandom = false;
+			}
+            velocity -= Time.deltaTime * acceleration * 2;
+			if (velocity <= 0)
+			{
+                animator.Play(runPoses[randomePoseIndex]);
+                velocity = 0;
+			}
+            animator.SetFloat(veclocityHash, velocity);
+        }
 	}
 
 	private void FixedUpdate() {
@@ -149,7 +173,6 @@ public class PlayerController : MonoBehaviour {
 		yield return new WaitForSeconds(0.1f);
         SoundManager.Instance.PlaySoundMaleHited();
 		GameObject gm = ObjectPooler.instance.SetObject("bloodEffect",transform.position);
-		gm.transform.localPosition = new Vector3(0, 1.3f, 0);
 		int bb = Random.Range(1, 5);
 		GetComponent<HighlightPlus.HighlightEffect>().highlighted = false;
 		GetComponent<Animator>().Play("die" + bb.ToString());
