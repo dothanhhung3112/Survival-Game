@@ -17,7 +17,7 @@ public class SoundManager : MonoBehaviour
     [SerializeField] AudioSource enemySound;
     [SerializeField] AudioClip walkSound;
     [SerializeField] AudioClip enemySearching;
-    [SerializeField] AudioClip[] gunShooting;
+    [SerializeField] AudioClip gunShooting;
     [SerializeField] AudioClip maleHited;
     [SerializeField] AudioClip femaleHited;
 
@@ -93,8 +93,7 @@ public class SoundManager : MonoBehaviour
 
     public void PlaySoundGunShooting()
     {
-        int a = Random.Range(0,gunShooting.Length);
-        PlaySound(gunShooting[a],0.5f);
+        PlaySound(gunShooting,0.5f);
     }
 
     public void PlaySoundMaleHited()

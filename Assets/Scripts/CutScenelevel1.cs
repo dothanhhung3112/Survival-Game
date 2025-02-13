@@ -1,5 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
+using Cinemachine;
+using DG.Tweening;
 using UnityEngine;
 
 public class CutScenelevel1 : MonoBehaviour
@@ -14,15 +14,33 @@ public class CutScenelevel1 : MonoBehaviour
 
     [Header("EnemyAnim")]
     [SerializeField] Animator enemyAnimator;
+    [SerializeField] CinemachineVirtualCamera enemyCam;
+    [SerializeField] ParticleSystem vfxShooting;
 
-    private void Update()
+    public void CutSceneLose()
     {
-        if (Input.GetKeyDown(KeyCode.B))
+        UIGreenRedLightController.Instance.UIGamePlay.DisplayPanelGameplay(false);
+        DOVirtual.DelayedCall(0.5f,delegate
         {
+            MoveCamToEnemy();
             enemyAnimator.transform.LookAt(hitTransform.position);
-            enemyAnimator.Play("Shooting");
-            Shoot();
-        }
+        });
+
+        DOVirtual.DelayedCall(1f, delegate
+        {
+            enemyAnimator.speed = 0.5f;
+            DOVirtual.DelayedCall(0.3f, delegate
+            {
+                SoundManager.Instance.PlaySoundGunShooting();
+                vfxShooting.Play();
+                Shoot();
+            });
+        });
+    }
+
+    public void MoveCamToEnemy()
+    {
+        enemyCam.gameObject.SetActive(true);
     }
 
     public void Shoot()
@@ -30,6 +48,6 @@ public class CutScenelevel1 : MonoBehaviour
         Vector3 direction = hitTransform.transform.position - bulletSpawnTransform.position;    
         Bullet bulletInstance = Instantiate(bulletPrefab, bulletSpawnTransform.position, Quaternion.LookRotation(direction));
         bulletInstance.Launch(shootingForce, hitTransform, hitTransform.position);
-        bulletTimeController.StartSequence(bulletInstance, hitTransform.position);
+        bulletTimeController.StartSequence(bulletInstance, hitTransform);
     }
 }

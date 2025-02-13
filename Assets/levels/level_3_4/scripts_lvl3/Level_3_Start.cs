@@ -14,6 +14,10 @@ public class Level_3_Start : MonoBehaviour
     
     public void btn_start()
     {
+        control_script.game_run = true;
+        panel_arrow.SetActive(true);
+        panel_start.SetActive(false);
+
         //if (BridgeController.instance.IsShowAdsPlay)
         //{
         //    UnityEvent e = new UnityEvent();

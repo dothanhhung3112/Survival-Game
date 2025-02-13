@@ -475,17 +475,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   soundSource: {fileID: 1183644904}
-  musicSource: {fileID: 0}
+  musicSource: {fileID: 821348477}
   musicClip: {fileID: 0}
-  winClip: {fileID: 0}
-  loseClip: {fileID: 0}
+  winClip: {fileID: 8300000, guid: 2955965603d6f8f419a2f1c742e4aeb2, type: 3}
+  loseClip: {fileID: 8300000, guid: 1c3f88ed9f7dcab4f98ee0d99055c6e0, type: 3}
   timeCountClip: {fileID: 8300000, guid: 7d86fcb0d8c407949b19a2dff6916ea7, type: 3}
   enemySound: {fileID: 1512519976}
   walkSound: {fileID: 8300000, guid: 340e1c98212feba4b98f43de368c0053, type: 3}
   enemySearching: {fileID: 8300000, guid: 4d62a6351a3603844a2cfed315b5b889, type: 3}
-  gunShooting:
-  - {fileID: 8300000, guid: 44a894b79a1256c4b9729e7e43a00c7e, type: 3}
-  - {fileID: 8300000, guid: 88466d57c537d46498b8eb1544e1dd58, type: 3}
+  gunShooting: {fileID: 8300000, guid: 44a894b79a1256c4b9729e7e43a00c7e, type: 3}
   maleHited: {fileID: 8300000, guid: 148f2c9cae9663a449c9415a40b6aa81, type: 3}
   femaleHited: {fileID: 8300000, guid: 7d42870c9723c95499b65549ff3ece6f, type: 3}
 --- !u!1 &1512519974
