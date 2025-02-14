@@ -1,28 +1,31 @@
 using UnityEngine;
 
-public class UILose : MonoBehaviour
+namespace Hung.UI
 {
-    [SerializeField] GameObject losePanel;
-
-    public void DisplayPanelLose(bool enable)
+    public class UILose : MonoBehaviour
     {
-        if (enable)
+        [SerializeField] GameObject losePanel;
+
+        public void DisplayPanelLose(bool enable)
         {
-            losePanel.SetActive(true);
+            if (enable)
+            {
+                losePanel.SetActive(true);
+            }
+            else
+            {
+                losePanel.SetActive(false);
+            }
         }
-        else
+
+        public void OnCLickButtonWatchAdRetry()
         {
-            losePanel.SetActive(false);
+
         }
-    }
 
-    public void OnCLickButtonWatchAdRetry()
-    {
-
-    }
-
-    public void OnClickButtonNo()
-    {
-        GameManager.Instance.LoadNextLevel();
+        public void OnClickButtonNo()
+        {
+            GameManager.Instance.LoadNextLevel();
+        }
     }
 }

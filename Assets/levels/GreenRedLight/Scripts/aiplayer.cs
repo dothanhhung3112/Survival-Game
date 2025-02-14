@@ -1,162 +1,161 @@
 ﻿using System.Collections;
 using UnityEngine;
+using Hung.UI;
 
-public class aiplayer : MonoBehaviour
-{
-    PlayerController pc;
-    enemCtr ec;
-    public float speed;
-    public bool firsttime;
-    float a;
-    bool die,onetime,win;
-    public bool femal;
-
-    [Header("Animation")]
-    Animator animator;
-    float velocity = 0f;
-    public float acceleration = 0.2f;
-    int veclocityHash;
-    bool canRandom = true;
-    string[] runPoses = { "runfe", "rundynamicpose", "rundancepose" };
-    int randomePoseIndex;
-
-
-    // Start is called before the first frame update
-    void Start()
+namespace Hung.Gameplay.GreenRedLight {
+    public class aiplayer : MonoBehaviour
     {
-        speed = Random.Range(2.8f, 3.4f);
-        ec = FindObjectOfType<enemCtr>();
-        pc = FindObjectOfType<PlayerController>();
-        int tt = Random.Range(1, 6);
-        GetComponent<Animator>().Play("idle"+tt.ToString());
-        animator = GetComponent<Animator>();
-        veclocityHash = Animator.StringToHash("velocity");
-    }
+        PlayerController pc;
+        enemCtr ec;
+        public float speed;
+        public bool firsttime;
+        float a;
+        bool die, onetime, win;
+        public bool femal;
 
-    // Update is called once per frame
-    void Update()
-    {
-        if(pc.GmRun && !die && !win && !pc.die)
+        [Header("Animation")]
+        Animator animator;
+        float velocity = 0f;
+        public float acceleration = 0.2f;
+        int veclocityHash;
+        bool canRandom = true;
+        string[] runPoses = { "runfe", "rundynamicpose", "rundancepose" };
+        int randomePoseIndex;
+
+
+        // Start is called before the first frame update
+        void Start()
         {
-            if(!ec.animcor)
+            speed = Random.Range(2.8f, 3.4f);
+            ec = FindObjectOfType<enemCtr>();
+            pc = FindObjectOfType<PlayerController>();
+            int tt = Random.Range(1, 6);
+            GetComponent<Animator>().Play("idle" + tt.ToString());
+            animator = GetComponent<Animator>();
+            veclocityHash = Animator.StringToHash("velocity");
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+            if (pc.GmRun && !die && !win && !pc.die)
             {
-                onetime = false;
-                if(!firsttime)
+                if (!ec.animcor)
                 {
-                    firsttime = true;
-                    a = Random.Range(1, 1.3f);
-                    SetRandomPoseWhileRunning(false);
+                    onetime = false;
+                    if (!firsttime)
+                    {
+                        firsttime = true;
+                        a = Random.Range(1, 1.3f);
+                        SetRandomPoseWhileRunning(false);
+                    }
+                    else
+                    {
+                        SetRandomPoseWhileRunning(false);
+                    }
+                    transform.Translate(Vector3.forward * speed * Time.deltaTime);
+                    GetComponent<Animator>().speed = a;
                 }
                 else
                 {
-                    SetRandomPoseWhileRunning(false);
+                    speed = Random.Range(3f, 4f);
+                    if (!onetime)
+                    {
+                        StartCoroutine(stayordie());
+                    }
+                    if (!die)
+                    {
+                        SetRandomPoseWhileRunning(true);
+                    }
                 }
-                transform.Translate(Vector3.forward * speed * Time.deltaTime);
-                GetComponent<Animator>().speed = a;
+            }
+            if (UIGreenRedLightController.Instance.time <= 0 && !win && !die)
+            {
+                die = true;
+                StartCoroutine(stayordie());
+            }
+        }
+
+        void SetRandomPoseWhileRunning(bool enable)
+        {
+            if (enable)
+            {
+                canRandom = true;
+                velocity += Time.deltaTime * acceleration;
+                if (velocity > 1) velocity = 1;
+                animator.SetFloat(veclocityHash, velocity);
             }
             else
             {
-                speed = Random.Range(3f, 4f);
-                if(!onetime)
+                if (canRandom)
                 {
-                    StartCoroutine(stayordie());
+                    randomePoseIndex = Random.Range(0, runPoses.Length);
+                    canRandom = false;
                 }
-                if (!die)
+                velocity -= Time.deltaTime * acceleration * 2;
+                if (velocity <= 0)
                 {
-                    SetRandomPoseWhileRunning(true);
+                    animator.Play(runPoses[randomePoseIndex]);
+                    velocity = 0;
                 }
+                animator.SetFloat(veclocityHash, velocity);
             }
         }
-        if (UIGreenRedLightController.Instance.time <= 0 && !win && !die)
-        {
-            die = true;
-            StartCoroutine(stayordie());
-        }
-    }
 
-    void SetRandomPoseWhileRunning(bool enable)
-    {
-        if (enable)
+        IEnumerator stayordie()
         {
-            canRandom = true;
-            velocity += Time.deltaTime * acceleration;
-            if (velocity > 1) velocity = 1;
-            animator.SetFloat(veclocityHash, velocity);
-        }
-        else
-        {
-            if (canRandom)
+            onetime = true;
+            int b = Random.Range(1, 4);
+            if (b == 2)
             {
-                randomePoseIndex = Random.Range(0, runPoses.Length);
-                canRandom = false;
+                die = true;
+                GetComponent<HighlightPlus.HighlightEffect>().highlighted = true;
+                GetComponent<Animator>().speed = Random.Range(1, 2);
             }
-            velocity -= Time.deltaTime * acceleration * 2;
-            if (velocity <= 0)
+            else
             {
-                animator.Play(runPoses[randomePoseIndex]);
-                velocity = 0;
+                GetComponent<Animator>().speed = 0;
             }
-            animator.SetFloat(veclocityHash, velocity);
-        }
-    }
 
-    IEnumerator stayordie()
-    {
-        onetime = true;
-        int b = Random.Range(1, 4);
-        if(b==2)
-        {
-            die = true;
-            GetComponent<HighlightPlus.HighlightEffect>().highlighted = true;
-            GetComponent<Animator>().speed =Random.Range(1,2);
-        }
-        else
-        {
+            yield return new WaitForSeconds(Random.Range(0.5f, 0.7f));
             GetComponent<Animator>().speed = 0;
-        }
 
-        yield return new WaitForSeconds(Random.Range(0.5f,0.7f));
-        GetComponent<Animator>().speed = 0;
-        if (pc.die) yield return new WaitForSeconds(Random.Range(4f,6f));
-        else yield return new WaitForSeconds(Random.Range(0.8f,1.5f));
-        if(die)
-        {
-            GetComponent<BoxCollider>().isTrigger = true;
-            int t = Random.Range(1, 3);
-            SoundManager.Instance.PlaySoundGunShooting();
-            yield return new WaitForSeconds(0.1f);
-            if (femal)
+            if (pc.die) yield break;
+
+            if (pc.die) yield return new WaitForSeconds(Random.Range(4f, 6f));
+            else yield return new WaitForSeconds(Random.Range(0.8f, 1.5f));
+            if (die)
             {
-                SoundManager.Instance.PlaySoundFemaleHited();
+                GetComponent<BoxCollider>().isTrigger = true;
+                int t = Random.Range(1, 3);
+                SoundManager.Instance.PlaySoundGunShooting();
+                yield return new WaitForSeconds(0.1f);
+                if (femal)
+                {
+                    SoundManager.Instance.PlaySoundFemaleHited();
+                }
+                else
+                {
+                    SoundManager.Instance.PlaySoundMaleHited();
+                }
+                GameObject gm = ObjectPooler.instance.SetObject("bloodEffect", transform.position);
+                gm.transform.position = transform.position;
+                int bb = Random.Range(1, 5);
+                GetComponent<HighlightPlus.HighlightEffect>().highlighted = false;
+                GetComponent<Animator>().Play("die" + bb.ToString());
+                GetComponent<Animator>().speed = 1;
+                Destroy(gameObject, 7f);
             }
-            else
-            {
-                SoundManager.Instance.PlaySoundMaleHited();
-            }
-            GameObject gm = ObjectPooler.instance.SetObject("bloodEffect", transform.position);
-            gm.transform.position = transform.position;
-            int bb = Random.Range(1, 5);
-            GetComponent<HighlightPlus.HighlightEffect>().highlighted = false;
-            GetComponent<Animator>().Play("die" + bb.ToString());
-            GetComponent<Animator>().speed = 1;
-            Destroy(gameObject, 7f);
         }
-    }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.tag == "win")
+        private void OnCollisionEnter(Collision collision)
         {
-            win = true;
-            transform.eulerAngles = new Vector3(0, 180, 0);
-            GetComponent<Animator>().Play("idle2");
+            if (collision.gameObject.tag == "win")
+            {
+                win = true;
+                transform.eulerAngles = new Vector3(0, 180, 0);
+                GetComponent<Animator>().Play("win");
+            }
         }
     }
-
-    private void OnCollisionExit(Collision collision)
-    {
-        
-    }
-
-
 }

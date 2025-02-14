@@ -3,7 +3,13 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - lvl3_enm
+  - live
+  - Missile
+  - win
+  - lvl3_pl
+  - enemy
   layers:
   - Default
   - TransparentFX
@@ -11,7 +17,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - Dalgona
   - 
   - 
   - 

@@ -1,49 +1,52 @@
-using DG.Tweening.Core.Easing;
 using UnityEngine;
+using Hung.Gameplay.GreenRedLight;
 
-public class UIGreenRedLightController : MonoBehaviour
+namespace Hung.UI
 {
-    public static UIGreenRedLightController Instance;
-    public UIWin UIWin { get { return GetComponentInChildren<UIWin>(); } }
-    public UILose UILose { get { return GetComponentInChildren<UILose>(); } }
-    public UIGamePlay UIGamePlay { get { return GetComponentInChildren<UIGamePlay>(); } }
-    public UIMenu UIMenu { get { return GetComponentInChildren<UIMenu>(); } }
-    public float time = 65;
-    public bool canCountTime;
-    public float timeSound;
-
-    private void Awake()
+    public class UIGreenRedLightController : MonoBehaviour
     {
-        if(Instance == null)
-        {
-            Instance = this;
-        }
-    }
+        public static UIGreenRedLightController Instance;
+        public UIWin UIWin { get { return GetComponentInChildren<UIWin>(); } }
+        public UILose UILose { get { return GetComponentInChildren<UILose>(); } }
+        public UIGamePlay UIGamePlay { get { return GetComponentInChildren<UIGamePlay>(); } }
+        public UIMenu UIMenu { get { return GetComponentInChildren<UIMenu>(); } }
+        public float time = 65;
+        public bool canCountTime;
+        public float timeSound;
 
-    private void Update()
-    {
-        if (canCountTime)
+        private void Awake()
         {
-            time -= Time.deltaTime;
-            timeSound -= Time.deltaTime;
-            if (timeSound <= 0 && time >= 0)
+            if (Instance == null)
             {
-                timeSound = 1;
-                SoundManager.Instance.PlaySoundTimeCount();
-            }
-            int a = (int)time;
-            if (a >= 0)
-            {
-                UIGamePlay.SetTimeText(a);
+                Instance = this;
             }
         }
-    }
 
-    public void StartButton()
-    {
-        UIMenu.DisplayPanelMenu(false);
-        UIGamePlay.DisplayPanelGameplay(true);
-        canCountTime = true;
-        FindObjectOfType<PlayerController>().GmRun = true;
+        private void Update()
+        {
+            if (canCountTime)
+            {
+                time -= Time.deltaTime;
+                timeSound -= Time.deltaTime;
+                if (timeSound <= 0 && time >= 0)
+                {
+                    timeSound = 1;
+                    SoundManager.Instance.PlaySoundTimeCount();
+                }
+                int a = (int)time;
+                if (a >= 0)
+                {
+                    UIGamePlay.SetTimeText(a);
+                }
+            }
+        }
+
+        public void StartButton()
+        {
+            UIMenu.DisplayPanelMenu(false);
+            UIGamePlay.DisplayPanelGameplay(true);
+            canCountTime = true;
+            FindObjectOfType<PlayerController>().GmRun = true;
+        }
     }
 }

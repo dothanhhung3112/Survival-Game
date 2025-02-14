@@ -1,30 +1,31 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class UIWin : MonoBehaviour
+namespace Hung.UI
 {
-    [SerializeField] GameObject winPanel;
-
-    public void DisplayPanelWin(bool enable)
+    public class UIWin : MonoBehaviour
     {
-        if (enable)
+        [SerializeField] GameObject winPanel;
+
+        public void DisplayPanelWin(bool enable)
         {
-            winPanel.SetActive(true);
+            if (enable)
+            {
+                winPanel.SetActive(true);
+            }
+            else
+            {
+                winPanel.SetActive(false);
+            }
         }
-        else
+
+        public void OnCLickButtonWatchAds()
         {
-            winPanel.SetActive(false);
+            GameManager.Instance.LoadNextLevel();
         }
-    }
 
-    public void OnCLickButtonWatchAds()
-    {
-        GameManager.Instance.LoadNextLevel();
-    }
-
-    public void OnClickButtonClaim()
-    {
-        GameManager.Instance.LoadNextLevel();
+        public void OnClickButtonClaim()
+        {
+            GameManager.Instance.LoadNextLevel();
+        }
     }
 }
