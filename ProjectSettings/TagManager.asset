@@ -10,6 +10,7 @@ TagManager:
   - win
   - lvl3_pl
   - enemy
+  - Bot
   layers:
   - Default
   - TransparentFX

@@ -11,7 +11,6 @@ namespace Hung.Gameplay.GreenRedLight {
 	[RequireComponent(typeof(Rigidbody))]
 	public class PlayerController : MonoBehaviour
 	{
-
 		[Header(" Control Settings ")]
 		public Rigidbody thisRigidbody;
 		public SimpleJoystick joystick;
