@@ -25,10 +25,6 @@ public class PlayerControllerLvFight : MonoBehaviour
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            animator.SetTrigger("Hit");
-        }
         scaledMovement = navMeshAgent.speed * Time.deltaTime * new Vector3(joystick.HorizintalAxis.Value,0,joystick.VerticalAxis.Value);
         navMeshAgent.Move(scaledMovement);
         transform.LookAt(lookAt.transform.position + scaledMovement);
@@ -40,7 +36,6 @@ public class PlayerControllerLvFight : MonoBehaviour
     {
         if (other.CompareTag("Bot"))
         {
-            Debug.Log("name" + other.name);
             RaycastHit hit;
             Vector3 from = transform.position;
             Vector3 to = other.transform.position;
@@ -53,10 +48,16 @@ public class PlayerControllerLvFight : MonoBehaviour
                 isHitting = true;
                 lookAt = other.gameObject;
                 animator.SetTrigger("Hit");
-                DOVirtual.DelayedCall(0.2f, delegate
+                navMeshAgent.speed /= 2;
+                DOVirtual.DelayedCall(0.35f, delegate
                 {
                     lookAt = gameObject;
+                    navMeshAgent.speed *= 2;
                     other.GetComponent<EnemyControllerLvFight>().Die();
+                });
+                DOVirtual.DelayedCall(0.35f, delegate
+                {
+                    isHitting = false;
                 });
             }
         }

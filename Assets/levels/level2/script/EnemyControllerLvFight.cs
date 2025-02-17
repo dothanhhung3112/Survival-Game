@@ -1,4 +1,5 @@
 using DG.Tweening;
+using Hung;
 using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -54,6 +55,7 @@ public class EnemyControllerLvFight : MonoBehaviour
         isDie = true;
         navMeshAgent.isStopped = true;
         animator.Play("die1");
+        GameObject gm = ObjectPooler.instance.SetObject("bloodEffect", transform.position);
         DOVirtual.DelayedCall(4f, delegate
         {
             gameObject.SetActive(false);
