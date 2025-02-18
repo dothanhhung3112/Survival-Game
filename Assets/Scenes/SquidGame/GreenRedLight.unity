@@ -5416,9 +5416,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: nextlvl
+      - m_Target: {fileID: 1480562367}
+        m_TargetAssemblyTypeName: Hung.UI.UIWin, Assembly-CSharp
+        m_MethodName: OnClickButtonClaim
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -49546,9 +49546,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: UiManager, Assembly-CSharp
-        m_MethodName: btn_retry
+      - m_Target: {fileID: 1650879216}
+        m_TargetAssemblyTypeName: Hung.UI.UILose, Assembly-CSharp
+        m_MethodName: OnClickButtonNo
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -61302,6 +61302,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 872478112}
+  - component: {fileID: 872478113}
   m_Layer: 0
   m_Name: UIGreenLightController
   m_TagString: Untagged
@@ -61329,6 +61330,21 @@ Transform:
   - {fileID: 1711006493}
   m_Father: {fileID: 961790355}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &872478113
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 872478110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08e5941d0eebf264dab060a74f09b750, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  time: 65
+  canCountTime: 0
+  timeSound: 0
 --- !u!1 &872679459
 GameObject:
   m_ObjectHideFlags: 0
@@ -89703,9 +89719,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameplayPanel: {fileID: 1499202576}
-  timeText: {fileID: 173880167}
-  redImage: {fileID: 664391131}
   greenImage: {fileID: 698894680}
+  redImage: {fileID: 664391131}
+  timeText: {fileID: 173880167}
+  botLeftText: {fileID: 0}
 --- !u!1 &1381859548
 GameObject:
   m_ObjectHideFlags: 0
@@ -91396,7 +91413,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1499202577
 RectTransform:
   m_ObjectHideFlags: 0
@@ -93368,7 +93385,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5ed1b52d501c6d4ebb9f0d3683f955e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeText: {fileID: 173880167}
 --- !u!1 &1838689808
 GameObject:
   m_ObjectHideFlags: 0
@@ -106110,7 +106126,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1217362268575814005
 GameObject:
   m_ObjectHideFlags: 0
@@ -112559,8 +112575,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: UIGreenRedLightController, Assembly-CSharp
+      - m_Target: {fileID: 872478113}
+        m_TargetAssemblyTypeName: Hung.UI.UIGreenRedLightController, Assembly-CSharp
         m_MethodName: StartButton
         m_Mode: 1
         m_Arguments:

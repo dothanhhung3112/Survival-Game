@@ -11,8 +11,9 @@ namespace Hung.UI
         public UIGamePlay UIGamePlay { get { return GetComponentInChildren<UIGamePlay>(); } }
         public UIMenu UIMenu { get { return GetComponentInChildren<UIMenu>(); } }
         public float time = 65;
-        public bool canCountTime;
-        public float timeSound;
+        [HideInInspector] public bool canCountTime;
+
+        float timeSound;
 
         private void Awake()
         {

@@ -1,8 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Hung.UI;
+using System.Collections;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 
 public class Level_4_Timer : MonoBehaviour
@@ -14,15 +13,12 @@ public class Level_4_Timer : MonoBehaviour
     public float total_time , max_time , timer;
     Level_4_Controller control_script;
 
-    // Start is called before the first frame update
     void Start()
     {
         control_script = FindObjectOfType<Level_4_Controller>();
-
         text_timer.text = total_time.ToString();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (active)
@@ -51,12 +47,9 @@ public class Level_4_Timer : MonoBehaviour
 
     IEnumerator show_lose_panel()
     {
-        print("lose timer");
         control_script.break_all_glasses_and_player_fall_timeOut();
-
         yield return new WaitForSeconds(3.5f);
-
-        lose_panel.SetActive(true);
-        InGame_panel.SetActive(false);
+        UIGlassSteppingController.Instance.UIGamePlay.DisplayPanelGameplay(false);
+        UIGlassSteppingController.Instance.UILose.DisplayPanelLose(true);
     }
 }
