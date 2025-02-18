@@ -44,7 +44,7 @@ namespace Hung
 
         public void PlaySound(AudioClip clip, float volume = 1f, float pitch = 1f)
         {
-            if (GameManager.Instance.IsMuteSound) return;
+            if (Manager.Instance.IsMuteSound) return;
 
             if (clip != null)
                 soundSource.pitch = pitch;

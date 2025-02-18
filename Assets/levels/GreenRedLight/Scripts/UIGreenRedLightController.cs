@@ -22,6 +22,11 @@ namespace Hung.UI
             }
         }
 
+        private void Start()
+        {
+            UIMenu.DisplayPanelMenu(true);
+        }
+
         private void Update()
         {
             if (canCountTime)

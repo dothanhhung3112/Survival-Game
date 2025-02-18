@@ -5,9 +5,10 @@ using UnityEngine.UI;
 public class UIGamePlay : MonoBehaviour
 {
     [SerializeField] GameObject gameplayPanel;
-    [SerializeField] TextMeshProUGUI timeText;
-    [SerializeField] Image redImage;
     [SerializeField] GameObject greenImage;
+    [SerializeField] Image redImage;
+    [SerializeField] TextMeshProUGUI timeText;
+    [SerializeField] TextMeshProUGUI botLeftText;
 
     public void DisplayPanelGameplay(bool enable)
     {
@@ -40,5 +41,10 @@ public class UIGamePlay : MonoBehaviour
     public void SetTimeText(float value)
     {
         timeText.text = $"{value}";
+    }
+
+    public void SetBotLeftText(float botLeft,float botSum)
+    {
+        botLeftText.text = $"{botLeft}/{botSum}";
     }
 }

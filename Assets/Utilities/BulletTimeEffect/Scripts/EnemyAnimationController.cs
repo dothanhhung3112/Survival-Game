@@ -20,7 +20,10 @@ namespace Hung.Tools
 
         public void PlaySoundShoot()
         {
+            if(SoundManager.Instance!= null) 
             SoundManager.Instance.PlaySoundGunShooting();
+
+            if(shootEffect!=null)
             shootEffect.Play();
         }
     }

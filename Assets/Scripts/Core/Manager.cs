@@ -3,9 +3,9 @@ using UnityEngine.SceneManagement;
 
 namespace Hung
 {
-    public class GameManager : MonoBehaviour
+    public class Manager : MonoBehaviour
     {
-        public static GameManager Instance;
+        public static Manager Instance;
         private void Awake()
         {
             if (Instance == null)

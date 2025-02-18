@@ -120,28 +120,28 @@ namespace _Scripts.Extension
             if (!isAllowKeyCode && Input.GetKeyDown(KeyCode.LeftArrow)) //back
             {
                 isAllowKeyCode = true;
-                if (GameManager.Instance.Level > 0)
+                if (Manager.Instance.Level > 0)
                 {
-                    GameManager.Instance.Level++;
+                    Manager.Instance.Level++;
                 }
-                SceneManager.LoadScene(GameManager.Instance.Level);
+                SceneManager.LoadScene(Manager.Instance.Level);
                 DOVirtual.DelayedCall(0.5f, delegate { isAllowKeyCode = false; });
             }
 
             if (!isAllowKeyCode && Input.GetKeyDown(KeyCode.RightArrow)) //next
             {
                 isAllowKeyCode = true;
-                if(GameManager.Instance.Level <= 3)
+                if(Manager.Instance.Level <= 3)
                 {
-                    GameManager.Instance.Level++;
+                    Manager.Instance.Level++;
                 }
-                SceneManager.LoadScene(GameManager.Instance.Level);
+                SceneManager.LoadScene(Manager.Instance.Level);
                 DOVirtual.DelayedCall(0.5f, delegate { isAllowKeyCode = false; });
             }
 
             if (Input.GetKeyDown(KeyCode.S))
             {
-                GameManager.Instance.IsMuteSound = !GameManager.Instance.IsMuteSound;
+                Manager.Instance.IsMuteSound = !Manager.Instance.IsMuteSound;
             }
 
             if (Input.GetKeyDown(KeyCode.N))

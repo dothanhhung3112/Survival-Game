@@ -20,12 +20,12 @@ namespace Hung.UI
 
         public void OnCLickButtonWatchAds()
         {
-            GameManager.Instance.LoadNextLevel();
+            Manager.Instance.LoadNextLevel();
         }
 
         public void OnClickButtonClaim()
         {
-            GameManager.Instance.LoadNextLevel();
+            Manager.Instance.LoadNextLevel();
         }
     }
 }

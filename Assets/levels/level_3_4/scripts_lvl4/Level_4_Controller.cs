@@ -317,14 +317,8 @@ public class Level_4_Controller : MonoBehaviour
     {
         //play confetti
         confetti.Play();
-
         game_run = false;
-        
-
         cam_follow.is_active = false;
-
-
-        //animation win
         anim.Play("happy");
 
         Quaternion qt1 = Quaternion.Euler(0, -180, 0);

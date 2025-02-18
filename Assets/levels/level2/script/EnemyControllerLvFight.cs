@@ -1,17 +1,17 @@
 using DG.Tweening;
 using Hung;
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class EnemyControllerLvFight : MonoBehaviour
 {
-    private NavMeshAgent navMeshAgent;
-    private Animator animator;
-    private Vector3 nextPos;
-    private int speedToHash;
-    private bool isDie = false;
+    NavMeshAgent navMeshAgent;
+    Animator animator;
+    Coroutine movingRandom;
+    Vector3 nextPos;
+    int speedToHash;
+    bool isDie = false;
 
     private void Start()
     {
@@ -19,21 +19,26 @@ public class EnemyControllerLvFight : MonoBehaviour
         animator = GetComponent<Animator>();
         nextPos = transform.position;
         speedToHash = Animator.StringToHash("Speed");
-        StartCoroutine(StartMovingRandom());
     }
 
     private void Update()
     {
-        animator.SetFloat(speedToHash,Mathf.Clamp01(navMeshAgent.velocity.magnitude));
+        if(GameFightController.Instance.isLose || GameFightController.Instance.isWin) return;
+        animator.SetFloat(speedToHash, Mathf.Clamp01(navMeshAgent.velocity.magnitude));
     }
 
-    IEnumerator StartMovingRandom()
+    public void StartMoving()
     {
-        while (!isDie)
+        movingRandom = StartCoroutine(MovingRandom());
+    }
+
+    IEnumerator MovingRandom()
+    {
+        while (!isDie || !GameFightController.Instance.isLose || !GameFightController.Instance.isWin)
         {
             nextPos = GetRandomPoint(transform.position, 20);
             navMeshAgent.SetDestination(nextPos);
-            yield return new WaitForSeconds(6f);  
+            yield return new WaitForSeconds(6f);
         }
     }
 
@@ -52,6 +57,7 @@ public class EnemyControllerLvFight : MonoBehaviour
 
     public void Die()
     {
+        if (isDie) return;
         isDie = true;
         navMeshAgent.isStopped = true;
         animator.Play("die1");
