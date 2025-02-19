@@ -1,4 +1,5 @@
 using UnityEngine;
+using Hung.Gameplay.GlassStepping;
 
 namespace Hung.UI
 {
@@ -9,8 +10,6 @@ namespace Hung.UI
         public UILose UILose { get { return GetComponentInChildren<UILose>(); } }
         public UIGamePlay UIGamePlay { get { return GetComponentInChildren<UIGamePlay>(); } }
         public UIMenu UIMenu { get { return GetComponentInChildren<UIMenu>(); } }
-        [SerializeField] Level_4_Controller control_script;
-        [SerializeField] Level_4_Timer timer_script;
 
         private void Awake()
         {
@@ -20,18 +19,13 @@ namespace Hung.UI
             }
         }
 
-        private void Start()
-        {
-            UIMenu.DisplayPanelMenu(true);
-        }
-
         public void StartButton()
         {
-            control_script.game_run = true;
-            control_script.start_game = true;
+            GlassSteppingController.instance.game_run = true;
+            GlassSteppingController.instance.start_game = true;
+            GlassSteppingController.instance.canCountTime = true;
             UIMenu.DisplayPanelMenu(false);
             UIGamePlay.DisplayPanelGameplay(true);
-            timer_script.active = true;
         }
     }
 }

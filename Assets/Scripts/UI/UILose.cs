@@ -25,7 +25,7 @@ namespace Hung.UI
 
         public void OnClickButtonNo()
         {
-            Manager.Instance.LoadNextLevel();
+            Manager.Instance.LoadNextLevel(false);
         }
     }
 }

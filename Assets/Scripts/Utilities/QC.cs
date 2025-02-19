@@ -18,9 +18,11 @@ namespace _Scripts.Extension
         private void Awake()
         {
             if (instance == null)
+            {
                 instance = this;
-
-            DontDestroyOnLoad(gameObject);
+                DontDestroyOnLoad(this.gameObject);
+            }
+            else Destroy(this.gameObject);
         }
 
         private void Update()
@@ -120,22 +122,24 @@ namespace _Scripts.Extension
             if (!isAllowKeyCode && Input.GetKeyDown(KeyCode.LeftArrow)) //back
             {
                 isAllowKeyCode = true;
-                if (Manager.Instance.Level > 0)
+                if (Manager.Instance.CurrentLevel > 0)
                 {
-                    Manager.Instance.Level++;
+                    Manager.Instance.CurrentLevel--;
+                    if (Manager.Instance.CurrentLevel < 1) Manager.Instance.CurrentLevel = 1;
                 }
-                SceneManager.LoadScene(Manager.Instance.Level);
+                SceneManager.LoadScene(Manager.Instance.CurrentLevel);
                 DOVirtual.DelayedCall(0.5f, delegate { isAllowKeyCode = false; });
             }
 
             if (!isAllowKeyCode && Input.GetKeyDown(KeyCode.RightArrow)) //next
             {
                 isAllowKeyCode = true;
-                if(Manager.Instance.Level <= 3)
+                if(Manager.Instance.CurrentLevel <= 5)
                 {
-                    Manager.Instance.Level++;
+                    Manager.Instance.CurrentLevel++;
+                    if (Manager.Instance.CurrentLevel > 5) Manager.Instance.CurrentLevel = 5;
                 }
-                SceneManager.LoadScene(Manager.Instance.Level);
+                SceneManager.LoadScene(Manager.Instance.CurrentLevel);
                 DOVirtual.DelayedCall(0.5f, delegate { isAllowKeyCode = false; });
             }
 
@@ -153,13 +157,6 @@ namespace _Scripts.Extension
             {
                 PlayerPrefs.DeleteAll();
                 PlayerPrefs.Save();
-            }
-
-            //gameplay
-            if(Input.GetKeyDown(KeyCode.Space) && PlayerPrefs.GetInt("level") == 1)
-            {
-                Debug.Log("StartKicking");
-                FindObjectOfType<lvl2playerctr>().kicking();
             }
         }
     }

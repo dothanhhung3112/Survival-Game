@@ -177,6 +177,30 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 478023635289706540, guid: 1c828900aed800845907b7d95a1fd4b7, type: 3}
+      propertyPath: tugClick
+      value: 
+      objectReference: {fileID: 8300000, guid: 5bbdc9cd276ce024b832e4a689800712, type: 3}
+    - target: {fileID: 478023635289706540, guid: 1c828900aed800845907b7d95a1fd4b7, type: 3}
+      propertyPath: tugSound
+      value: 
+      objectReference: {fileID: 8300000, guid: a6ae5a296b2f94e489c21cc92bdb12d9, type: 3}
+    - target: {fileID: 478023635289706540, guid: 1c828900aed800845907b7d95a1fd4b7, type: 3}
+      propertyPath: jumpSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 29a0dd7039581c846bf446a8bb4612c7, type: 3}
+    - target: {fileID: 478023635289706540, guid: 1c828900aed800845907b7d95a1fd4b7, type: 3}
+      propertyPath: candyBreak
+      value: 
+      objectReference: {fileID: 8300000, guid: 9e5922e0b71ee674c90ef0d4006ab9f3, type: 3}
+    - target: {fileID: 478023635289706540, guid: 1c828900aed800845907b7d95a1fd4b7, type: 3}
+      propertyPath: glassBreak
+      value: 
+      objectReference: {fileID: 8300000, guid: 32eca3c7ac6fdd545907475d4286681f, type: 3}
+    - target: {fileID: 478023635289706540, guid: 1c828900aed800845907b7d95a1fd4b7, type: 3}
+      propertyPath: needleMove
+      value: 
+      objectReference: {fileID: 8300000, guid: 58ba73107dbded1408703f33d78eed01, type: 3}
     - target: {fileID: 2835427480626608621, guid: 1c828900aed800845907b7d95a1fd4b7, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

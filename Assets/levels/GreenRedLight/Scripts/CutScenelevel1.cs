@@ -21,10 +21,14 @@ namespace Hung.Gameplay.GreenRedLight
         [SerializeField] CinemachineVirtualCamera enemyCam;
         [SerializeField] ParticleSystem vfxShooting;
 
+        [SerializeField] GameObject playerArrow;
+
         public void CutSceneLose()
         {
+            playerArrow.SetActive(false);
             UIGreenRedLightController.Instance.UIGamePlay.DisplayPanelGameplay(false);
-            DOVirtual.DelayedCall(0.5f, delegate
+            enemyAnimator.Play("Shooting");
+            DOVirtual.DelayedCall(0.8f, delegate
             {
                 MoveCamToEnemy();
                 enemyAnimator.transform.LookAt(hitTransform.position);

@@ -27,6 +27,17 @@ namespace Hung
         [SerializeField] AudioClip needleMove;
         [SerializeField] AudioClip candyBreak;
 
+        [Header("TugOfWar")]
+        [SerializeField] AudioClip tugSound;
+        [SerializeField] AudioClip tugClick;
+
+        [Header("GlassStepping")]
+        [SerializeField] AudioClip glassBreak;
+        [SerializeField] AudioClip jumpSound;
+
+        [Header("GameFight")]
+        [SerializeField] AudioClip slash;
+
         private void Awake()
         {
             if (Instance == null)
@@ -123,6 +134,37 @@ namespace Hung
         {
             if (soundSource.isPlaying) return;
             PlaySound(needleMove);
+        }
+        #endregion
+
+        #region TugOfWar
+        public void PlaySoundTug()
+        {
+            PlaySound(tugSound);
+        }
+
+        public void PLaySoundTugClick()
+        {
+            PlaySound(tugClick);
+        }
+        #endregion
+
+        #region GlassStepping
+        public void PLaySoundGlassBreak()
+        {
+            PlaySound(glassBreak);
+        }
+
+        public void PLaySoundJump()
+        {
+            PlaySound(jumpSound);
+        }
+        #endregion
+
+        #region GameFight
+        public void PlaySoundSlash()
+        {
+            PlaySound(slash);
         }
         #endregion
     }

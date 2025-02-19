@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -6,6 +8,8 @@ namespace Hung
     public class Manager : MonoBehaviour
     {
         public static Manager Instance;
+        public List<int> levelLoseList = new List<int>();
+        public List<int> levelWinList = new List<int>();
         private void Awake()
         {
             if (Instance == null)
@@ -18,7 +22,8 @@ namespace Hung
 
         private void Start()
         {
-            SceneManager.LoadScene(1);
+            LoadWinLoseList();
+            SceneManager.LoadScene(CurrentLevel);
         }
 
         #region PlayerData
@@ -26,6 +31,12 @@ namespace Hung
         {
             get { return PlayerPrefs.GetInt("Level", 1); }
             set { PlayerPrefs.SetInt("Level", value); }
+        }
+
+        public int CurrentLevel
+        {
+            get { return PlayerPrefs.GetInt("CurrentLevel", 1); }
+            set { PlayerPrefs.SetInt("CurrentLevel", value); }
         }
 
         public int Season
@@ -40,7 +51,17 @@ namespace Hung
             set { PlayerPrefs.SetInt("Theme", 1); }
         }
 
+        public string LevelLoses
+        {
+            get { return PlayerPrefs.GetString("LevelLoses",""); }
+            set { PlayerPrefs.SetString("LevelLoses", value); }
+        }
 
+        public string LevelWins
+        {
+            get { return PlayerPrefs.GetString("LevelWins",""); }
+            set { PlayerPrefs.SetString("LevelWins", value); }
+        }
 
         #endregion
 
@@ -58,10 +79,43 @@ namespace Hung
         }
         #endregion
 
-        public void LoadNextLevel()
+        public void LoadNextLevel(bool isWin)
         {
+            if(isWin) levelWinList.Add(CurrentLevel);
+            else levelLoseList.Add(CurrentLevel);
+
+            CurrentLevel++;
             Level++;
-            SceneManager.LoadScene(Level);
+            SceneManager.LoadScene(CurrentLevel);
+        }
+
+        public void ChangeSeason()
+        {
+            LevelLoses = null;
+            LevelWins = null;
+            levelWinList.Clear();
+            levelLoseList.Clear();
+            CurrentLevel = 1;
+            Season++;
+        }
+
+        void LoadWinLoseList()
+        {
+            if (!string.IsNullOrEmpty(LevelWins))
+            {
+                levelWinList = LevelWins.Split(';').Select(int.Parse).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(LevelLoses))
+            {
+                levelLoseList = LevelLoses.Split(';').Select(int.Parse).ToList();
+            }
+        }
+
+        private void OnDestroy()
+        {
+            LevelLoses = string.Join(";", levelLoseList.ToArray());
+            LevelWins = string.Join(";", levelWinList.ToArray());
         }
     }
 }
