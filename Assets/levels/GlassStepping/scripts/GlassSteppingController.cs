@@ -34,7 +34,6 @@ namespace Hung.Gameplay.GlassStepping
 
         GlassSteppingCam cam_follow;
         public ParticleSystem confetti;
-        bool canClick = true;
 
         private void Awake()
         {
@@ -54,7 +53,6 @@ namespace Hung.Gameplay.GlassStepping
             UIGlassSteppingController.Instance.UIGamePlay.SetTimeText(total_time);
         }
 
-        // Update is called once per frame
         void Update()
         {
             if (!game_run || !start_game)
@@ -204,8 +202,6 @@ namespace Hung.Gameplay.GlassStepping
                 show_start = true;
                 UIGlassSteppingController.Instance.UIMenu.DisplayPanelMenu(true);
             }
-            canClick = true;
-
             //active follow cam
             if (!cam_follow.is_active)
                 cam_follow.start_follow();
@@ -259,7 +255,6 @@ namespace Hung.Gameplay.GlassStepping
                 SoundManager.Instance.PLaySoundJump();
                 if (glass.is_active)
                 {
-                    canClick = false;
                     if (glass.type == glass_type.true_glass)
                     {
                         //get_next_step();

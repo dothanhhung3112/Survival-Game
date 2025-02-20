@@ -134,12 +134,7 @@ namespace _Scripts.Extension
             if (!isAllowKeyCode && Input.GetKeyDown(KeyCode.RightArrow)) //next
             {
                 isAllowKeyCode = true;
-                if(Manager.Instance.CurrentLevel <= 5)
-                {
-                    Manager.Instance.CurrentLevel++;
-                    if (Manager.Instance.CurrentLevel > 5) Manager.Instance.CurrentLevel = 5;
-                }
-                SceneManager.LoadScene(Manager.Instance.CurrentLevel);
+                Manager.Instance.LoadNextLevel(true);
                 DOVirtual.DelayedCall(0.5f, delegate { isAllowKeyCode = false; });
             }
 

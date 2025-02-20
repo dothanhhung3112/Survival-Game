@@ -23,4 +23,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SquidGame/GlassStepping.unity
     guid: 785b2b67161c5ef4faaf7f577591a28c
+  - enabled: 1
+    path: Assets/Scenes/SquidGame/Marbles.unity
+    guid: f2f8a9c36b6146e4da513370bc17dd67
   m_configObjects: {}

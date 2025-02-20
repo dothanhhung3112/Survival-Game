@@ -86,6 +86,10 @@ namespace Hung
 
             CurrentLevel++;
             Level++;
+            if(CurrentLevel > SceneManager.sceneCountInBuildSettings)
+            {
+                ChangeSeason();
+            }
             SceneManager.LoadScene(CurrentLevel);
         }
 
