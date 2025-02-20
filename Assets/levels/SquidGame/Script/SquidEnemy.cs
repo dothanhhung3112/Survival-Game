@@ -4,12 +4,14 @@ using UnityEngine.UI;
 
 public class SquidEnemy : MonoBehaviour
 {
-    public Transform mnplayer;
+    public SquidGamePlayer player;
     public bool kick, canFight, isDie;
     [SerializeField] float enemyHealh;
-    void Start()
+    Animator animator;
+
+    private void Awake()
     {
-        mnplayer = FindObjectOfType<SquidGamePlayer>().GetComponent<Transform>();
+        animator = GetComponent<Animator>();
     }
 
     void Update()
@@ -34,11 +36,9 @@ public class SquidEnemy : MonoBehaviour
     {
         while (!isDie)
         {
-            int bb = Random.Range(1, 4);
-            GetComponent<Animator>().Play("kick" + bb.ToString());
-            GetComponent<Animator>().speed = 2;
-            mnplayer.GetChild(2).GetChild(0).GetChild(0).gameObject.GetComponent<Image>().fillAmount -= Random.Range(0.1f, 0.025f);
-            yield return new WaitForSeconds(0.6f);
+            animator.Play("Slap");
+            player.DecreaseHealth(0.15f);
+            yield return new WaitForSeconds(3);
         }
 
     }

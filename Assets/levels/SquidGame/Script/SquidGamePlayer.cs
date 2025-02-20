@@ -1,21 +1,26 @@
-﻿using System.Collections;
+﻿using DG.Tweening;
+using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class SquidGamePlayer : MonoBehaviour
 {
+    [SerializeField] Transform endPos;
     public float speed, speedForward;
     public Image powerbar;
-    public Transform boss, campos, look;
+    public Transform boss;
     bool die, kick, win;
-    Vector3 direction, pressPos, presspos, actualpos;
-    Rigidbody rb;
-    float healthMax = 1;
+    Vector3 presspos, actualpos;
     float playerHealth = 0;
+    bool stopMove = false;
+    Rigidbody rb;
+    Animator animator;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        animator = GetComponent<Animator>();
     }
 
     void Start()
@@ -28,18 +33,18 @@ public class SquidGamePlayer : MonoBehaviour
         if (Input.GetMouseButtonDown(0) && !SquidGameController.Instance.gamerun)
         {
             SquidGameController.Instance.gamerun = true;
-            GetComponent<Animator>().Play("run");
-            GetComponent<Animator>().speed = 1.2f;
+            animator.Play("Running");
+            animator.speed = 0.7f;
             presspos = Input.mousePosition;
             //FindObjectOfType<UiManager>().startpanel.SetActive(false);
         }
 
-        if (SquidGameController.Instance.gamerun && !SquidGameController.Instance.isWin)
+        if (SquidGameController.Instance.gamerun && !SquidGameController.Instance.isWin && !stopMove)
         {
-            transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z + speedForward * Time.deltaTime);
+            rb.MovePosition(rb.position + new Vector3(0, 0, speedForward * Time.deltaTime));
         }
 
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0) && !stopMove)
         {
             actualpos = Input.mousePosition;
             float ss = actualpos.x - presspos.x;
@@ -48,9 +53,10 @@ public class SquidGamePlayer : MonoBehaviour
             Vector3 tmp = transform.position;
             tmp.x += xdiff;
             tmp.x = Mathf.Clamp(tmp.x, -4.5f, 3f);
-            transform.position = Vector3.Lerp(transform.position, tmp, speed * Time.deltaTime);
+            rb.MovePosition(Vector3.Lerp(rb.position, tmp, speed * Time.deltaTime));
             presspos = actualpos;
         }
+
 
         //if (SquidGameController.Instance.isWin)
         //{
@@ -64,9 +70,9 @@ public class SquidGamePlayer : MonoBehaviour
         //    {
         //        if (!SquidGameController.Instance.stopfolow)
         //        {
-        //            //fightpanel.SetActive(true);
+        //            fightpanel.SetActive(true);
         //            GetComponent<Animator>().Play("idle1");
-        //            //SoundManager.instance.Play("punch");
+        //            SoundManager.instance.Play("punch");
         //            FindObjectOfType<SquidEnemy>().canFight = true;
         //        }
         //        SquidGameController.Instance.stopfolow = true;
@@ -126,10 +132,12 @@ public class SquidGamePlayer : MonoBehaviour
             Destroy(collision.gameObject);
             IncreaseHealth();
         }
-        if(collision.gameObject.tag == "Obstacle")
+        if (collision.gameObject.tag == "Obstacle")
         {
-            Vector3 direction = collision.transform.position - transform.position;
-            rb.AddForce(direction * 10000f, ForceMode.Impulse);
+            Vector3 direction = transform.position - collision.transform.position;
+            direction.y = 0;
+            DecreaseHealth(0.05f);
+            rb.AddForce(direction.normalized * 100, ForceMode.Impulse);
         }
     }
 
@@ -138,7 +146,18 @@ public class SquidGamePlayer : MonoBehaviour
         if (other.gameObject.tag == "win")
         {
             SquidGameController.Instance.isWin = true;
+            MoveToBoss();
         }
+    }
+
+    void MoveToBoss()
+    {
+        stopMove = true;
+        transform.DOMove(new Vector3(endPos.position.x, transform.position.y, endPos.position.z), 3f)
+        .OnComplete(delegate
+        {
+            animator.Play("Idle");
+        });
     }
 
     void IncreaseHealth()
@@ -148,13 +167,13 @@ public class SquidGamePlayer : MonoBehaviour
         powerbar.fillAmount = playerHealth;
     }
 
-    void DecreaseHealth(int damage)
+    public void DecreaseHealth(float damage)
     {
         playerHealth -= damage;
         powerbar.fillAmount = playerHealth;
-        if(playerHealth <= 0)
+        if (playerHealth <= 0)
         {
-            //lose
+            SquidGameController.Instance.Lose();
         }
     }
 }

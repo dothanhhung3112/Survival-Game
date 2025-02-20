@@ -15,6 +15,16 @@ public class SquidGameController : MonoBehaviour
         }
     }
 
+    public void Win()
+    {
+        StartCoroutine(winplayer());
+    }
+
+    public void Lose()
+    {
+        StartCoroutine(dieplayer());
+    }
+
     IEnumerator winplayer()
     {
         //FindObjectOfType<UiManager>().wineffet.SetActive(true);
