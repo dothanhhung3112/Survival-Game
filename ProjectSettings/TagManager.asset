@@ -11,6 +11,8 @@ TagManager:
   - lvl3_pl
   - enemy
   - Bot
+  - food
+  - Obstacle
   layers:
   - Default
   - TransparentFX

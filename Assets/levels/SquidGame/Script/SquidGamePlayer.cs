@@ -5,7 +5,6 @@ using UnityEngine.UI;
 public class SquidGamePlayer : MonoBehaviour
 {
     public float speed, speedForward;
-    public bool gamerun, isWin, stopfolow;
     public Image powerbar;
     public Transform boss, campos, look;
     bool die, kick, win;
@@ -26,16 +25,16 @@ public class SquidGamePlayer : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (Input.GetMouseButtonDown(0) && !gamerun)
+        if (Input.GetMouseButtonDown(0) && !SquidGameController.Instance.gamerun)
         {
-            gamerun = true;
+            SquidGameController.Instance.gamerun = true;
             GetComponent<Animator>().Play("run");
             GetComponent<Animator>().speed = 1.2f;
             presspos = Input.mousePosition;
             //FindObjectOfType<UiManager>().startpanel.SetActive(false);
         }
 
-        if (gamerun && !isWin)
+        if (SquidGameController.Instance.gamerun && !SquidGameController.Instance.isWin)
         {
             transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z + speedForward * Time.deltaTime);
         }
@@ -43,7 +42,6 @@ public class SquidGamePlayer : MonoBehaviour
         if (Input.GetMouseButton(0))
         {
             actualpos = Input.mousePosition;
-
             float ss = actualpos.x - presspos.x;
             ss = Mathf.Clamp(ss, -1, 1);
             float xdiff = (actualpos.x - presspos.x) * Time.deltaTime * speed;
@@ -54,30 +52,30 @@ public class SquidGamePlayer : MonoBehaviour
             presspos = actualpos;
         }
 
-        if (isWin)
-        {
-            if (Vector3.Distance(transform.position, boss.position) >= 1.2f)
-            {
-                GetComponent<Animator>().Play("run");
-                transform.LookAt(boss);
-                transform.position = Vector3.MoveTowards(transform.position, boss.position, 7 * Time.deltaTime);
-            }
-            else
-            {
-                if (!stopfolow)
-                {
-                    //fightpanel.SetActive(true);
-                    GetComponent<Animator>().Play("idle1");
-                    //SoundManager.instance.Play("punch");
-                    FindObjectOfType<SquidEnemy>().canFight = true;
-                }
-                stopfolow = true;
-                transform.LookAt(boss);
-                Vector3 v = boss.position;
-                Camera.main.transform.position = Vector3.MoveTowards(Camera.main.transform.position, campos.position, 7 * Time.deltaTime);
-                Camera.main.transform.LookAt(look);
-            }
-        }
+        //if (SquidGameController.Instance.isWin)
+        //{
+        //    if (Vector3.Distance(transform.position, boss.position) >= 1.2f)
+        //    {
+        //        GetComponent<Animator>().Play("run");
+        //        transform.LookAt(boss);
+        //        transform.position = Vector3.MoveTowards(transform.position, boss.position, 7 * Time.deltaTime);
+        //    }
+        //    else
+        //    {
+        //        if (!SquidGameController.Instance.stopfolow)
+        //        {
+        //            //fightpanel.SetActive(true);
+        //            GetComponent<Animator>().Play("idle1");
+        //            //SoundManager.instance.Play("punch");
+        //            FindObjectOfType<SquidEnemy>().canFight = true;
+        //        }
+        //        SquidGameController.Instance.stopfolow = true;
+        //        transform.LookAt(boss);
+        //        Vector3 v = boss.position;
+        //        Camera.main.transform.position = Vector3.MoveTowards(Camera.main.transform.position, campos.position, 7 * Time.deltaTime);
+        //        Camera.main.transform.LookAt(look);
+        //    }
+        //}
 
         //if (boss.GetChild(1).GetChild(0).GetChild(0).gameObject.GetComponent<Image>().fillAmount <= 0 && !FindObjectOfType<SquidEnemy>().die && isWin)
         //{
@@ -128,13 +126,18 @@ public class SquidGamePlayer : MonoBehaviour
             Destroy(collision.gameObject);
             IncreaseHealth();
         }
+        if(collision.gameObject.tag == "Obstacle")
+        {
+            Vector3 direction = collision.transform.position - transform.position;
+            rb.AddForce(direction * 10000f, ForceMode.Impulse);
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "win")
         {
-            isWin = true;
+            SquidGameController.Instance.isWin = true;
         }
     }
 
@@ -154,27 +157,4 @@ public class SquidGamePlayer : MonoBehaviour
             //lose
         }
     }
-
-    IEnumerator winplayer()
-    {
-        //FindObjectOfType<UiManager>().wineffet.SetActive(true);
-        GetComponent<Animator>().Play("win");
-        GetComponent<Animator>().speed = 1;
-        //SoundManager.instance.stop("punch");
-        //SoundManager.instance.Play("win");
-        yield return new WaitForSeconds(7f);
-        //FindObjectOfType<UiManager>().winpanel.SetActive(true);
-    }
-
-    IEnumerator dieplayer()
-    {
-        GetComponent<Animator>().Play("die1");
-        GetComponent<Animator>().speed = 1;
-        //SoundManager.instance.stop("punch");
-        //SoundManager.instance.Play("lose");
-        yield return new WaitForSeconds(7f);
-        //FindObjectOfType<UiManager>().losepanel.SetActive(true);
-    }
-
-
 }
