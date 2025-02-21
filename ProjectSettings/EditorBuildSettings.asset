@@ -26,4 +26,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SquidGame/Marbles.unity
     guid: f2f8a9c36b6146e4da513370bc17dd67
+  - enabled: 1
+    path: Assets/Scenes/SquidGame/SquidGame.unity
+    guid: 09ec7ad946397a44991d92cd10194426
   m_configObjects: {}

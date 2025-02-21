@@ -1,11 +1,15 @@
+using Hung;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SquidGameController : MonoBehaviour
 {
     public static SquidGameController Instance;
-    public bool gamerun, isWin;
+    [SerializeField] SquidEnemy enemy;
+    [SerializeField] SquidGamePlayer player;
+    [SerializeField] GameObject camEnd;
+    [SerializeField] ParticleSystem effectWin;
+    public bool gamerun, isWin,isLose,canFight;
 
     private void Awake()
     {
@@ -17,32 +21,44 @@ public class SquidGameController : MonoBehaviour
 
     public void Win()
     {
+        isWin = true;
         StartCoroutine(winplayer());
     }
 
     public void Lose()
     {
+        isLose = true;
         StartCoroutine(dieplayer());
+    }
+
+    public void ChangingToFight()
+    {
+        player.MoveToBoss(delegate
+        {
+            enemy.MovingToEndPos();
+            camEnd.SetActive(true);
+        });
     }
 
     IEnumerator winplayer()
     {
-        //FindObjectOfType<UiManager>().wineffet.SetActive(true);
-        GetComponent<Animator>().Play("win");
-        GetComponent<Animator>().speed = 1;
-        //SoundManager.instance.stop("punch");
-        //SoundManager.instance.Play("win");
-        yield return new WaitForSeconds(7f);
-        //FindObjectOfType<UiManager>().winpanel.SetActive(true);
+        enemy.Die();
+        effectWin.Play();
+        SoundManager.Instance.PlaySoundWin();
+        yield return new WaitForSeconds(5f);
+        UISquidGameController.Instance.UIWin.DisplayPanelWin(true);
     }
 
     IEnumerator dieplayer()
     {
-        GetComponent<Animator>().Play("die1");
-        GetComponent<Animator>().speed = 1;
-        //SoundManager.instance.stop("punch");
-        //SoundManager.instance.Play("lose");
-        yield return new WaitForSeconds(7f);
-        //FindObjectOfType<UiManager>().losepanel.SetActive(true);
+        SoundManager.Instance.PlaySoundLose();
+        yield return new WaitForSeconds(5f);
+        UISquidGameController.Instance.UILose.DisplayPanelLose(true);
+    }
+
+    public void StartGame()
+    {
+        gamerun = true;
+        player.StartMoving();
     }
 }

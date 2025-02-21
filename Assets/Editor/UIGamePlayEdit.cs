@@ -1,3 +1,4 @@
+#if UNITY_EDITOR || UNITY_STANDALONE
 using UnityEditor;
 using Hung.UI;
 
@@ -36,3 +37,4 @@ public class UIGamePlayEdit : Editor
         serializedObject.ApplyModifiedProperties();
     }
 }
+#endif

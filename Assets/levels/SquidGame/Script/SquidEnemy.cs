@@ -1,11 +1,14 @@
-﻿using System.Collections;
+﻿using DG.Tweening;
+using Hung;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class SquidEnemy : MonoBehaviour
 {
-    public SquidGamePlayer player;
-    public bool kick, canFight, isDie;
+    [SerializeField] SquidGamePlayer player;
+    [SerializeField] Image powerBar;
+    [SerializeField] Transform endPos;
     [SerializeField] float enemyHealh;
     Animator animator;
 
@@ -14,34 +17,48 @@ public class SquidEnemy : MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
-    void Update()
-    {
-        if(canFight)
-        {
-            kicking();
-        }
-        else if(isDie)
-        {
-            kick=true;
-            GetComponent<Animator>().Play("die1");
-        }
-    }
-
     public void kicking()
     {
-        StartCoroutine(StartFighting());
+        player.DecreaseHealth(0.1f);
+    }
+
+    public void MovingToEndPos()
+    {
+        animator.Play("Running");
+        transform.DOMove(new Vector3(endPos.position.x, transform.position.y, endPos.position.z), 2)
+        .OnComplete(delegate
+        {
+            SquidGameController.Instance.canFight = true;
+            animator.Play("RightHook");
+        });
     }
 
     IEnumerator StartFighting()
     {
-        while (!isDie)
+        while (!SquidGameController.Instance.isWin && !SquidGameController.Instance.isLose)
         {
-            animator.Play("Slap");
-            player.DecreaseHealth(0.15f);
-            yield return new WaitForSeconds(3);
+            yield return new WaitForSeconds(2f);
         }
-
     }
 
+    public void DecreaseHealth(float damage)
+    {
+        enemyHealh -= damage;
+        powerBar.fillAmount = enemyHealh;
+        ObjectPooler.instance.SetObject("bloodEffect", transform.position + new Vector3(0, 0.5f, 0));
+        if (enemyHealh <= 0)
+        {
+            SquidGameController.Instance.Win();
+        }
+    }
 
+    public void Die()
+    {
+        animator.Play("Die");
+    }
+
+    public void Cheer()
+    {
+        animator.Play("Cheer");
+    }
 }

@@ -16,8 +16,14 @@ public class UISquidGameController : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        UIMenu.DisplayPanelMenu(true);
+    }
+
     public void StartButton()
     {
-
+        SquidGameController.Instance.StartGame();
+        UIMenu.DisplayPanelMenu(false);
     }
 }

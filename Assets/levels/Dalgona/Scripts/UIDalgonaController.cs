@@ -19,6 +19,11 @@ namespace Hung.UI
             }
         }
 
+        private void Start()
+        {
+            UIMenu.DisplayPanelMenu(true);
+        }
+
         public void StartButton()
         {
                 DalgonaController.Instance.canCountTime = true;

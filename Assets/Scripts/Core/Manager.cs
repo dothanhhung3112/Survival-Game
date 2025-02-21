@@ -86,7 +86,7 @@ namespace Hung
 
             CurrentLevel++;
             Level++;
-            if(CurrentLevel > SceneManager.sceneCountInBuildSettings)
+            if(CurrentLevel > SceneManager.sceneCountInBuildSettings - 1)
             {
                 ChangeSeason();
             }

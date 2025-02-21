@@ -156,5 +156,4 @@ namespace _Scripts.Extension
         }
     }
 }
-
 #endif
