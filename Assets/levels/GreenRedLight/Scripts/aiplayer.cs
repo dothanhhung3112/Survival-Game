@@ -22,21 +22,22 @@ namespace Hung.Gameplay.GreenRedLight {
         string[] runPoses = { "runfe", "rundynamicpose", "rundancepose" };
         int randomePoseIndex;
 
+        private void Awake()
+        {
+            animator = GetComponent<Animator>();
+            ec = FindObjectOfType<enemCtr>();
+            pc = FindObjectOfType<PlayerController>();
+        }
 
-        // Start is called before the first frame update
         void Start()
         {
             speed = Random.Range(2.8f, 3.4f);
-            ec = FindObjectOfType<enemCtr>();
-            pc = FindObjectOfType<PlayerController>();
             int tt = Random.Range(1, 6);
-            GetComponent<Animator>().Play("idle" + tt.ToString());
-            animator = GetComponent<Animator>();
+            animator.Play("idle" + tt.ToString());
             veclocityHash = Animator.StringToHash("velocity");
         }
 
-        // Update is called once per frame
-        void Update()
+        void Update() 
         {
             if (pc.GmRun && !die && !win && !pc.die)
             {
@@ -54,7 +55,7 @@ namespace Hung.Gameplay.GreenRedLight {
                         SetRandomPoseWhileRunning(false);
                     }
                     transform.Translate(Vector3.forward * speed * Time.deltaTime);
-                    GetComponent<Animator>().speed = a;
+                    animator.speed = a;
                 }
                 else
                 {
@@ -110,15 +111,15 @@ namespace Hung.Gameplay.GreenRedLight {
             {
                 die = true;
                 GetComponent<HighlightPlus.HighlightEffect>().highlighted = true;
-                GetComponent<Animator>().speed = Random.Range(1, 2);
+                animator.speed = Random.Range(1, 2);
             }
             else
             {
-                GetComponent<Animator>().speed = 0;
+                animator.speed = 0;
             }
 
             yield return new WaitForSeconds(Random.Range(0.5f, 0.7f));
-            GetComponent<Animator>().speed = 0;
+            animator.speed = 0;
 
             if (pc.die) yield break;
 
@@ -128,8 +129,9 @@ namespace Hung.Gameplay.GreenRedLight {
             {
                 GetComponent<BoxCollider>().isTrigger = true;
                 int t = Random.Range(1, 3);
+                ec.SpawnBullet(transform);
+                yield return new WaitForSeconds(0.4f);
                 SoundManager.Instance.PlaySoundGunShooting();
-                yield return new WaitForSeconds(0.1f);
                 if (femal)
                 {
                     SoundManager.Instance.PlaySoundFemaleHited();
@@ -142,9 +144,8 @@ namespace Hung.Gameplay.GreenRedLight {
                 gm.transform.position = transform.position;
                 int bb = Random.Range(1, 5);
                 GetComponent<HighlightPlus.HighlightEffect>().highlighted = false;
-                GetComponent<Animator>().Play("die" + bb.ToString());
-                GetComponent<Animator>().speed = 1;
-                Destroy(gameObject, 7f);
+                animator.Play("die" + bb.ToString());
+                animator.speed = 1;
             }
         }
 
@@ -154,7 +155,7 @@ namespace Hung.Gameplay.GreenRedLight {
             {
                 win = true;
                 transform.eulerAngles = new Vector3(0, 180, 0);
-                GetComponent<Animator>().Play("win");
+                animator.Play("win");
             }
         }
     }

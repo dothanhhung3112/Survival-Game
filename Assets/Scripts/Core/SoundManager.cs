@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 
 namespace Hung
@@ -48,9 +49,31 @@ namespace Hung
             else Destroy(this.gameObject);
         }
 
+        private bool isMuteMusic;
+        public void SetMuteMusic(bool smooth)
+        {
+            isMuteMusic = Manager.Instance.IsMuteMusic;
+            if (!smooth)
+            {
+                musicSource.mute = isMuteMusic;
+                musicSource.volume = isMuteMusic ? 0f : 0.5f;
+                return;
+            }
+
+            musicSource.DOFade(isMuteMusic ? 0f : 0.5f, 0.2f).OnComplete(() =>
+            {
+                musicSource.mute = isMuteMusic;
+            }).SetUpdate(true);
+        }
+
         public void SetMuteSounds()
         {
-
+            if (Manager.Instance.IsMuteSound)
+            {
+                soundSource.mute = true;
+                return;
+            }
+            soundSource.mute = false;
         }
 
         public void PlaySound(AudioClip clip, float volume = 1f, float pitch = 1f)

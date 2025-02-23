@@ -7,6 +7,7 @@ namespace Hung.Tools
     {
         private Animator animator;
         [SerializeField] private ParticleSystem shootEffect;
+        [SerializeField] private bool noAnim;
 
         private void Awake()
         {
@@ -20,6 +21,7 @@ namespace Hung.Tools
 
         public void PlaySoundShoot()
         {
+            if (noAnim) return;
             if(SoundManager.Instance!= null) 
             SoundManager.Instance.PlaySoundGunShooting();
 

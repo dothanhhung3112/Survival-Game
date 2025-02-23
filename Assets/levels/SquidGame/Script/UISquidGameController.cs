@@ -8,6 +8,7 @@ public class UISquidGameController : MonoBehaviour
     public UILose UILose { get { return GetComponentInChildren<UILose>(); } }
     public UIGamePlay UIGamePlay { get { return GetComponentInChildren<UIGamePlay>(); } }
     public UIMenu UIMenu { get { return GetComponentInChildren<UIMenu>(); } }
+    public UISetting UISetting { get { return GetComponentInChildren<UISetting>(); } }
     private void Awake()
     {
         if (Instance == null)

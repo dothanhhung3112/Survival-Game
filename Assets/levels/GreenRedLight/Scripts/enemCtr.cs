@@ -1,25 +1,28 @@
 ﻿using System.Collections;
 using UnityEngine;
 using Hung.UI;
+using Hung.Tools;
 
 namespace Hung.Gameplay.GreenRedLight
 {
     public class enemCtr : MonoBehaviour
     {
         PlayerController pc;
+        [SerializeField] Transform[] startBulletPos;
+        [SerializeField] Transform[] endBulletPos;
+        [SerializeField] Bullet bulletPrefab;
         public float mytimer;
         public bool onetime, firsttime, endcount, startturn, animcor;
         public int i;
         public float a = 1;
         float timestage;
-
+        
         void Start()
         {
             pc = FindObjectOfType<PlayerController>();
             timestage = mytimer;
         }
 
-        // Update is called once per frame
         void Update()
         {
             if (pc.GmRun && !pc.die)
@@ -54,7 +57,7 @@ namespace Hung.Gameplay.GreenRedLight
                     }
                     if (!animcor && !pc.die && !pc.win)
                     {
-                        StartCoroutine(singagain());
+                        StartCoroutine(SingAgain());
                     }
                 }
 
@@ -75,7 +78,17 @@ namespace Hung.Gameplay.GreenRedLight
             }
         }
 
-        IEnumerator singagain()
+        public void SpawnBullet(Transform bot)
+        {
+            for(int i = 0;i < 2; i++)
+            {
+                int randomStartPos = Random.Range(0, startBulletPos.Length);
+                Bullet bullet = Instantiate(bulletPrefab, startBulletPos[randomStartPos]);
+                bullet.Launch(Random.Range(100,120), bot, bot.position);
+            }
+        }
+
+        IEnumerator SingAgain()
         {
             animcor = true;
             yield return new WaitForSeconds(1.5f);

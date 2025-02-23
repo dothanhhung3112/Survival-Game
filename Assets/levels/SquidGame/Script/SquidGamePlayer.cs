@@ -83,7 +83,7 @@ public class SquidGamePlayer : MonoBehaviour
 
     public void DecreaseEnemyHealth()
     {
-        enemy.DecreaseHealth(0.2f);
+        enemy.DecreaseHealth(0.5f);
     }
 
     private void OnCollisionEnter(Collision collision)

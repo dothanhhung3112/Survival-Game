@@ -23,7 +23,7 @@ namespace Hung
         private void Start()
         {
             LoadWinLoseList();
-            SceneManager.LoadScene(CurrentLevel);
+            //SceneManager.LoadScene(CurrentLevel);
         }
 
         #region PlayerData
@@ -69,13 +69,48 @@ namespace Hung
         public bool IsMuteSound
         {
             get { return PlayerPrefs.GetInt("IsMuteSound", 0) == 0 ? false : true; }
-            set { PlayerPrefs.GetInt("IsMuteSound", value ? 1 : 0); }
+            set { PlayerPrefs.SetInt("IsMuteSound", value ? 1 : 0); }
         }
 
         public bool IsMuteMusic
         {
             get { return PlayerPrefs.GetInt("IsMuteMusic", 0) == 0 ? false : true; }
-            set { PlayerPrefs.GetInt("IsMuteMusic", value ? 1 : 0); }
+            set { PlayerPrefs.SetInt("IsMuteMusic", value ? 1 : 0); }
+        }
+
+        public bool IsOffVibration
+        {
+            get
+            {
+                return PlayerPrefs.GetInt("IsOffVibration", 0) == 0 ? false : true;
+            }
+            set
+            {
+                PlayerPrefs.SetInt("IsOffVibration", value ? 1 : 0);
+            }
+        }
+
+        public bool SetSound()
+        {
+            bool isMuteSound = !IsMuteSound;
+            IsMuteSound = isMuteSound;
+            SoundManager.Instance.SetMuteSounds();
+            return isMuteSound;
+        }
+
+        public bool SetMusic()
+        {
+            bool isMuteMusic = !IsMuteMusic;
+            IsMuteMusic = isMuteMusic;
+            SoundManager.Instance.SetMuteMusic(true);
+            return isMuteMusic;
+        }
+
+        public bool SetVibration()
+        {
+            bool isOffVibration = !IsOffVibration;
+            IsOffVibration = isOffVibration;
+            return isOffVibration;
         }
         #endregion
 

@@ -33,14 +33,6 @@ public class SquidEnemy : MonoBehaviour
         });
     }
 
-    IEnumerator StartFighting()
-    {
-        while (!SquidGameController.Instance.isWin && !SquidGameController.Instance.isLose)
-        {
-            yield return new WaitForSeconds(2f);
-        }
-    }
-
     public void DecreaseHealth(float damage)
     {
         enemyHealh -= damage;
