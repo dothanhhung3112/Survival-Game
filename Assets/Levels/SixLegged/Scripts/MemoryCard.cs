@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,15 +11,18 @@ public class MemoryCard : MonoBehaviour
     [SerializeField] List<Card> cards;
     [SerializeField] Transform[] cardPos;
     [SerializeField] float time;
-    [HideInInspector] public Card firstCard;
-    [HideInInspector] public Card secondCard;
+    [SerializeField] GameObject cam;
+    [SerializeField] Transform table;
+    Card firstCard;
+    Card secondCard;
+    public bool isWin = false;
     public bool canClick;
     int pairMatched = 0;
 
     private void Awake()
     {
-        if(Instance == null)
-        Instance = this;
+        if (Instance == null)
+            Instance = this;
     }
 
     private void Start()
@@ -33,15 +37,23 @@ public class MemoryCard : MonoBehaviour
 
     private void Update()
     {
+        if (isWin) return;
         time -= Time.deltaTime;
         int a = (int)time;
         //Update ui text
 
+        if (time <= 0)
+        {
+            //lose
+        }
     }
 
-    void CreateCard()
+    public void StartGame()
     {
-
+        DOVirtual.DelayedCall(1f, delegate
+        {
+            cam.SetActive(true);
+        });
     }
 
     public void CardFlip(Card card)
@@ -69,6 +81,20 @@ public class MemoryCard : MonoBehaviour
         {
             StartCoroutine(FlipBackCard());
         }
+
+        if (pairMatched == 3)
+        {
+            isWin = true;
+            DOVirtual.DelayedCall(0.5f, delegate
+            {
+                table.DOLocalMoveX(4, 2f);
+                cam.SetActive(false);
+                DOVirtual.DelayedCall(2f, delegate
+                {
+                    SixLeggedController.Instance.canMove = true;
+                });
+            });
+        }
     }
 
     IEnumerator FlipBackCard()
@@ -81,10 +107,5 @@ public class MemoryCard : MonoBehaviour
         secondCard = null;
         yield return new WaitForSeconds(0.5f);
         canClick = true;
-    }
-
-    public void StartMemoryCard()
-    {
-
     }
 }

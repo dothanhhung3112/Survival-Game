@@ -8,7 +8,7 @@ public class Card : MonoBehaviour
 
     private void Start()
     {
-        transform.rotation = Quaternion.Euler(180, 0, 0);
+        transform.localEulerAngles = new Vector3(180,0,0);
     }
 
     public void FlipCard()
@@ -16,7 +16,7 @@ public class Card : MonoBehaviour
         if (!isFlipped && MemoryCard.Instance.canClick)
         {
             isFlipped = true;
-            transform.DORotate(new Vector3(0, 0, 0), 0.5f);
+            transform.DOLocalRotate(new Vector3(0, 0, 0), 0.5f);
             MemoryCard.Instance.CardFlip(this);
         }
     }
@@ -26,7 +26,7 @@ public class Card : MonoBehaviour
         if (isFlipped)
         {
             isFlipped = false;
-            transform.DORotate(new Vector3(180, 0, 0), 0.5f);
+            transform.DOLocalRotate(new Vector3(180, 0, 0), 0.5f);
         }
     }
 
