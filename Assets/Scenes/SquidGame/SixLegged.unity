@@ -132,7 +132,6 @@ GameObject:
   m_Component:
   - component: {fileID: 40032561}
   - component: {fileID: 40032566}
-  - component: {fileID: 40032565}
   - component: {fileID: 40032564}
   - component: {fileID: 40032568}
   - component: {fileID: 40032569}
@@ -178,39 +177,12 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 0.65230703, y: 1.7491193, z: 0.4487546}
   m_Center: {x: 0, y: 0.89046264, z: 0}
---- !u!54 &40032565
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 40032560}
-  serializedVersion: 4
-  m_Mass: 50
-  m_Drag: 3
-  m_AngularDrag: 5
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 84
-  m_CollisionDetection: 0
 --- !u!95 &40032566
 Animator:
   serializedVersion: 5
