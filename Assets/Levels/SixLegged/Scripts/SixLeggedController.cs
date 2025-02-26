@@ -5,11 +5,18 @@ public class SixLeggedController : MonoBehaviour
 {
     public static SixLeggedController Instance;
     [SerializeField] Animator[] animators;
-    DOTweenPath path;
     [SerializeField] float accleration;
+    [SerializeField] FlyingStone flyingStone;
+    DOTweenPath path;
     float speed;
     int speedToHash;
     public bool canMove = false;
+
+    public enum MiniGame
+    {
+        DDakji,Memory,FlyingStone
+    }
+    public MiniGame minigame;
 
     private void Awake()
     {
@@ -60,7 +67,22 @@ public class SixLeggedController : MonoBehaviour
             {
                 canMove = false;
                 MemoryCard.Instance.StartGame();
+            }else if (!flyingStone.isWin)
+            {
+                canMove = false;
+                flyingStone.StartGame();
             }
         }
+
+    }
+
+    public void Win()
+    {
+
+    }
+
+    public void Lose()
+    {
+
     }
 }

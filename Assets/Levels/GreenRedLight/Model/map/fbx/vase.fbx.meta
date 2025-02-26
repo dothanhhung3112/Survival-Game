@@ -3,7 +3,12 @@ guid: 0c290942bffcd38418881864b62cf215
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: texture_obstacle_samac
+    second: {fileID: 2100000, guid: 0a27388e0f17e544aa91e16ac272ceff, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

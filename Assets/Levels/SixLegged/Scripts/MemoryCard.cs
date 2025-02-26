@@ -50,10 +50,7 @@ public class MemoryCard : MonoBehaviour
 
     public void StartGame()
     {
-        DOVirtual.DelayedCall(1f, delegate
-        {
-            cam.SetActive(true);
-        });
+        cam.SetActive(true);
     }
 
     public void CardFlip(Card card)

@@ -3,7 +3,12 @@ guid: c57495af61eac874aa11cf2272dd934c
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: al_samac_BG
+    second: {fileID: 2100000, guid: 4ff2b9573131da94da2f9b37ea3ab86b, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

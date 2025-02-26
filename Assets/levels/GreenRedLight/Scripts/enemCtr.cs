@@ -11,6 +11,7 @@ namespace Hung.Gameplay.GreenRedLight
         [SerializeField] Transform[] startBulletPos;
         [SerializeField] Transform[] endBulletPos;
         [SerializeField] Bullet bulletPrefab;
+        [SerializeField] Transform headDoll;
         public float mytimer;
         public bool onetime, firsttime, endcount, startturn, animcor;
         public int i;
@@ -51,9 +52,9 @@ namespace Hung.Gameplay.GreenRedLight
                 {
                     endcount = true;
 
-                    if (transform.eulerAngles.y > 181f || transform.eulerAngles.y == 0)
+                    if (headDoll.eulerAngles.y > 181f || headDoll.eulerAngles.y == 0)
                     {
-                        transform.eulerAngles = new Vector3(0, transform.eulerAngles.y - 75 * i * Time.deltaTime, 0);
+                        headDoll.eulerAngles = new Vector3(0, headDoll.eulerAngles.y - 75 * i * Time.deltaTime * 5f, 0);
                     }
                     if (!animcor && !pc.die && !pc.win)
                     {
@@ -61,12 +62,12 @@ namespace Hung.Gameplay.GreenRedLight
                     }
                 }
 
-                if (transform.eulerAngles.y < 350f && startturn)
+                if (headDoll.eulerAngles.y < 350f && startturn)
                 {
-                    transform.eulerAngles = new Vector3(0, transform.eulerAngles.y + 75 * i * Time.deltaTime, 0);
+                    headDoll.eulerAngles = new Vector3(0, headDoll.eulerAngles.y + 75 * i * Time.deltaTime * 5f, 0);
                 }
 
-                if (transform.eulerAngles.y >= 349f && startturn)
+                if (headDoll.eulerAngles.y >= 349f && startturn)
                 {
                     timestage = mytimer = 4.7f / a;
                     startturn = false;
