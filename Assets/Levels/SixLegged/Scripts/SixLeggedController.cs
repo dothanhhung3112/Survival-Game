@@ -6,7 +6,8 @@ public class SixLeggedController : MonoBehaviour
     public static SixLeggedController Instance;
     [SerializeField] Animator[] animators;
     [SerializeField] float accleration;
-    [SerializeField] FlyingStone flyingStone;
+    public FlyingStone flyingStone;
+    public Ddakji ddakji;
     DOTweenPath path;
     float speed;
     int speedToHash;
