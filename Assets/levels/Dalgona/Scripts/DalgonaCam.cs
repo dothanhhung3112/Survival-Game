@@ -21,20 +21,20 @@ namespace Hung.Gameplay.Dalgona
 
         private void Update()
         {
-            if (canBlend)
-            {
-                blend += Time.deltaTime * 2f;
-                if (blend > 1)
-                {
-                    blend = 1;
-                    if (!hasAnimated)
-                    {
-                        hasAnimated = true;
-                        anim_enemy.Play("Shooting");
-                    }
-                }
-                anim_enemy.SetFloat(blendHash, blend);
-            }
+            //if (canBlend)
+            //{
+            //    blend += Time.deltaTime * 2f;
+            //    if (blend > 1)
+            //    {
+            //        blend = 1;
+            //        if (!hasAnimated)
+            //        {
+            //            hasAnimated = true;
+            //            anim_enemy.Play("Shooting");
+            //        }
+            //    }
+            //    anim_enemy.SetFloat(blendHash, blend);
+            //}
         }
 
         public void win_move()
@@ -44,37 +44,34 @@ namespace Hung.Gameplay.Dalgona
             Vector3 vt = qt.eulerAngles;
 
             sequence = DOTween.Sequence();
-
-            sequence
-
-                        .Append(transform.DOMove(win_cam_pos.position, 1f).SetEase(ease))
+            sequence.Append(transform.DOMove(win_cam_pos.position, 1f).SetEase(ease))
                         .Join(transform.DORotate(vt, .5f).SetEase(ease))
                         .OnComplete(() => animate_player());
-
             anim_enemy.gameObject.SetActive(false);
         }
 
         public void lose_move()
         {
             Quaternion qt = lose_cam_pos.transform.rotation;
-
             Vector3 vt = qt.eulerAngles;
-
             sequence = DOTween.Sequence();
-
-            sequence
-
-                        .Append(transform.DOMove(lose_cam_pos.position, 1f).SetEase(ease))
-                        .Join(transform.DORotate(vt, .5f).SetEase(ease))
-                        .OnComplete(() => animate_enemy());
-
-            anim_player.gameObject.SetActive(false);
+            sequence.Append(transform.DOMove(lose_cam_pos.position, 1f).SetEase(ease))
+                    .Join(transform.DORotate(vt, .5f).SetEase(ease))
+                    .OnComplete(() => animate_enemy());
         }
 
         public void animate_enemy()
         {
             //SoundManager.instance.Play("fire2");
-            canBlend = true;
+            anim_enemy.Play("Shooting");
+            SoundManager.Instance.PlaySoundGunShooting();
+            DOVirtual.DelayedCall(0.2f, delegate
+            {
+                anim_player.Play("Die");
+                //GameObject blood = ObjectPooler.instance.SetObject("bloodEffect", anim_player.transform.position + new Vector3(0, 55, 0));
+                //blood.transform.localScale *= 70f; 
+                SoundManager.Instance.PlaySoundMaleHited();
+            });
         }
 
         public void animate_player()
