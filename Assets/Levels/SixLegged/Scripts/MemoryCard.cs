@@ -18,6 +18,7 @@ public class MemoryCard : MonoBehaviour
     public bool isWin = false;
     public bool canClick;
     int pairMatched = 0;
+    bool canCountTime = false;
 
     private void Awake()
     {
@@ -37,20 +38,23 @@ public class MemoryCard : MonoBehaviour
 
     private void Update()
     {
-        if (isWin) return;
+        if (isWin || !canCountTime ||SixLeggedController.Instance.isLose) return;
         time -= Time.deltaTime;
         int a = (int)time;
-        //Update ui text
-
-        if (time <= 0)
+        UISixLeggedController.Instance.UIGamePlay.SetTimeText(a);
+        if (a <= 0)
         {
-            //lose
+            SixLeggedController.Instance.Lose();
         }
     }
 
     public void StartGame()
     {
         cam.SetActive(true);
+        DOVirtual.DelayedCall(SixLeggedController.Instance.timeMoveCam, delegate
+        {
+            canCountTime = true;
+        });
     }
 
     public void CardFlip(Card card)
@@ -86,7 +90,7 @@ public class MemoryCard : MonoBehaviour
             {
                 table.DOLocalMoveX(4, 2f);
                 cam.SetActive(false);
-                DOVirtual.DelayedCall(2f, delegate
+                DOVirtual.DelayedCall(SixLeggedController.Instance.timeMoveCam, delegate
                 {
                     SixLeggedController.Instance.canMove = true;
                 });

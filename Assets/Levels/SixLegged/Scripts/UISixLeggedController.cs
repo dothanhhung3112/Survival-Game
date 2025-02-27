@@ -1,18 +1,31 @@
-using System.Collections;
-using System.Collections.Generic;
+using Hung.UI;
 using UnityEngine;
 
 public class UISixLeggedController : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public static UISixLeggedController Instance;
+    public UIWin UIWin { get { return GetComponentInChildren<UIWin>(); } }
+    public UILose UILose { get { return GetComponentInChildren<UILose>(); } }
+    public UIGamePlay UIGamePlay { get { return GetComponentInChildren<UIGamePlay>(); } }
+    public UIMenu UIMenu { get { return GetComponentInChildren<UIMenu>(); } }
+
+    private void Awake()
     {
-        
+        if (Instance == null)
+        {
+            Instance = this;
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Start()
     {
-        
+        UIMenu.DisplayPanelMenu(true);
+    }
+
+    public void StartButton()
+    {
+        UIMenu.DisplayPanelMenu(false);
+        UIGamePlay.DisplayPanelGameplay(true);
+        SixLeggedController.Instance.canMove = true;
     }
 }

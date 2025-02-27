@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 using Hung.UI;
+using DG.Tweening;
 
 namespace Hung.Gameplay.GreenRedLight {
     public class aiplayer : MonoBehaviour
@@ -18,8 +19,9 @@ namespace Hung.Gameplay.GreenRedLight {
         float velocity = 0f;
         public float acceleration = 0.2f;
         int veclocityHash;
+        int blendHash;
         bool canRandom = true;
-        string[] runPoses = { "runfe", "rundynamicpose", "rundancepose" };
+        float[] runPoses = { 0, 0.5f, 1 };
         int randomePoseIndex;
 
         private void Awake()
@@ -35,6 +37,7 @@ namespace Hung.Gameplay.GreenRedLight {
             int tt = Random.Range(1, 6);
             animator.Play("idle" + tt.ToString());
             veclocityHash = Animator.StringToHash("velocity");
+            blendHash = Animator.StringToHash("Blend");
         }
 
         void Update() 
@@ -49,6 +52,7 @@ namespace Hung.Gameplay.GreenRedLight {
                         firsttime = true;
                         a = Random.Range(1, 1.3f);
                         SetRandomPoseWhileRunning(false);
+                        animator.Play("runPose");
                     }
                     else
                     {
@@ -83,21 +87,25 @@ namespace Hung.Gameplay.GreenRedLight {
             {
                 canRandom = true;
                 velocity += Time.deltaTime * acceleration;
-                if (velocity > 1) velocity = 1;
+                if (velocity > 1)
+                {
+                    velocity = 1;
+                }
                 animator.SetFloat(veclocityHash, velocity);
             }
             else
             {
-                if (canRandom)
-                {
-                    randomePoseIndex = Random.Range(0, runPoses.Length);
-                    canRandom = false;
-                }
-                velocity -= Time.deltaTime * acceleration * 2;
+
+                velocity -= Time.deltaTime * acceleration;
                 if (velocity <= 0)
                 {
-                    animator.Play(runPoses[randomePoseIndex]);
                     velocity = 0;
+                    if (canRandom)
+                    {
+                        randomePoseIndex = Random.Range(0, runPoses.Length);
+                        canRandom = false;
+                        animator.SetFloat(blendHash, runPoses[randomePoseIndex]);
+                    }
                 }
                 animator.SetFloat(veclocityHash, velocity);
             }
@@ -153,9 +161,12 @@ namespace Hung.Gameplay.GreenRedLight {
         {
             if (collision.gameObject.tag == "win")
             {
-                win = true;
-                transform.eulerAngles = new Vector3(0, 180, 0);
-                animator.Play("win");
+                DOVirtual.DelayedCall(0.5f, delegate
+                {
+                    win = true;
+                    transform.eulerAngles = new Vector3(0, 180, 0);
+                    animator.Play("Win");
+                });
             }
         }
     }

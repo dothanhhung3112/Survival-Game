@@ -1,27 +1,35 @@
+using Cinemachine;
 using DG.Tweening;
+using Hung;
 using UnityEngine;
 
 public class SixLeggedController : MonoBehaviour
 {
     public static SixLeggedController Instance;
-    [SerializeField] Animator[] animators;
-    [SerializeField] float accleration;
+
     public FlyingStone flyingStone;
     public Ddakji ddakji;
+    public bool canMove = false;
+    public float timeMoveCam;
+    [SerializeField] Animator[] animators;
+    [SerializeField] GameObject camWinLose;
+    [SerializeField] float accleration;
     DOTweenPath path;
+    public bool isLose = false;
     float speed;
     int speedToHash;
-    public bool canMove = false;
 
     public enum MiniGame
     {
-        DDakji,Memory,FlyingStone
+        DDakji, Memory, FlyingStone
     }
     public MiniGame minigame;
 
     private void Awake()
     {
         if (Instance == null) Instance = this;
+
+        timeMoveCam = Camera.main.GetComponent<CinemachineBrain>().m_DefaultBlend.BlendTime;
     }
 
     private void Start()
@@ -68,22 +76,61 @@ public class SixLeggedController : MonoBehaviour
             {
                 canMove = false;
                 MemoryCard.Instance.StartGame();
-            }else if (!flyingStone.isWin)
+                minigame = MiniGame.Memory;
+            }
+            else if (!flyingStone.isWin)
             {
                 canMove = false;
                 flyingStone.StartGame();
+                minigame = MiniGame.FlyingStone;
+            }
+            else if (!ddakji.isWin)
+            {
+                canMove = false;
+                ddakji.StartGame();
+                minigame = MiniGame.DDakji;
             }
         }
 
+        if (other.CompareTag("win"))
+        {
+            Win();
+        }
     }
 
     public void Win()
     {
-
+        canMove = false;
+        camWinLose.SetActive(true);
+        DOVirtual.DelayedCall(timeMoveCam, delegate
+        {
+            foreach (var item in animators)
+            {
+                item.Play("Win");
+            }
+        });
+        DOVirtual.DelayedCall(5f, delegate
+        {
+            UISixLeggedController.Instance.UIWin.DisplayPanelWin(true);
+        });
     }
 
     public void Lose()
     {
-
+        isLose = true;
+        camWinLose.SetActive(true);
+        DOVirtual.DelayedCall(timeMoveCam, delegate
+        {
+            foreach (var item in animators)
+            {
+                ObjectPooler.instance.SetObject("bloodEffect", item.transform.position + new Vector3(0, 0.5f, 0));
+                int randomDie = Random.Range(1, 4);
+                item.Play("die" + randomDie);
+            }
+        });
+        DOVirtual.DelayedCall(5f, delegate
+        {
+            UISixLeggedController.Instance.UILose.DisplayPanelLose(true);
+        });
     }
 }

@@ -28,8 +28,9 @@ namespace Hung.Gameplay.GreenRedLight {
 		float velocity = 0f;
 		public float acceleration = 0.2f;
 		int veclocityHash;
+		int blendHash;
 		bool canRandom = false;
-		string[] runPoses = { "runfe", "rundynamicpose", "rundancepose" };
+		float[] runPoses = { 0,0.5f,1};
 		int randomePoseIndex;
 
 		[SerializeField] List<Rigidbody> listRB;
@@ -48,7 +49,8 @@ namespace Hung.Gameplay.GreenRedLight {
 
 			animator = GetComponent<Animator>();
 			veclocityHash = Animator.StringToHash("velocity");
-
+			blendHash = Animator.StringToHash("Blend");
+			
 			listRB.AddRange(gameObject.GetComponentsInChildren<Rigidbody>().Where(x => x.gameObject != this.gameObject));
 			listCD.AddRange(gameObject.GetComponentsInChildren<Collider>().Where(x => x.gameObject != this.gameObject));
 			listCJ.AddRange(gameObject.GetComponentsInChildren<CharacterJoint>());
@@ -73,37 +75,25 @@ namespace Hung.Gameplay.GreenRedLight {
 						die = true;
 						cutScene.CutSceneLose();
 					}
-					// Move Player
-					move = true;
+                    // Move Player
+                    animator.Play("runPose");
+                    move = true;
 					SetRandomPoseWhileRunning(false);
 					transform.forward = new Vector3(joystick.HorizintalAxis.Value * Time.deltaTime, 0, joystick.VerticalAxis.Value * Time.deltaTime);
 					GetComponent<Animator>().speed = 1;
 				}
 				else
 				{
-					move = false;
+                    move = false;
 					GetComponent<Animator>().speed = 0;
 					SetRandomPoseWhileRunning(true);
 				}
 			}
 
-			if (die && !chwya)
+			if (die)
 			{
-				if (joystick.HorizintalAxis.Value != 0 || joystick.VerticalAxis.Value != 0)
-				{
-					// Move Player
-					move = true;
-
-					animator.Play("Run");
-					transform.forward = new Vector3(joystick.HorizintalAxis.Value * Time.deltaTime, 0, joystick.VerticalAxis.Value * Time.deltaTime);
-					GetComponent<Animator>().speed = 1;
-				}
-				else
-				{
-					move = false;
-					GetComponent<Animator>().speed = 0;
-				}
-			}
+                SetRandomPoseWhileRunning(true);
+            }
 
 			if (UIGreenRedLightController.Instance.time <= 0 && !win && !die)
 			{
@@ -118,23 +108,26 @@ namespace Hung.Gameplay.GreenRedLight {
 			{
 				canRandom = true;
 				velocity += Time.deltaTime * acceleration;
-				if (velocity > 1) velocity = 1;
+				if (velocity > 1)
+				{
+                    velocity = 1;
+				}
 				animator.SetFloat(veclocityHash, velocity);
 			}
 			else
 			{
-				if (canRandom)
-				{
-					randomePoseIndex = Random.Range(0, runPoses.Length);
-					canRandom = false;
-				}
 				velocity -= Time.deltaTime * acceleration * 2;
 				if (velocity <= 0)
 				{
-					animator.Play(runPoses[randomePoseIndex]);
 					velocity = 0;
-				}
-				animator.SetFloat(veclocityHash, velocity);
+                    if (canRandom)
+                    {
+                        randomePoseIndex = Random.Range(0, runPoses.Length);
+                        canRandom = false;
+						animator.SetFloat(blendHash, runPoses[randomePoseIndex]);
+                    }
+                }
+                animator.SetFloat(veclocityHash, velocity);
 			}
 		}
 
@@ -172,8 +165,6 @@ namespace Hung.Gameplay.GreenRedLight {
 			}
 		}
 
-
-
 		float elapsedTime = 0;
 		public void Move()
 		{
@@ -197,12 +188,9 @@ namespace Hung.Gameplay.GreenRedLight {
 			GetComponent<BoxCollider>().isTrigger = true;
 			SoundManager.Instance.PlaySoundMaleHited();
 			GameObject gm = ObjectPooler.instance.SetObject("bloodEffect", listRB[9].position);
-			//int bb = Random.Range(1, 5);
-			//GetComponent<Animator>().Play("die" + bb.ToString());
-			//GetComponent<Animator>().speed = 1;
 			animator.enabled = false;
 			ActiveRagdoll();
-			listRB[9].AddForce(direction * 2f, ForceMode.Impulse);
+			listRB[9].AddForce(direction * 4f, ForceMode.Impulse);
 			StartCoroutine(dieplayer());
 		}
 
@@ -224,10 +212,12 @@ namespace Hung.Gameplay.GreenRedLight {
 
 		IEnumerator WinPlayer()
 		{
+			
 			UIGreenRedLightController.Instance.canCountTime = false;
 			transform.eulerAngles = new Vector3(0, 180, 0);
 			//FindObjectOfType<UiManager>().wineffet.SetActive(true);
-			GetComponent<Animator>().Play("win");
+			
+			GetComponent<Animator>().Play("Win");
 			GetComponent<Animator>().speed = 1;
 			SoundManager.Instance.PlaySoundWin();
 			yield return new WaitForSeconds(7f);

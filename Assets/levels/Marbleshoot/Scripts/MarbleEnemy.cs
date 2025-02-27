@@ -20,7 +20,7 @@ namespace Hung.Gameplay.Marble
         {
             marble = Instantiate(marblePrefab, marbleParent);
             marble.transform.position = marblePos.transform.position;
-            marble.transform.localScale = marble.transform.localScale * 10;
+            marble.transform.localScale = marble.transform.localScale/0.7f;
             animator.Play("Throw");
             DOVirtual.DelayedCall(0.6f, delegate
             {

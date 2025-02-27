@@ -12,7 +12,7 @@ public class FlyingStone : MonoBehaviour
     [SerializeField] Rigidbody stone;
     [SerializeField] Transform target;
     [SerializeField] float time;
-    bool isChangeDirection, isChangeForce;
+    bool isChangeDirection, isChangeForce,canCountTime;
     float forceAmount;
     Tween arrowTween, fillArrowTween;
     Vector3 stonePos;
@@ -26,15 +26,13 @@ public class FlyingStone : MonoBehaviour
 
     private void Update()
     {
-        if (isWin) return;
+        if (isWin || !canCountTime || SixLeggedController.Instance.isLose) return;
         time -= Time.deltaTime;
         int a = (int)time;
-        //Update ui text
-
-        if (time <= 0)
+        UISixLeggedController.Instance.UIGamePlay.SetTimeText(a);
+        if (a <= 0)
         {
-            //lose
-
+            SixLeggedController.Instance.Lose();
         }
 
         if (Input.GetMouseButtonDown(0))
@@ -100,7 +98,7 @@ public class FlyingStone : MonoBehaviour
         DOVirtual.DelayedCall(0.5f, delegate
         {
             camFlyingStone.SetActive(false);
-            DOVirtual.DelayedCall(2f, delegate
+            DOVirtual.DelayedCall(SixLeggedController.Instance.timeMoveCam, delegate
             {
                 SixLeggedController.Instance.canMove = true;
             });
@@ -110,8 +108,9 @@ public class FlyingStone : MonoBehaviour
     public void StartGame()
     {
         camFlyingStone.SetActive(true);
-        DOVirtual.DelayedCall(2f, delegate
+        DOVirtual.DelayedCall(SixLeggedController.Instance.timeMoveCam, delegate
         {
+            canCountTime = true;
             DisplayArrow(true);
             stone.gameObject.SetActive(true);
         });

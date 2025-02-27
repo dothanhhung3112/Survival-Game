@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,7 +9,9 @@ public class Ddakji : MonoBehaviour
     [SerializeField] Rigidbody paperGreenRB;
     [SerializeField] Transform point;
     [SerializeField] GameObject camDdakji;
-
+    [SerializeField] Transform paperRedPos;
+    [SerializeField] Transform paperGreenPos;
+    [SerializeField] float time;
 
     [Header("UI")]
     [SerializeField] Image targetImage;
@@ -16,16 +19,22 @@ public class Ddakji : MonoBehaviour
     [SerializeField] RectTransform forceZone;
     [SerializeField] RectTransform pointCheck;
     [SerializeField] Camera camUI;
-    bool isAimRight, isTrueForce, canAim, canForce;
+    bool isAimRight, isTrueForce, canAim, canForce, canCountTime;
     public bool isWin = false;
-    Tween targetTween;
-    private void Start()
-    {
-        DisplayArrow(true);
-    }
+    Tween targetTween,zoneTween,sliderTween;
 
     private void Update()
     {
+        if (isWin || !canCountTime || SixLeggedController.Instance.isLose) return;
+        time -= Time.deltaTime;
+        int a = (int)time;
+        UISixLeggedController.Instance.UIGamePlay.SetTimeText(a);
+        if (a <= 0)
+        {
+            SixLeggedController.Instance.Lose();
+        }
+
+
         Vector3 screenPos = RectTransformUtility.WorldToScreenPoint(camUI, targetImage.rectTransform.position);
         Ray ray = Camera.main.ScreenPointToRay(screenPos);
         RaycastHit hit;
@@ -33,7 +42,6 @@ public class Ddakji : MonoBehaviour
         {
             if (canForce)
             {
-                canForce = false;
                 CheckIsTrueForce();
                 DisplayForceBar(false);
             }
@@ -44,10 +52,7 @@ public class Ddakji : MonoBehaviour
                 {
                     isAimRight = true;
                 }
-                canForce = true;
-                canAim = false;
-                targetTween.Kill();
-                targetImage.gameObject.SetActive(false);
+                DisplayArrow(false);
                 DisplayForceBar(true);
             }
         }
@@ -57,14 +62,15 @@ public class Ddakji : MonoBehaviour
     {
         if (enable)
         {
-            targetImage.gameObject.SetActive(true);
             canAim = true;
+            targetImage.gameObject.SetActive(true);
             targetTween = targetImage.rectTransform.DOAnchorPosX(-410, 1f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InOutSine);
         }
         else
         {
+            canAim = false;
             targetTween.Kill();
-            targetImage.rectTransform.position = new Vector3(410f, 0f, 0f);
+            targetImage.rectTransform.anchoredPosition = new Vector2(410,0);
             targetImage.gameObject.SetActive(false);
         }
     }
@@ -73,12 +79,16 @@ public class Ddakji : MonoBehaviour
     {
         if (enable)
         {
+            canForce = true;
             forceSlider.gameObject.SetActive(true);
-            forceSlider.DOValue(1, 1.5f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.Linear);
-            forceZone.DOAnchorPosX(-150,2f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.Linear);
+            sliderTween = forceSlider.DOValue(1, 1.5f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.Linear);
+            zoneTween = forceZone.DOAnchorPosX(-150,2f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.Linear);
         }
         else
         {
+            canForce = false;
+            sliderTween.Kill();
+            zoneTween.Kill();
             forceSlider.value = 0;
             forceZone.anchoredPosition = new Vector2(150,0);
             forceSlider.gameObject.SetActive(false);
@@ -107,12 +117,27 @@ public class Ddakji : MonoBehaviour
         }
     }
 
+    public void StartResetPaper()
+    {
+        StartCoroutine(ResetPaper());
+    }
+
+    IEnumerator ResetPaper()
+    {
+        yield return new WaitForSeconds(2f);
+        if(isWin) yield break;
+        paperRedRB.transform.position = paperRedPos.position;
+        paperGreenRB.transform.position = paperGreenPos.position;
+        paperGreenRB.isKinematic = true;
+        DisplayArrow(true);
+    }
+
     public void MakePaperBounce()
     {
         if (isTrueForce && isAimRight)
         {
             paperRedRB.AddForceAtPosition(Vector3.up * 6f, point.transform.position, ForceMode.Impulse);
-            isWin = true;
+            Win();
         }
         else
         {
@@ -120,9 +145,29 @@ public class Ddakji : MonoBehaviour
         }
     }
 
-    void StartGame()
+    public void Win()
+    {
+        isWin = true;
+        DOVirtual.DelayedCall(0.5f, delegate
+        {
+            camDdakji.SetActive(false);
+            DOVirtual.DelayedCall(SixLeggedController.Instance.timeMoveCam, delegate
+            {
+                SixLeggedController.Instance.canMove = true;
+                paperRedRB.gameObject.SetActive(false);
+                paperGreenRB.gameObject.SetActive(false);
+            });
+        });
+    }
+
+    public void StartGame()
     {
         camDdakji.SetActive(true);
-
+        DOVirtual.DelayedCall(SixLeggedController.Instance.timeMoveCam, delegate
+        {
+            canCountTime = true;
+            DisplayArrow(true);
+            paperGreenRB.gameObject.SetActive(true);
+        });
     }
 }

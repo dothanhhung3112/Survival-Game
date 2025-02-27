@@ -18,10 +18,10 @@ public class Target : MonoBehaviour
             rb.AddForce(direction * 3f, ForceMode.Impulse);
             flyingStone.Win();
         }
-
-        if (SixLeggedController.Instance.minigame == SixLeggedController.MiniGame.DDakji && !SixLeggedController.Instance.ddakji.isWin)
+        else if (SixLeggedController.Instance.minigame == SixLeggedController.MiniGame.DDakji && !SixLeggedController.Instance.ddakji.isWin)
         {
             SixLeggedController.Instance.ddakji.MakePaperBounce();
+            SixLeggedController.Instance.ddakji.StartResetPaper();
         }
     }
 }

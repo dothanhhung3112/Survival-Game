@@ -12,7 +12,6 @@ namespace Hung.Tools
         private void Awake()
         {
             animator = GetComponent<Animator>();
-            animator.Play("Firing Rifle");
         }
 
         public void DisableAnimator()
