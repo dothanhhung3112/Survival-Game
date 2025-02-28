@@ -28,14 +28,12 @@ namespace Hung.Gameplay.GameFight
 
         private void Update()
         {
+            if (!GameFightController.Instance.canCountTime) return;
             if (isWinning)
             {
                 blendWining += Time.deltaTime * 3f;
                 animator.SetFloat("Blend", blendWining);
             }
-
-            if (!GameFightController.Instance.canCountTime) return;
-            if (GameFightController.Instance.isWin || GameFightController.Instance.isLose) return;
             scaledMovement = navMeshAgent.speed * Time.deltaTime * new Vector3(joystick.HorizintalAxis.Value, 0, joystick.VerticalAxis.Value);
             navMeshAgent.Move(scaledMovement);
             transform.LookAt(lookAt.transform.position + scaledMovement);

@@ -15,10 +15,16 @@ namespace Hung.Gameplay.GlassStepping
         public bool is_active;
         public GameObject pref_glass, pref_pos_jump;
         public GameObject break_glass, pos_jumping;
+        MeshRenderer mesh;
+
+        private void Awake()
+        {
+            mesh = GetComponent<MeshRenderer>();
+            
+        }
 
         void Start()
         {
-
             instantiate_breakGlass();
         }
 
@@ -36,7 +42,7 @@ namespace Hung.Gameplay.GlassStepping
             pos_jumping = Instantiate(pref_pos_jump, transform);
             new_pos = pos_jumping.transform.localPosition;
             new_pos.x = 0f;
-            new_pos.y = -.48f;
+            new_pos.y = .5f;
             new_pos.z = 0f;
             pos_jumping.transform.localPosition = new_pos;
         }

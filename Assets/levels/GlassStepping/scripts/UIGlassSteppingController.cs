@@ -19,11 +19,6 @@ namespace Hung.UI
             }
         }
 
-        private void Start()
-        {
-            UIMenu.DisplayPanelMenu(true);
-        }
-
         public void StartButton()
         {
             GlassSteppingController.instance.game_run = true;
