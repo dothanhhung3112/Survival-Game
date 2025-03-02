@@ -1,50 +1,79 @@
+﻿using System.ComponentModel;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class BotPrisionEscape : MonoBehaviour
 {
-    PlayerPrisionEscape target;
-    NavMeshAgent Agent;
+    PlayerPrisionEscape player;
+    Transform target;
+    NavMeshAgent agent;
     Animator animator;
     public float radius;
-    float lengthCircle = 4;
     public bool canFollow = false;
-    Vector3 lastPos;
     public bool canGetPos = true;
     public bool canTele;
+    bool isDie = false;
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
-        Agent = GetComponent<NavMeshAgent>();
+        agent = GetComponent<NavMeshAgent>();
     }
 
-    public void SetActive(PlayerPrisionEscape player)
+    public void SetPlayer(PlayerPrisionEscape playerPrisionEscape)
     {
-        target = player;
+        player = playerPrisionEscape;
         canFollow = true;
     }
 
     private void Update()
     {
-        if (canFollow)
+        if (canFollow && !isDie)
         {
-            float speed = Agent.speed;
-            Agent.Move(target.scaledMovement);
-            transform.rotation = target.transform.rotation;
-            animator.SetFloat("Speed", target.GetSpeed());
+            float speed = agent.speed;
+            agent.Move(player.scaledMovement);
+            transform.rotation = player.transform.rotation;
+            animator.SetFloat("Speed", player.GetSpeed());
             CheckDistance();
         }
+
+        if (target != null && !isDie)
+        {
+            float distance = Vector3.Distance(transform.position, target.position);
+            animator.SetFloat("Speed", Mathf.Clamp01(agent.velocity.magnitude));
+            if (distance < 0.3f)
+            {
+                Attack();
+            }
+            else
+            {
+                agent.SetDestination(target.position);
+                transform.LookAt(target);
+            }
+        }
+    }
+
+    public void Attack()
+    {
+        agent.isStopped = true;
+        animator.SetTrigger("Hit");
     }
 
     void CheckDistance()
     {
-        float distance = Vector3.Distance(transform.position, target.transform.position);
-
-        if (distance > 3)
+        float maxDistance = 3.5f;
+        float safeDistance = 3f;
+        float checkRadius = 1.0f; 
+        float distance = Vector3.Distance(transform.position, player.transform.position);
+        if (distance > maxDistance)
         {
-            Vector3 direction = (transform.position - target.transform.position).normalized;
-            transform.position = target.transform.position + direction * 3;
+            Vector3 direction = (transform.position - player.transform.position).normalized;
+            Vector3 newPosition = player.transform.position + direction * safeDistance;
+            if (NavMesh.SamplePosition(newPosition, out NavMeshHit hit, checkRadius, NavMesh.AllAreas))
+            {
+                agent.Warp(hit.position);
+            }
         }
     }
 
@@ -52,9 +81,14 @@ public class BotPrisionEscape : MonoBehaviour
     {
         if (other.CompareTag("Bot"))
         {
-            other.tag = "Player";
             BotPrisionEscape bot = other.GetComponent<BotPrisionEscape>();
-            bot.SetActive(target);
+            bot.SetPlayer(player);
+            PrisionEscapeController.instance.bots.Add(bot);
         }
+    }
+
+    public void SetTarget(Transform target)
+    {
+        this.target = target;
     }
 }

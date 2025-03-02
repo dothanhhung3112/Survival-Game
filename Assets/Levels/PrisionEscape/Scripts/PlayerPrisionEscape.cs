@@ -44,9 +44,14 @@ public class PlayerPrisionEscape : MonoBehaviour
     {
         if (other.CompareTag("Bot"))
         {
-            other.tag = "Player";
             BotPrisionEscape bot = other.GetComponent<BotPrisionEscape>();
-            bot.SetActive(this);
+            bot.SetPlayer(this);
+            PrisionEscapeController.instance.bots.Add(bot);
         }
+    }
+
+    public void AddBot()
+    {
+
     }
 }
