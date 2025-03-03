@@ -1,3 +1,5 @@
+using DG.Tweening;
+using Hung;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -6,22 +8,37 @@ public class EnemyPrisionEscape : MonoBehaviour
     Animator animator;
     NavMeshAgent agent;
     Transform target;
-    bool isDie = false;
+    SkinnedMeshRenderer meshRenderer;
+    Material[] originalMats;
+    bool isAttacked, isDie, isMovingToTarget;
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
+        meshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
+        originalMats = meshRenderer.materials;
+    }
+
+    public void SetColorGray(bool isGray)
+    {
+        Material[] mat = meshRenderer.materials;
+        for (int i = 0; i < mat.Length; i++)
+        {
+            mat[i] = isGray ? PrisionEscapeController.instance.grayMat : originalMats[i];
+        }
+        meshRenderer.materials = mat;
     }
 
     private void Update()
     {
-        if(target != null && !isDie)
+        if (target != null && !isDie)
         {
             float distance = Vector3.Distance(transform.position, target.position);
-            animator.SetFloat("Speed",Mathf.Clamp01(agent.velocity.magnitude));
-            if(distance < 0.3f)
+            animator.SetFloat("Speed", Mathf.Clamp01(agent.velocity.magnitude));
+            if (distance < 0.8f && !isAttacked)
             {
+                isAttacked = true;
                 Attack();
             }
             else
@@ -41,10 +58,29 @@ public class EnemyPrisionEscape : MonoBehaviour
     {
         agent.isStopped = true;
         animator.SetTrigger("Hit");
+        DOVirtual.DelayedCall(0.4f, delegate
+        {
+            animator.Play("die1");
+            SetColorGray(true);
+            ObjectPooler.instance.SetObject("bloodEffect", transform.position + new Vector3(0,0.5f,0));
+            isDie = true;
+        });
     }
 
     public void SetTarget(Transform target)
     {
         this.target = target;
+        agent.speed = 4f;
+        isMovingToTarget = true;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Bot") || other.CompareTag("Player") && !isDie && !isMovingToTarget)
+        {
+            isDie = true;
+            animator.Play("die1");
+            SetColorGray(true);
+        }
     }
 }

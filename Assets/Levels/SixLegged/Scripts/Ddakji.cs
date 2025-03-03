@@ -33,8 +33,6 @@ public class Ddakji : MonoBehaviour
         {
             SixLeggedController.Instance.Lose();
         }
-
-
         Vector3 screenPos = RectTransformUtility.WorldToScreenPoint(camUI, targetImage.rectTransform.position);
         Ray ray = Camera.main.ScreenPointToRay(screenPos);
         RaycastHit hit;
@@ -97,23 +95,19 @@ public class Ddakji : MonoBehaviour
      
     void CheckIsTrueForce()
     {
-        Vector2 pointCenter = pointCheck.position; // Vì RectTransform có pivot, position chính là tâm
-
-        // Chuyển tâm sang screen space
+        Vector2 pointCenter = pointCheck.position; 
         Vector2 screenPoint = camUI.WorldToScreenPoint(pointCenter);
-
-        // Kiểm tra tâm có nằm trong forceZone không
         if (RectTransformUtility.RectangleContainsScreenPoint(forceZone, screenPoint, camUI))
         {
             isTrueForce = true;
             paperGreenRB.isKinematic = false;
-            paperGreenRB.AddForceAtPosition(Vector3.down * 4f, transform.position, ForceMode.Impulse);
+            paperGreenRB.AddForce(Vector3.down * 2, ForceMode.Impulse);
         }
         else
         {
             isTrueForce = false;
             paperGreenRB.isKinematic = false;
-            paperGreenRB.AddForceAtPosition(Vector3.down * 2f, transform.position, ForceMode.Impulse);
+            paperGreenRB.AddForce(Vector3.down, ForceMode.Impulse);
         }
     }
 

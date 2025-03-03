@@ -10,6 +10,7 @@ namespace Hung.UI
         {
             if (enable)
             {
+                PiggyBankWin.Instance.StartSpawnMoney();
                 winPanel.SetActive(true);
             }
             else

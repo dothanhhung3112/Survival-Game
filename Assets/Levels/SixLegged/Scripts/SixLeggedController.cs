@@ -36,7 +36,6 @@ public class SixLeggedController : MonoBehaviour
     {
         path = GetComponent<DOTweenPath>();
         speedToHash = Animator.StringToHash("Speed");
-        path.DOPlay();
     }
 
     private void Update()

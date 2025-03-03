@@ -88,7 +88,7 @@ public class MemoryCard : MonoBehaviour
             isWin = true;
             DOVirtual.DelayedCall(0.5f, delegate
             {
-                table.DOLocalMoveX(4, 2f);
+                table.DOLocalMoveX(5, 1.5f);
                 cam.SetActive(false);
                 DOVirtual.DelayedCall(SixLeggedController.Instance.timeMoveCam, delegate
                 {

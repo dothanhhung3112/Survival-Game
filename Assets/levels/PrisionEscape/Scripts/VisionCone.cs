@@ -15,6 +15,7 @@ public class VisionCone : MonoBehaviour
     public Material white;
     public Material red;
     public List<GameObject> allies = new List<GameObject>();
+    bool isContainTarget = false;
     LayerMask layer;
     Vector3[] dirs;
 
@@ -89,7 +90,6 @@ public class VisionCone : MonoBehaviour
 
     void CheckEnemyInVisionCone()
     {
-        bool isContainTarget = false;
         for (int i = 1; i < VisionConeResolution; i++)
         {
             RaycastHit hit;
@@ -99,18 +99,25 @@ public class VisionCone : MonoBehaviour
                 {
                     if (hit.collider.CompareTag("Bot") && !isContainTarget)
                     {
-                        enemy.SetTarget(hit.transform);
+                        BotPrisionEscape bot = hit.transform.GetComponent<BotPrisionEscape>();
+                        enemy.SetTarget(bot.transform);
+                        bot.SetTarget(enemy.transform);
+                        PrisionEscapeController.instance.bots.Remove(bot);
                     }
                     else if (hit.collider.CompareTag("Player") && !isContainTarget)
                     {
-                        if(PrisionEscapeController.instance.bots.Count > 0)
+                        if (PrisionEscapeController.instance.bots.Count > 0)
                         {
-                            PrisionEscapeController.instance.RemoveBot(hit.transform.gameObject);
+                            BotPrisionEscape bot = PrisionEscapeController.instance.GetRandomeBot();
+                            enemy.SetTarget(bot.transform);
+                            bot.SetTarget(enemy.transform);
+                            PrisionEscapeController.instance.bots.Remove(bot);
                         }
                         else
                         {
-                            //player Die
-
+                            PlayerPrisionEscape player = hit.transform.GetComponent<PlayerPrisionEscape>();
+                            enemy.SetTarget(player.transform);
+                            player.SetTarget(enemy.transform);
                         }
                     }
                     isContainTarget = true;

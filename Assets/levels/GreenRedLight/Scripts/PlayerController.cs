@@ -221,8 +221,8 @@ namespace Hung.Gameplay.GreenRedLight {
 			GetComponent<Animator>().speed = 1;
 			SoundManager.Instance.PlaySoundWin();
 			yield return new WaitForSeconds(7f);
-
-			UIGreenRedLightController.Instance.UIWin.DisplayPanelWin(true);
+            UIGreenRedLightController.Instance.UIGamePlay.DisplayPanelGameplay(false);
+            UIGreenRedLightController.Instance.UIWin.DisplayPanelWin(true);
 		}
 
 		void DisActiveRagdoll()

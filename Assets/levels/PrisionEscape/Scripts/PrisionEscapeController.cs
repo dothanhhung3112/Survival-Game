@@ -5,7 +5,7 @@ public class PrisionEscapeController : MonoBehaviour
 {
     public static PrisionEscapeController instance;
     public List<BotPrisionEscape> bots;
-    public PlayerPrisionEscape player;
+    public Material grayMat;
     EnemyPrisionEscape enemy;
 
     private void Awake()
@@ -20,12 +20,18 @@ public class PrisionEscapeController : MonoBehaviour
 
     public void RemoveBot(GameObject go)
     {
-        foreach(var item in bots)
+        for (int i = 0; i < bots.Count; i++)
         {
-            if(item.gameObject == go)
+            if (bots[i].gameObject == go)
             {
-                bots.Remove(item);
+                bots.Remove(bots[i]);
             }
         }
+    }
+
+    public BotPrisionEscape GetRandomeBot()
+    {
+        int randomeIndex = Random.Range(0, bots.Count);
+        return bots[randomeIndex];
     }
 }
