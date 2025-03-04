@@ -5,18 +5,21 @@ using UnityEngine.AI;
 
 public class EnemyPrisionEscape : MonoBehaviour
 {
+    public bool isDie;
     Animator animator;
     NavMeshAgent agent;
     Transform target;
     SkinnedMeshRenderer meshRenderer;
     Material[] originalMats;
-    bool isAttacked, isDie, isMovingToTarget;
+    bool isAttacked, isMovingToTarget;
+    VisionCone radar;
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
         meshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
+        radar = GetComponentInChildren<VisionCone>();
         originalMats = meshRenderer.materials;
     }
 
@@ -32,13 +35,14 @@ public class EnemyPrisionEscape : MonoBehaviour
 
     private void Update()
     {
+        if (PrisionEscapeController.instance.isWin || PrisionEscapeController.instance.isLose) return;
         if (target != null && !isDie)
         {
             float distance = Vector3.Distance(transform.position, target.position);
             animator.SetFloat("Speed", Mathf.Clamp01(agent.velocity.magnitude));
-            if (distance < 0.8f && !isAttacked)
+            if (distance < 0.8f)
             {
-                isAttacked = true;
+                isDie = true;
                 Attack();
             }
             else
@@ -62,8 +66,12 @@ public class EnemyPrisionEscape : MonoBehaviour
         {
             animator.Play("die1");
             SetColorGray(true);
-            ObjectPooler.instance.SetObject("bloodEffect", transform.position + new Vector3(0,0.5f,0));
-            isDie = true;
+            ObjectPooler.instance.SetObject("bloodEffect", transform.position + new Vector3(0, 0.5f, 0));
+            radar.gameObject.SetActive(false);
+        });
+        DOVirtual.DelayedCall(2f, delegate
+        {
+            gameObject.SetActive(false);
         });
     }
 
@@ -76,9 +84,12 @@ public class EnemyPrisionEscape : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Bot") || other.CompareTag("Player") && !isDie && !isMovingToTarget)
+        if(isDie || isMovingToTarget) return;
+        if (other.CompareTag("Bot") || other.CompareTag("Player"))
         {
             isDie = true;
+            radar.gameObject.SetActive(false);
+            ObjectPooler.instance.SetObject("bloodEffect", transform.position + new Vector3(0, 0.5f, 0));
             animator.Play("die1");
             SetColorGray(true);
         }

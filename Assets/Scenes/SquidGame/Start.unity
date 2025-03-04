@@ -234,6 +234,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2969036876712638296, guid: c56c96ee790a62d4eb90a7a1953c196a, type: 3}
+      propertyPath: brain
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 4535138019554286158, guid: c56c96ee790a62d4eb90a7a1953c196a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

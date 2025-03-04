@@ -26,5 +26,6 @@ public class UISquidGameController : MonoBehaviour
     {
         SquidGameController.Instance.StartGame();
         UIMenu.DisplayPanelMenu(false);
+        UIGamePlay.DisplayPanelGameplay(true);
     }
 }

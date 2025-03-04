@@ -90,6 +90,7 @@ public class VisionCone : MonoBehaviour
 
     void CheckEnemyInVisionCone()
     {
+        if (enemy.isDie) return;
         for (int i = 1; i < VisionConeResolution; i++)
         {
             RaycastHit hit;

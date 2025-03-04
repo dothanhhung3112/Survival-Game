@@ -80,7 +80,7 @@ public class Ddakji : MonoBehaviour
             canForce = true;
             forceSlider.gameObject.SetActive(true);
             sliderTween = forceSlider.DOValue(1, 1.5f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.Linear);
-            zoneTween = forceZone.DOAnchorPosX(-150,2f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.Linear);
+            zoneTween = forceZone.DOAnchorPosY(-137,2f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.Linear);
         }
         else
         {

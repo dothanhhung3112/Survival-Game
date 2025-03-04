@@ -12634,7 +12634,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1489457157
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13306,12 +13306,12 @@ GameObject:
   - component: {fileID: 1680176383}
   - component: {fileID: 1680176384}
   m_Layer: 0
-  m_Name: Virtual Camera
+  m_Name: PiggyCam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1680176383
 Transform:
   m_ObjectHideFlags: 0
@@ -13344,7 +13344,7 @@ MonoBehaviour:
   - m_Script
   m_LockStageInInspector: 
   m_StreamingVersion: 20170927
-  m_Priority: 10
+  m_Priority: 11
   m_StandbyUpdate: 2
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 0}
@@ -14960,8 +14960,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moneyParent: {fileID: 62340819}
   moneyPrefab: {fileID: 2765461793846336725, guid: 83a8aab5009cab2489aa96d67d8dcd47, type: 3}
+  camPiggy: {fileID: 1680176382}
   moneyAmount: 0
-  brain: {fileID: 0}
+  brain: {fileID: 2138139620}
 --- !u!1 &1992996214
 GameObject:
   m_ObjectHideFlags: 0
@@ -16081,7 +16082,7 @@ Camera:
     height: 1
   near clip plane: 0.01
   far clip plane: 1000
-  field of view: 60.000004
+  field of view: 60.171837
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -16107,8 +16108,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2138139619}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1000, z: 0}
+  m_LocalRotation: {x: -0.032042224, y: -0.93969214, z: 0.09182554, w: 0.32790262}
+  m_LocalPosition: {x: 4.9, y: 32.4, z: -11.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

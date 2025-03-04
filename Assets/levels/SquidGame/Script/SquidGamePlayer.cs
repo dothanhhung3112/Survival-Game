@@ -1,7 +1,8 @@
-﻿using DG.Tweening;
+﻿using Cinemachine;
+using DG.Tweening;
 using Hung;
+using Hung.Gameplay.GreenRedLight;
 using System;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,6 +10,7 @@ public class SquidGamePlayer : MonoBehaviour
 {
     [SerializeField] Transform endPos;
     [SerializeField] SquidEnemy enemy;
+    [SerializeField] CinemachineVirtualCamera camPlayer;
     public float speed, speedForward;
     public Image powerbar;
     bool die, win, stopMove, isDragging;
@@ -33,9 +35,16 @@ public class SquidGamePlayer : MonoBehaviour
 
     private void Update()
     {
+        if (SquidGameController.Instance.isWin || SquidGameController.Instance.isLose) return;
         if (Input.GetMouseButtonDown(0) && SquidGameController.Instance.canFight)
         {
-            kicking();
+            AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+
+            // Chỉ thực hiện đòn đánh nếu animation đã kết thúc
+            if (stateInfo.IsName("CrossPunch0") && stateInfo.normalizedTime < 1.0f)
+                return;
+
+            animator.Play("CrossPunch0");
         }
 
         if (Input.GetMouseButtonDown(0))
@@ -58,6 +67,7 @@ public class SquidGamePlayer : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (SquidGameController.Instance.isWin || SquidGameController.Instance.isLose) return;
         if (SquidGameController.Instance.gamerun && !SquidGameController.Instance.isWin && !stopMove)
         {
             rb.MovePosition(rb.position + new Vector3(0, 0, speedForward * Time.deltaTime));
@@ -70,7 +80,7 @@ public class SquidGamePlayer : MonoBehaviour
             float xdiff = (actualpos.x - presspos.x) * Time.deltaTime * speed;
             Vector3 tmp = rb.position;
             tmp.x += xdiff;
-            tmp.x = Mathf.Clamp(tmp.x, -5f, 5f);
+            tmp.x = Mathf.Clamp(tmp.x, -6f, 6f);
             rb.MovePosition(Vector3.Lerp(rb.position, tmp, speed * Time.deltaTime));
             presspos = actualpos;
         }
@@ -78,16 +88,17 @@ public class SquidGamePlayer : MonoBehaviour
 
     public void kicking()
     {
-        animator.Play("CrossPunch0");
+        
     }
 
     public void DecreaseEnemyHealth()
     {
-        enemy.DecreaseHealth(0.5f);
+        enemy.DecreaseHealth(0.3f);
     }
 
     private void OnCollisionEnter(Collision collision)
     {
+        if (SquidGameController.Instance.isWin || SquidGameController.Instance.isLose) return;
         if (collision.gameObject.tag == "food")
         {
             //SoundManager.instance.Play("eatmeat");
@@ -96,10 +107,22 @@ public class SquidGamePlayer : MonoBehaviour
         }
         if (collision.gameObject.tag == "Obstacle")
         {
-            Vector3 direction = transform.position - collision.transform.position;
-            direction.y = 0;
+            Vector3 hitPoint = collision.contacts[0].point;
+            Vector3 centerPoint = collision.transform.position;
+            if(hitPoint.x < centerPoint.x)
+            {
+                Vector3 direction = (transform.position + new Vector3(-0.5f,0,0)) - collision.transform.position;
+                direction.y = 0;
+                rb.AddForce(direction.normalized * 100, ForceMode.Impulse);
+            }
+            else
+            {
+                Vector3 direction = (transform.position + new Vector3(0.5f, 0, 0)) - collision.transform.position;
+                direction.y = 0;
+                rb.AddForce(direction.normalized * 100, ForceMode.Impulse);
+            }
+
             DecreaseHealth(0.05f);
-            rb.AddForce(direction.normalized * 100, ForceMode.Impulse);
         }
     }
 
@@ -114,14 +137,14 @@ public class SquidGamePlayer : MonoBehaviour
     public void MoveToBoss(Action onDoneMove = null)
     {
         stopMove = true;
-        animator.speed = 0.5f;
+        animator.speed = 0.7f;
         transform.LookAt(endPos);
-        transform.DOMove(new Vector3(endPos.position.x, transform.position.y, endPos.position.z), 2f)
+        transform.DOMove(new Vector3(endPos.position.x, transform.position.y, endPos.position.z), 1.5f).SetEase(Ease.Linear)
         .OnComplete(delegate
         {
             animator.speed = 1f;
             animator.Play("Idle");
-            transform.DOLookAt(new Vector3(enemy.transform.position.x,0, enemy.transform.position.z),0.5f);
+            transform.DOLookAt(new Vector3(enemy.transform.position.x, transform.position.y, enemy.transform.position.z),0.5f);
             onDoneMove?.Invoke();
         });
     }

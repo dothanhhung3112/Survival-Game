@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using Hung.UI;
+using UnityEngine.AI;
 
 namespace Hung.Gameplay.GreenRedLight {
 
@@ -15,10 +16,6 @@ namespace Hung.Gameplay.GreenRedLight {
 		public Rigidbody thisRigidbody;
 		public SimpleJoystick joystick;
 		public float moveSpeed;
-		public float RotSpeed;
-		public float maxX;
-		public float maxZ;
-		bool move;
 		public static bool canMove;
 		public bool GmRun, die, chwya, win;
 
@@ -32,8 +29,8 @@ namespace Hung.Gameplay.GreenRedLight {
 		bool canRandom = false;
 		float[] runPoses = { 0,0.5f,1};
 		int randomePoseIndex;
-
-		[SerializeField] List<Rigidbody> listRB;
+        Vector3 scaledMovement;
+        [SerializeField] List<Rigidbody> listRB;
 		[SerializeField] List<CharacterJoint> listCJ;
 		[SerializeField] List<Collider> listCD;
 		[SerializeField] List<ActiveJoin> listActiveJoin;
@@ -75,17 +72,17 @@ namespace Hung.Gameplay.GreenRedLight {
 						die = true;
 						cutScene.CutSceneLose();
 					}
-                    // Move Player
+
                     animator.Play("runPose");
-                    move = true;
 					SetRandomPoseWhileRunning(false);
-					transform.forward = new Vector3(joystick.HorizintalAxis.Value * Time.deltaTime, 0, joystick.VerticalAxis.Value * Time.deltaTime);
-					GetComponent<Animator>().speed = 1;
+                    scaledMovement = new Vector3(joystick.HorizintalAxis.Value, 0, joystick.VerticalAxis.Value) * moveSpeed * Time.deltaTime;
+                    transform.LookAt(transform.position + scaledMovement);
+                    transform.Translate(scaledMovement,Space.World);
+					animator.speed = 1;
 				}
 				else
 				{
-                    move = false;
-					GetComponent<Animator>().speed = 0;
+					animator.speed = 0;
 					SetRandomPoseWhileRunning(true);
 				}
 			}
@@ -128,40 +125,6 @@ namespace Hung.Gameplay.GreenRedLight {
                     }
                 }
                 animator.SetFloat(veclocityHash, velocity);
-			}
-		}
-
-		private void FixedUpdate()
-		{
-			if (GmRun && !die && !win)
-			{
-				Vector3 pos = transform.position;
-				pos.x = Mathf.Clamp(pos.x, -maxX, maxX);
-				pos.z = Mathf.Clamp(pos.z, -maxZ, maxZ);
-				transform.position = pos;
-
-				if (canMove)
-				{
-					if (move)
-						Move();
-					else
-						thisRigidbody.velocity = Vector3.zero;
-				}
-			}
-			if (die && !chwya)
-			{
-				Vector3 pos = transform.position;
-				pos.x = Mathf.Clamp(pos.x, -maxX, maxX);
-				pos.z = Mathf.Clamp(pos.z, -maxZ, maxZ);
-				transform.position = pos;
-
-				if (canMove)
-				{
-					if (move)
-						Move();
-					else
-						thisRigidbody.velocity = Vector3.zero;
-				}
 			}
 		}
 

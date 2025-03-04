@@ -8,32 +8,34 @@ public class PiggyBankWin : MonoBehaviour
     [SerializeField] Transform moneyParent;
     [SerializeField] GameObject moneyPrefab;
     [SerializeField] GameObject camPiggy;
-    [SerializeField] int moneyAmount;
-    [SerializeField] CinemachineBrain brain;
+    int moneyAmount;
+    CinemachineBrain brain;
 
     private void Awake()
     {
-        if(Instance == null)
+        if (Instance == null)
         {
             Instance = this;
         }
+        brain = FindAnyObjectByType<CinemachineBrain>();
     }
 
     private void Start()
     {
-        StartSpawnMoney();
+        StartCoroutine(SpawnMoney(15));
     }
 
     public void StartSpawnMoney()
     {
         brain.m_DefaultBlend.m_Style = CinemachineBlendDefinition.Style.Cut;
         camPiggy.SetActive(true);
-        StartCoroutine(SpawnMoney());
+        StartCoroutine(SpawnMoney(20));
     }
 
-    IEnumerator SpawnMoney()
+    IEnumerator SpawnMoney(int amount)
     {
-        while(moneyAmount < 15)
+        moneyAmount = 0;
+        while (moneyAmount < amount)
         {
             moneyAmount++;
             GameObject money = Instantiate(moneyPrefab, moneyParent);
