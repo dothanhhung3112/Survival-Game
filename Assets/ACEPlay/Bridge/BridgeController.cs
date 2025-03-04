@@ -246,7 +246,6 @@ namespace ACEPlay.Bridge
         }
         #endregion
 
-
         public bool testGame;
         [SerializeField] private Camera cam;
 
@@ -267,6 +266,7 @@ namespace ACEPlay.Bridge
         [SerializeField] private string[] urls = new string[] { "https://www.google.com", "https://www.wikipedia.com", "https://www.amazon.com", "https://y.qq.com", "https://www.microsoft.com" };
         int amountOpen;
 
+        public int rewardedCountOnPlay = 0;
         public int PlayCount { get; set; }
         public int currentLevel
         {

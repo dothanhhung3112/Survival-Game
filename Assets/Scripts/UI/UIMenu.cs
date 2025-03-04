@@ -1,3 +1,4 @@
+using ACEPlay.Bridge;
 using TMPro;
 using UnityEngine;
 
@@ -13,6 +14,10 @@ namespace Hung.UI
         {
             if (enable)
             {
+                if(BridgeController.instance.PlayCount < Manager.Instance.Level)
+                {
+                    BridgeController.instance.PlayCount = Manager.Instance.Level;
+                }
                 menuPanel.SetActive(true);
                 textSeason.text = $"SEASON {Manager.Instance.Season}";
                 SetPointsData();

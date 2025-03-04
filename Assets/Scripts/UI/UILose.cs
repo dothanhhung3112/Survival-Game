@@ -1,4 +1,7 @@
+using ACEPlay.Bridge;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.UIElements;
 
 namespace Hung.UI
 {
@@ -10,7 +13,26 @@ namespace Hung.UI
         {
             if (enable)
             {
-                losePanel.SetActive(true);
+                BridgeController.instance.rewardedCountOnPlay++;
+                BridgeController.instance.ShowBannerCollapsible();
+                if (BridgeController.instance.rewardedCountOnPlay >= 3)
+                {
+                    if (BridgeController.instance.IsRewardReady())
+                    {
+                        BridgeController.instance.rewardedCountOnPlay = 0;
+                        BridgeController.instance.ShowRewarded("reward", null);
+                    }
+                    losePanel.SetActive(true);
+                }
+                else
+                {
+                    UnityEvent e = new UnityEvent();
+                    e.AddListener(() =>
+                    {
+                        losePanel.SetActive(true);
+                    });
+                    BridgeController.instance.ShowInterstitial("lose", e);
+                }
             }
             else
             {

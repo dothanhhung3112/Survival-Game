@@ -80,7 +80,6 @@ namespace Hung.Gameplay.Dalgona
 
         IEnumerator show_lose_panel()
         {
-            Debug.Log("b");
             DalgonaCam cam_script = FindObjectOfType<DalgonaCam>();
             cam_script.lose_move();
             yield return new WaitForSeconds(3.5f);

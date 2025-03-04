@@ -1,4 +1,6 @@
+﻿using ACEPlay.Bridge;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Hung.UI
 {
@@ -10,8 +12,28 @@ namespace Hung.UI
         {
             if (enable)
             {
-                PiggyBankWin.Instance.StartSpawnMoney();
-                winPanel.SetActive(true);
+                BridgeController.instance.rewardedCountOnPlay++;
+                BridgeController.instance.ShowBannerCollapsible();
+                if (BridgeController.instance.rewardedCountOnPlay >= 3)
+                {
+                    if (BridgeController.instance.IsRewardReady())
+                    {
+                        BridgeController.instance.rewardedCountOnPlay = 0;
+                        BridgeController.instance.ShowRewarded("reward", null);
+                    }
+                    PiggyBankWin.Instance.StartSpawnMoney();
+                    winPanel.SetActive(true);
+                }
+                else
+                {
+                    UnityEvent e = new UnityEvent();
+                    e.AddListener(() =>
+                    {
+                        PiggyBankWin.Instance.StartSpawnMoney();
+                        winPanel.SetActive(true);
+                    });
+                    BridgeController.instance.ShowInterstitial("lose", e);
+                }
             }
             else
             {

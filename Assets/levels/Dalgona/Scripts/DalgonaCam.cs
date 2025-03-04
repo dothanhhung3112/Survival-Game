@@ -68,8 +68,8 @@ namespace Hung.Gameplay.Dalgona
             DOVirtual.DelayedCall(0.2f, delegate
             {
                 anim_player.Play("Die");
-                //GameObject blood = ObjectPooler.instance.SetObject("bloodEffect", anim_player.transform.position + new Vector3(0, 55, 0));
-                //blood.transform.localScale *= 70f; 
+                GameObject blood = ObjectPooler.instance.SetObject("bloodEffect", anim_player.transform.position + new Vector3(0, 55, 0));
+                blood.transform.localScale *= 50f;
                 SoundManager.Instance.PlaySoundMaleHited();
             });
         }

@@ -8935,7 +8935,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 623279911726858738, guid: 50055885b903dd243b91f73a62f01a35, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1092392487}
   m_SourcePrefab: {fileID: 100100000, guid: 50055885b903dd243b91f73a62f01a35, type: 3}
 --- !u!1 &382458383
 GameObject:
@@ -38527,6 +38530,43 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1863745376}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1092392484 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 623279911726858738, guid: 50055885b903dd243b91f73a62f01a35, type: 3}
+  m_PrefabInstance: {fileID: 379471762}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1092392487
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1092392484}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9eced9d9111befb4ea8ff26e43ed68c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NonConsumableList: []
+  VipPackageList: []
+  testGame: 0
+  cam: {fileID: 0}
+  isLoadGameSuccess: 0
+  isCheckFirebase: 0
+  IsBannerShowing: 0
+  IsMRECsShowing: 0
+  canShowBanner: 0
+  lastTimeShowAd: 0
+  lastTimeShowBannerCollap: 0
+  lastTimeShowAdIngame: 0
+  urls:
+  - https://www.google.com
+  - https://www.wikipedia.com
+  - https://www.amazon.com
+  - https://y.qq.com
+  - https://www.microsoft.com
+  rewardedCountOnPlay: 0
+  availableItemsIAP: []
 --- !u!1 &1093037899
 GameObject:
   m_ObjectHideFlags: 0
