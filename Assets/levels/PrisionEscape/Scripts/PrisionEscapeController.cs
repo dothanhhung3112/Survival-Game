@@ -53,6 +53,7 @@ public class PrisionEscapeController : MonoBehaviour
 
     public void StartEndCard()
     {
+        if (isWin || isLose) return;
         isWin = true;
         camWin.SetActive(true);
         StartCoroutine(EndCard());
@@ -60,6 +61,7 @@ public class PrisionEscapeController : MonoBehaviour
 
     public void Lose()
     {
+        if (isWin || isLose) return;
         isLose = true;
         StartCoroutine(Losing());
     }

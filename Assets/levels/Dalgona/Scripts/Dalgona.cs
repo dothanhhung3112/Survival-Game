@@ -14,6 +14,7 @@ namespace Hung.Gameplay.Dalgona
         public GameObject[] dalgona_parts, dalgona_break_parts, dalgona_center_break_parts;
         public int actual_part;
         public Transform needle;
+        ParticleSystem effect;
         public bool active;
 
         public float max_time, timer;
@@ -24,6 +25,8 @@ namespace Hung.Gameplay.Dalgona
         void Start()
         {
             actual_anim = "needle_idle";
+            effect = Instantiate(DalgonaController.Instance.effectDalgona, needle.transform);
+            effect.transform.localScale = Vector3.one * 70f;
         }
 
         float elapsedTime = 1f;
@@ -37,6 +40,7 @@ namespace Hung.Gameplay.Dalgona
                 // play
                 elapsedTime = 1f;
                 dot_path.DOPlay();
+                effect.Play();
                 animate_needle("needle_zigzag_simple");
             }
 
@@ -45,6 +49,7 @@ namespace Hung.Gameplay.Dalgona
                 // pause
                 SoundManager.Instance.StopSound();
                 dot_path.DOPause();
+                effect.Stop();
                 animate_needle("needle_idle");
 
                 //reset timer

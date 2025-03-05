@@ -45,6 +45,7 @@ public class SquidGameController : MonoBehaviour
 
     IEnumerator winplayer()
     {
+        UISquidGameController.Instance.UIGamePlay.DisplayPanelGameplay(false);
         enemy.Die();
         effectWin.Play();
         SoundManager.Instance.PlaySoundWin();
@@ -58,6 +59,7 @@ public class SquidGameController : MonoBehaviour
 
     IEnumerator dieplayer()
     {
+        UISquidGameController.Instance.UIGamePlay.DisplayPanelGameplay(false);
         player.Die();
         SoundManager.Instance.PlaySoundLose();
         yield return new WaitForSeconds(5f);

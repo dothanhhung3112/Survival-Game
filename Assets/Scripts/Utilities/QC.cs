@@ -110,6 +110,8 @@ namespace _Scripts.Extension
 
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.C))
             {
+                Manager.Instance.levelWinList.Clear();
+                Manager.Instance.levelLoseList.Clear();
                 PlayerPrefs.DeleteAll();
                 PlayerPrefs.Save();
             }

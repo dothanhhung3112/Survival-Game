@@ -5,11 +5,11 @@ using UnityEngine;
 public class PiggyBankWin : MonoBehaviour
 {
     public static PiggyBankWin Instance;
+    [SerializeField] CinemachineBrain brain;
     [SerializeField] Transform moneyParent;
     [SerializeField] GameObject moneyPrefab;
     [SerializeField] GameObject camPiggy;
     int moneyAmount;
-    CinemachineBrain brain;
 
     private void Awake()
     {
@@ -17,7 +17,6 @@ public class PiggyBankWin : MonoBehaviour
         {
             Instance = this;
         }
-        brain = FindAnyObjectByType<CinemachineBrain>();
     }
 
     private void Start()
@@ -30,6 +29,11 @@ public class PiggyBankWin : MonoBehaviour
         brain.m_DefaultBlend.m_Style = CinemachineBlendDefinition.Style.Cut;
         camPiggy.SetActive(true);
         StartCoroutine(SpawnMoney(20));
+    }
+
+    public void ResetPiggy()
+    {
+        camPiggy.SetActive(false);
     }
 
     IEnumerator SpawnMoney(int amount)

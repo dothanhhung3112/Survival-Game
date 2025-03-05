@@ -19,7 +19,7 @@ public class Ddakji : MonoBehaviour
     [SerializeField] RectTransform forceZone;
     [SerializeField] RectTransform pointCheck;
     [SerializeField] Camera camUI;
-    bool isAimRight, isTrueForce, canAim, canForce, canCountTime;
+    public bool isAimRight, isTrueForce, canAim, canForce, canCountTime;
     public bool isWin = false;
     Tween targetTween,zoneTween,sliderTween;
 
@@ -88,7 +88,7 @@ public class Ddakji : MonoBehaviour
             sliderTween.Kill();
             zoneTween.Kill();
             forceSlider.value = 0;
-            forceZone.anchoredPosition = new Vector2(150,0);
+            forceZone.anchoredPosition = new Vector2(0,137);
             forceSlider.gameObject.SetActive(false);
         }
     }
@@ -101,13 +101,13 @@ public class Ddakji : MonoBehaviour
         {
             isTrueForce = true;
             paperGreenRB.isKinematic = false;
-            paperGreenRB.AddForce(Vector3.down * 2, ForceMode.Impulse);
+            paperGreenRB.AddForce(Vector3.down * 4, ForceMode.Impulse);
         }
         else
         {
             isTrueForce = false;
             paperGreenRB.isKinematic = false;
-            paperGreenRB.AddForce(Vector3.down, ForceMode.Impulse);
+            paperGreenRB.AddForce(Vector3.down * 2, ForceMode.Impulse);
         }
     }
 
@@ -130,12 +130,12 @@ public class Ddakji : MonoBehaviour
     {
         if (isTrueForce && isAimRight)
         {
-            paperRedRB.AddForceAtPosition(Vector3.up * 6f, point.transform.position, ForceMode.Impulse);
+            paperRedRB.AddForceAtPosition(Vector3.up * 4f, point.transform.position, ForceMode.Impulse);
             Win();
         }
         else
         {
-            paperRedRB.AddForceAtPosition(Vector3.up * 2f, point.transform.position, ForceMode.Impulse);
+            paperRedRB.AddForceAtPosition(Vector3.up, point.transform.position, ForceMode.Impulse);
         }
     }
 

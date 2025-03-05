@@ -98,6 +98,8 @@ namespace ACEPlay.CrossPromotion
         public string iconConfigStr;
         public string videoConfigStr;
         public string bannerConfigStr;
+        public string AndroidAppPackage;
+
 
         #region Icon
         /// <summary>

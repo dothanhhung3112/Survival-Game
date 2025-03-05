@@ -142,6 +142,7 @@ public class SquidGamePlayer : MonoBehaviour
         transform.DOMove(new Vector3(endPos.position.x, transform.position.y, endPos.position.z), 1.5f).SetEase(Ease.Linear)
         .OnComplete(delegate
         {
+            animator.SetFloat("Speed", 0);
             animator.speed = 1f;
             animator.Play("Idle");
             transform.DOLookAt(new Vector3(enemy.transform.position.x, transform.position.y, enemy.transform.position.z),0.5f);

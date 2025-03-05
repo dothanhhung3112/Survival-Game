@@ -8,6 +8,7 @@ namespace Hung.Gameplay.Dalgona
     {
         public static DalgonaController Instance;
         public bool active;
+        public ParticleSystem effectDalgona;
         public bool canCountTime = false;
         public DalgonaCam dalgonaCam;
         public LayerMask box_layer;

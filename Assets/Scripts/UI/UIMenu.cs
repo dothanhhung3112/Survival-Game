@@ -1,6 +1,8 @@
 using ACEPlay.Bridge;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Hung.UI
 {
@@ -8,7 +10,20 @@ namespace Hung.UI
     {
         [SerializeField] GameObject menuPanel;
         [SerializeField] TextMeshProUGUI textSeason;
-        [SerializeField] Point[] points;
+        [SerializeField] Point prefab;
+        [SerializeField] RectTransform progressBar;
+        List<Point> points = new List<Point>();
+
+        private void Awake()
+        {
+            Transform parent = menuPanel.transform.GetChild(0).GetChild(0);
+            int minigameSum = SceneManager.sceneCountInBuildSettings - 1;
+            for(int i = 0;i < SceneManager.sceneCountInBuildSettings - 1; i++)
+            {
+                points.Add(Instantiate(prefab, parent));
+            }
+            progressBar.sizeDelta = new Vector2(100 * minigameSum,progressBar.sizeDelta.y);
+        }
 
         public void DisplayPanelMenu(bool enable)
         {
@@ -30,7 +45,7 @@ namespace Hung.UI
 
         void SetPointsData()
         {
-            for (int i = 0; i < points.Length; i++)
+            for (int i = 0; i < points.Count; i++)
             {
                 if (Manager.Instance.levelLoseList.Contains(i + 1))
                 {

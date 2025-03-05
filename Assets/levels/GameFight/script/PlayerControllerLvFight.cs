@@ -28,7 +28,7 @@ namespace Hung.Gameplay.GameFight
 
         private void Update()
         {
-            if (!GameFightController.Instance.canCountTime) return;
+            if (!GameFightController.Instance.canCountTime || GameFightController.Instance.isWin || GameFightController.Instance.isLose) return;
             if (isWinning)
             {
                 blendWining += Time.deltaTime * 3f;

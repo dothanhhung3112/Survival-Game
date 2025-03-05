@@ -114,6 +114,7 @@ namespace Hung.Gameplay.Marble
         IEnumerator Win()
         {
             isWin = true;
+            UIMarbleController.Instance.UIGamePlay.DisplayPanelGameplay(false);
             yield return new WaitForSeconds(2f);
             camWin.SetActive(true);
             yield return new WaitForSeconds(1f);
@@ -121,17 +122,20 @@ namespace Hung.Gameplay.Marble
             effectWin.Play();
             playerAnimator.Play("Win");
             yield return new WaitForSeconds(5f);
+            UIMarbleController.Instance.UIWin.DisplayPanelWin(true);
         }
 
         IEnumerator Lose()
         {
             isLose = true;
+            UIMarbleController.Instance.UIGamePlay.DisplayPanelGameplay(false);
             yield return new WaitForSeconds(2f);
             camLose.SetActive(true);
             yield return new WaitForSeconds(2f);
-            playerAnimator.Play("Die1");
+            playerAnimator.Play("die1");
             ObjectPooler.instance.SetObject("bloodEffect", playerAnimator.transform.position);
-            yield return new WaitForSeconds(6f);
+            yield return new WaitForSeconds(5f);
+            UIMarbleController.Instance.UILose.DisplayPanelLose(true);
         }
     }
 }

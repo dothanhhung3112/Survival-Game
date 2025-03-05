@@ -125,8 +125,6 @@ MonoBehaviour:
   moneyParent: {fileID: 8532554858934474671}
   moneyPrefab: {fileID: 2765461793846336725, guid: 83a8aab5009cab2489aa96d67d8dcd47, type: 3}
   camPiggy: {fileID: 546292509974099477}
-  moneyAmount: 0
-  brain: {fileID: 0}
 --- !u!1 &3188665478465642688
 GameObject:
   m_ObjectHideFlags: 0
@@ -264,6 +262,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4535138019554286158}
   - component: {fileID: 2840081131372576580}
+  - component: {fileID: 1395835741440369253}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -301,6 +300,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelLoseList: 
   levelWinList: 
+--- !u!114 &1395835741440369253
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6105375320922713031}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df5633e6c9955964faa126795865f561, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UI: {fileID: 0}
+  isAllowKeyCode: 0
+  parentDifLevel: {fileID: 0}
 --- !u!1 &6976150464161086259
 GameObject:
   m_ObjectHideFlags: 0
