@@ -62,6 +62,7 @@ namespace Hung.Gameplay.GameFight
             isDie = true;
             navMeshAgent.isStopped = true;
             animator.Play("die1");
+            SoundManager.Instance.PlaySoundMaleHited();
             GameObject gm = ObjectPooler.instance.SetObject("bloodEffect", transform.position);
             DOVirtual.DelayedCall(4f, delegate
             {

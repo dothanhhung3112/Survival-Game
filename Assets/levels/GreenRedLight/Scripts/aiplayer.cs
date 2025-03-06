@@ -150,9 +150,10 @@ namespace Hung.Gameplay.GreenRedLight {
                 }
                 GameObject gm = ObjectPooler.instance.SetObject("bloodEffect", transform.position);
                 gm.transform.position = transform.position;
-                int bb = Random.Range(1, 5);
+                int bb = Random.Range(2, 5);
                 GetComponent<HighlightPlus.HighlightEffect>().highlighted = false;
                 animator.Play("die" + bb.ToString());
+                transform.position += new Vector3(0, 0.06f, 0);
                 animator.speed = 1;
             }
         }

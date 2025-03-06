@@ -62,9 +62,11 @@ public class EnemyPrisionEscape : MonoBehaviour
     {
         agent.isStopped = true;
         animator.SetTrigger("Hit");
+        SoundManager.Instance.PlaySoundPunch();
         DOVirtual.DelayedCall(0.4f, delegate
         {
             animator.Play("die1");
+            SoundManager.Instance.PlaySoundMaleHited();
             SetColorGray(true);
             ObjectPooler.instance.SetObject("bloodEffect", transform.position + new Vector3(0, 0.5f, 0));
             radar.gameObject.SetActive(false);
@@ -89,6 +91,7 @@ public class EnemyPrisionEscape : MonoBehaviour
         {
             isDie = true;
             radar.gameObject.SetActive(false);
+            SoundManager.Instance.PlaySoundMaleHited();
             ObjectPooler.instance.SetObject("bloodEffect", transform.position + new Vector3(0, 0.5f, 0));
             animator.Play("die1");
             SetColorGray(true);

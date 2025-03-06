@@ -61,6 +61,8 @@ public class SquidGameController : MonoBehaviour
     {
         UISquidGameController.Instance.UIGamePlay.DisplayPanelGameplay(false);
         player.Die();
+        yield return new WaitForSeconds(0.5f);
+        enemy.Cheer();
         SoundManager.Instance.PlaySoundLose();
         yield return new WaitForSeconds(5f);
         UISquidGameController.Instance.UILose.DisplayPanelLose(true);

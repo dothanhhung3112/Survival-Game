@@ -13,6 +13,7 @@ namespace Hung.Gameplay.Dalgona
         public DalgonaCam dalgonaCam;
         public LayerMask box_layer;
         public Dalgona dalgonaChosen;
+        public BoxDalgona boxDalgona;
         public float total_time, max_time, timer;
         private void Awake()
         {
@@ -65,7 +66,7 @@ namespace Hung.Gameplay.Dalgona
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, box_layer))
             {
                 active = false;
-                BoxDalgona boxDalgona = hit.collider.GetComponent<BoxDalgona>();
+                boxDalgona = hit.collider.GetComponent<BoxDalgona>();
                 boxDalgona.hide_other_boxes();
                 boxDalgona.hide_msg_choose_box();
                 dalgonaChosen = boxDalgona.get_active_dalgona();

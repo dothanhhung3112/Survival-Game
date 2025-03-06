@@ -6,6 +6,7 @@ using System.Linq;
 using Unity.VisualScripting;
 using Hung.UI;
 using UnityEngine.AI;
+using DG.Tweening;
 
 namespace Hung.Gameplay.GreenRedLight {
 
@@ -75,10 +76,8 @@ namespace Hung.Gameplay.GreenRedLight {
 
                     animator.Play("runPose");
 					SetRandomPoseWhileRunning(false);
-                    scaledMovement = new Vector3(joystick.HorizintalAxis.Value, 0, joystick.VerticalAxis.Value) * moveSpeed * Time.deltaTime;
-                    transform.LookAt(transform.position + scaledMovement);
-                    transform.Translate(scaledMovement,Space.World);
-					animator.speed = 1;
+					Move();
+                    animator.speed = 1;
 				}
 				else
 				{
@@ -137,12 +136,10 @@ namespace Hung.Gameplay.GreenRedLight {
 				SoundManager.Instance.PlaySoundWalk();
 				elapsedTime = 0;
 			}
-
-			Vector3 movement = new Vector3(joystick.HorizintalAxis.Value, 0, joystick.VerticalAxis.Value);
-			movement *= moveSpeed * Time.deltaTime;
-
-			thisRigidbody.velocity = movement;
-		}
+            scaledMovement = new Vector3(joystick.HorizintalAxis.Value, 0, joystick.VerticalAxis.Value) * moveSpeed * Time.deltaTime;
+            transform.LookAt(transform.position + scaledMovement);
+            transform.Translate(scaledMovement, Space.World);
+        }
 
 		public void PlayerDie(Vector3 direction)
 		{
@@ -168,8 +165,11 @@ namespace Hung.Gameplay.GreenRedLight {
 		{
 			if (collision.gameObject.tag == "win")
 			{
-				win = true;
-				StartCoroutine(WinPlayer());
+				DOVirtual.DelayedCall(1f, delegate
+				{
+					win = true;
+					StartCoroutine(WinPlayer());
+				});
 			}
 		}
 
@@ -179,7 +179,6 @@ namespace Hung.Gameplay.GreenRedLight {
 			UIGreenRedLightController.Instance.canCountTime = false;
 			transform.eulerAngles = new Vector3(0, 180, 0);
 			//FindObjectOfType<UiManager>().wineffet.SetActive(true);
-			
 			GetComponent<Animator>().Play("Win");
 			GetComponent<Animator>().speed = 1;
 			SoundManager.Instance.PlaySoundWin();

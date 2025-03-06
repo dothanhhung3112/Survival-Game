@@ -55,13 +55,14 @@ namespace Hung.Gameplay.Marble
                 float angleY = Mathf.Atan2(dragVector.x, dragVector.y) * Mathf.Rad2Deg;
                 Vector3 throwDirection = Quaternion.Euler(-30, Mathf.Clamp(angleY, -30, 30), 0) * Vector3.forward;
                 curMarble.Shoot(throwDirection * forceAmount);
+                SoundManager.Instance.PlaySoundMarbleShoot();
                 StartCoroutine(SwitchEnemyTurn());
             }
-            CheckEndGame();
         }
 
         public void CheckEndGame()
         {
+            if (isWin || isLose) return;
             if (enemyMarble == 0 && playerMarble == 0)
             {
                 if (playerMarbleHoled > enemyMarbleHoled)
@@ -115,6 +116,7 @@ namespace Hung.Gameplay.Marble
         {
             isWin = true;
             UIMarbleController.Instance.UIGamePlay.DisplayPanelGameplay(false);
+            SoundManager.Instance.PlaySoundWin();
             yield return new WaitForSeconds(2f);
             camWin.SetActive(true);
             yield return new WaitForSeconds(1f);
@@ -129,11 +131,12 @@ namespace Hung.Gameplay.Marble
         {
             isLose = true;
             UIMarbleController.Instance.UIGamePlay.DisplayPanelGameplay(false);
+            SoundManager.Instance.PlaySoundLose();
             yield return new WaitForSeconds(2f);
             camLose.SetActive(true);
             yield return new WaitForSeconds(2f);
             playerAnimator.Play("die1");
-            ObjectPooler.instance.SetObject("bloodEffect", playerAnimator.transform.position);
+            ObjectPooler.instance.SetObject("bloodEffect", transform.position + new Vector3(0, 0.5f, 0));
             yield return new WaitForSeconds(5f);
             UIMarbleController.Instance.UILose.DisplayPanelLose(true);
         }

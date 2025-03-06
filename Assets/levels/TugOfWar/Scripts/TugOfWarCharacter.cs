@@ -19,6 +19,11 @@ namespace Hung.Gameplay.TugOfWar
 
         private void Update()
         {
+            if (TugOfWarController.Instance.runnedGame)
+            {
+                anim.Play("PullToFall");
+            }
+
             if (canFall)
             {
                 blend += Time.deltaTime * 2f;

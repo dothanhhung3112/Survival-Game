@@ -19,6 +19,7 @@ public class SquidEnemy : MonoBehaviour
 
     public void kicking()
     {
+        SoundManager.Instance.PlaySoundPunch();
         player.DecreaseHealth(0.1f);
     }
 
@@ -37,7 +38,7 @@ public class SquidEnemy : MonoBehaviour
     {
         enemyHealh -= damage;
         powerBar.fillAmount = enemyHealh;
-        ObjectPooler.instance.SetObject("bloodEffect", transform.position + new Vector3(0, 0.5f, 0));
+        ObjectPooler.instance.SetObject("bloodEffect", transform.position + new Vector3(0, 0.8f, 0));
         if (enemyHealh <= 0)
         {
             SquidGameController.Instance.Win();

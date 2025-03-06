@@ -1,4 +1,5 @@
 using DG.Tweening;
+using Hung;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -43,6 +44,7 @@ public class PrisionEscapeController : MonoBehaviour
     public void StartGame()
     {
         gameStarted = true;
+        SoundManager.Instance.PlayBGMusicPrisionEscape();
     }
 
     public BotPrisionEscape GetRandomeBot()
@@ -55,7 +57,9 @@ public class PrisionEscapeController : MonoBehaviour
     {
         if (isWin || isLose) return;
         isWin = true;
+        SoundManager.Instance.StopMusic();
         camWin.SetActive(true);
+        SoundManager.Instance.PlaySoundWin();
         StartCoroutine(EndCard());
     }
 
@@ -63,6 +67,8 @@ public class PrisionEscapeController : MonoBehaviour
     {
         if (isWin || isLose) return;
         isLose = true;
+        SoundManager.Instance.StopMusic();
+        SoundManager.Instance.PlaySoundLose();
         StartCoroutine(Losing());
     }
 
@@ -90,6 +96,7 @@ public class PrisionEscapeController : MonoBehaviour
         leftDoor.DOPlay();
         rightDoor.DOPlay();
         yield return new WaitForSeconds(1f);
+        SoundManager.Instance.PlaySoundCar();
         carPath.DOPlay();
         yield return new WaitForSeconds(3f);
         UIPrisionEscapeController.Instance.UIWin.DisplayPanelWin(true);

@@ -193,7 +193,17 @@ MonoBehaviour:
   tugClick: {fileID: 8300000, guid: 5bbdc9cd276ce024b832e4a689800712, type: 3}
   glassBreak: {fileID: 8300000, guid: 32eca3c7ac6fdd545907475d4286681f, type: 3}
   jumpSound: {fileID: 8300000, guid: 29a0dd7039581c846bf446a8bb4612c7, type: 3}
-  slash: {fileID: 0}
+  manHitGround: {fileID: 0}
+  slash: {fileID: 8300000, guid: ba6909164b111184981f254b5ee25697, type: 3}
+  flipCard: {fileID: 8300000, guid: bdb7c32824851004d8a2f09ed1ec5fc8, type: 3}
+  throwStone: {fileID: 0}
+  paperHit: {fileID: 0}
+  carSound: {fileID: 0}
+  punchSound: {fileID: 8300000, guid: ba6909164b111184981f254b5ee25697, type: 3}
+  laserSound: {fileID: 0}
+  meatSound: {fileID: 8300000, guid: 54d14118255a8bf42bd98589e378946f, type: 3}
+  marbleSound: {fileID: 8300000, guid: 37ee8e1786defe349bafba6713fe1e3d, type: 3}
+  marbleHitGround: {fileID: 0}
 --- !u!1 &6767099316801543037
 GameObject:
   m_ObjectHideFlags: 0

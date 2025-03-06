@@ -27,13 +27,15 @@ namespace Hung.Gameplay.Marble
             if (other.CompareTag("Finish"))
             {
                 MarbleGameController.Instance.IncreaseMarbleHoled(isEnemyMarble);
-                MarbleGameController.Instance.CheckEndGame();
+                
             }
         }
 
         private void OnCollisionEnter(Collision collision)
         {
             trail.enabled = false;
+            SoundManager.Instance.PlaySoundMarbleHitGround();
+            MarbleGameController.Instance.CheckEndGame();
         }
     }
 }

@@ -31,7 +31,7 @@ namespace Hung.UI
             {
                 if(BridgeController.instance.PlayCount < Manager.Instance.Level)
                 {
-                    BridgeController.instance.PlayCount = Manager.Instance.Level;
+                    BridgeController.instance.PlayCount = Manager.Instance.Level;  
                 }
                 menuPanel.SetActive(true);
                 textSeason.text = $"SEASON {Manager.Instance.Season}";

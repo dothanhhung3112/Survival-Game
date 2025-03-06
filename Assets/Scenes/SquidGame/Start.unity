@@ -285,6 +285,38 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4216437553480503021, guid: 1c828900aed800845907b7d95a1fd4b7, type: 3}
+      propertyPath: slash
+      value: 
+      objectReference: {fileID: 8300000, guid: 6259e9c01d8496646a4563e52c5c8442, type: 3}
+    - target: {fileID: 4216437553480503021, guid: 1c828900aed800845907b7d95a1fd4b7, type: 3}
+      propertyPath: musicBG
+      value: 
+      objectReference: {fileID: 8300000, guid: fcf307811ba498342b55bcc2947bedea, type: 3}
+    - target: {fileID: 4216437553480503021, guid: 1c828900aed800845907b7d95a1fd4b7, type: 3}
+      propertyPath: carSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 6d535e9650bcdf3438d1c599ab23b335, type: 3}
+    - target: {fileID: 4216437553480503021, guid: 1c828900aed800845907b7d95a1fd4b7, type: 3}
+      propertyPath: paperHit
+      value: 
+      objectReference: {fileID: 8300000, guid: 4b58e1c76ac6c78488f38d3e95141be8, type: 3}
+    - target: {fileID: 4216437553480503021, guid: 1c828900aed800845907b7d95a1fd4b7, type: 3}
+      propertyPath: alertSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 85df301d6b6bdba48a20b10bcdfc2083, type: 3}
+    - target: {fileID: 4216437553480503021, guid: 1c828900aed800845907b7d95a1fd4b7, type: 3}
+      propertyPath: laserSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 6f628b5a4bdd1ff4496733f58b5bf9f6, type: 3}
+    - target: {fileID: 4216437553480503021, guid: 1c828900aed800845907b7d95a1fd4b7, type: 3}
+      propertyPath: throwStone
+      value: 
+      objectReference: {fileID: 8300000, guid: 58d0248875c239e4b8a262fdfe9e48e0, type: 3}
+    - target: {fileID: 4216437553480503021, guid: 1c828900aed800845907b7d95a1fd4b7, type: 3}
+      propertyPath: marbleHitGround
+      value: 
+      objectReference: {fileID: 8300000, guid: 58d0248875c239e4b8a262fdfe9e48e0, type: 3}
     - target: {fileID: 5747758059340947849, guid: 1c828900aed800845907b7d95a1fd4b7, type: 3}
       propertyPath: m_Name
       value: SoundManger

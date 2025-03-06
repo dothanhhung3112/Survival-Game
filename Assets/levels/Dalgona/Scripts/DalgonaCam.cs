@@ -5,9 +5,9 @@ namespace Hung.Gameplay.Dalgona
 {
     public class DalgonaCam : MonoBehaviour
     {
-        public Transform win_cam_pos, lose_cam_pos;
         Sequence sequence;
         public Ease ease;
+        public GameObject camLose, camWin,camTable;
         public Animator anim_player, anim_enemy;
         float blend = 0;
         int blendHash;
@@ -17,6 +17,7 @@ namespace Hung.Gameplay.Dalgona
         private void Start()
         {
             blendHash = Animator.StringToHash("Blend");
+
         }
 
         private void Update()
@@ -39,25 +40,22 @@ namespace Hung.Gameplay.Dalgona
 
         public void win_move()
         {
-            Quaternion qt = win_cam_pos.transform.rotation;
-
-            Vector3 vt = qt.eulerAngles;
-
-            sequence = DOTween.Sequence();
-            sequence.Append(transform.DOMove(win_cam_pos.position, 1f).SetEase(ease))
-                        .Join(transform.DORotate(vt, .5f).SetEase(ease))
-                        .OnComplete(() => animate_player());
+            camWin.SetActive(true);
+            DOVirtual.DelayedCall(2f, delegate
+            {
+                DalgonaController.Instance.boxDalgona.camBox.SetActive(false);
+                animate_player();
+            });
             anim_enemy.gameObject.SetActive(false);
         }
 
         public void lose_move()
         {
-            Quaternion qt = lose_cam_pos.transform.rotation;
-            Vector3 vt = qt.eulerAngles;
-            sequence = DOTween.Sequence();
-            sequence.Append(transform.DOMove(lose_cam_pos.position, 1f).SetEase(ease))
-                    .Join(transform.DORotate(vt, .5f).SetEase(ease))
-                    .OnComplete(() => animate_enemy());
+            camLose.SetActive(true);
+            DOVirtual.DelayedCall(2f, delegate
+            {
+                animate_enemy();
+            });
         }
 
         public void animate_enemy()
@@ -69,6 +67,7 @@ namespace Hung.Gameplay.Dalgona
             {
                 anim_player.Play("Die");
                 GameObject blood = ObjectPooler.instance.SetObject("bloodEffect", anim_player.transform.position + new Vector3(0, 55, 0));
+                anim_player.transform.localPosition += new Vector3(0, 8, 0);
                 blood.transform.localScale *= 50f;
                 SoundManager.Instance.PlaySoundMaleHited();
             });

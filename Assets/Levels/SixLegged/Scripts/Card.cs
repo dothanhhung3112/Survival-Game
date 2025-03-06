@@ -1,4 +1,5 @@
 using DG.Tweening;
+using Hung;
 using UnityEngine;
 
 public class Card : MonoBehaviour
@@ -17,6 +18,7 @@ public class Card : MonoBehaviour
         {
             isFlipped = true;
             transform.DOLocalRotate(new Vector3(0, 0, 0), 0.5f);
+            SoundManager.Instance.PlaySoundFlipCard();
             MemoryCard.Instance.CardFlip(this);
         }
     }

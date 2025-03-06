@@ -1,3 +1,4 @@
+using Hung;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -100,6 +101,8 @@ public class VisionCone : MonoBehaviour
                 {
                     if (hit.collider.CompareTag("Bot") && !isContainTarget)
                     {
+                        SetColor(true);
+                        SoundManager.Instance.PlaySoundAlert();
                         BotPrisionEscape bot = hit.transform.GetComponent<BotPrisionEscape>();
                         enemy.SetTarget(bot.transform);
                         bot.SetTarget(enemy.transform);
@@ -107,6 +110,8 @@ public class VisionCone : MonoBehaviour
                     }
                     else if (hit.collider.CompareTag("Player") && !isContainTarget)
                     {
+                        SetColor(true);
+                        SoundManager.Instance.PlaySoundAlert();
                         if (PrisionEscapeController.instance.bots.Count > 0)
                         {
                             BotPrisionEscape bot = PrisionEscapeController.instance.GetRandomeBot();

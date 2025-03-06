@@ -1,4 +1,5 @@
 using DG.Tweening;
+using UnityEditor;
 using UnityEngine;
 
 namespace Hung
@@ -35,9 +36,29 @@ namespace Hung
         [Header("GlassStepping")]
         [SerializeField] AudioClip glassBreak;
         [SerializeField] AudioClip jumpSound;
+        [SerializeField] AudioClip manHitGround;
 
         [Header("GameFight")]
         [SerializeField] AudioClip slash;
+
+        [Header("SixLegged")]
+        [SerializeField] AudioClip flipCard;
+        [SerializeField] AudioClip throwStone;
+        [SerializeField] AudioClip paperHit;
+
+        [Header("PrisionEscape")]
+        [SerializeField] AudioClip musicBG;
+        [SerializeField] AudioClip alertSound;
+        [SerializeField] AudioClip carSound;
+        [SerializeField] AudioClip punchSound;
+        [SerializeField] AudioClip laserSound;
+
+        [Header("SquidGame")]
+        [SerializeField] AudioClip meatSound;
+
+        [Header("Marbles")]
+        [SerializeField] AudioClip marbleSound;
+        [SerializeField] AudioClip marbleHitGround;
 
         private void Awake()
         {
@@ -112,6 +133,10 @@ namespace Hung
             PlaySound(timeCountClip);
         }
 
+        public void StopMusic()
+        {
+            musicSource.Stop();
+        }
 
         #endregion
 
@@ -188,6 +213,73 @@ namespace Hung
         public void PlaySoundSlash()
         {
             PlaySound(slash);
+        }
+        #endregion
+
+        #region SixLegged
+        public void PlaySoundFlipCard()
+        {
+            PlaySound(flipCard);
+        }
+
+        public void PlaySoundThrowStone()
+        {
+            PlaySound(throwStone);
+        }
+
+        public void PlaySoundPaperHit()
+        {
+            PlaySound(paperHit);
+        }
+        #endregion
+
+        #region SquidGame
+        public void PlaySoundEatMeat()
+        {
+            PlaySound(meatSound);
+        }
+        #endregion
+
+        #region PrisionEscape
+        public void PlayBGMusicPrisionEscape()
+        {
+            if (musicBG != null)
+            {
+                musicSource.clip = musicBG;
+                musicSource.Play();
+            }
+        }
+
+        public void PlaySoundAlert()
+        {
+            PlaySound(alertSound);
+        }
+
+        public void PlaySoundCar()
+        {
+            PlaySound(carSound);
+        }
+
+        public void PlaySoundPunch()
+        {
+            PlaySound(punchSound);
+        }
+
+        public void PlaySoundElectricDoor()
+        {
+            PlaySound(laserSound);
+        }
+        #endregion
+
+        #region Marbles
+        public void PlaySoundMarbleShoot()
+        {
+            PlaySound(marbleSound);
+        }
+
+        public void PlaySoundMarbleHitGround()
+        {
+            PlaySound(marbleHitGround);
         }
         #endregion
     }

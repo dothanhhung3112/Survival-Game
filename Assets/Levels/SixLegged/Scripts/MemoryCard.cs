@@ -86,6 +86,7 @@ public class MemoryCard : MonoBehaviour
         if (pairMatched == 3)
         {
             isWin = true;
+            UISixLeggedController.Instance.UIGamePlay.DisplayPanelGameplay(false);
             DOVirtual.DelayedCall(0.5f, delegate
             {
                 table.DOLocalMoveX(5, 1.5f);

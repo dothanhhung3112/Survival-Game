@@ -85,6 +85,7 @@ public class BotPrisionEscape : MonoBehaviour
     {
         agent.isStopped = true;
         animator.SetTrigger("Hit");
+        SoundManager.Instance.PlaySoundPunch();
         DOVirtual.DelayedCall(0.4f, delegate
         {
             Die();
@@ -97,6 +98,7 @@ public class BotPrisionEscape : MonoBehaviour
         animator.Play("die1");
         ObjectPooler.instance.SetObject("bloodEffect", transform.position + new Vector3(0, 0.5f, 0));
         SetColorGray(true);
+        SoundManager.Instance.PlaySoundMaleHited();
         DOVirtual.DelayedCall(2f, delegate
         {
             gameObject.SetActive(false);

@@ -7,8 +7,8 @@ namespace Hung.Gameplay.Dalgona
     public class BoxDalgona : MonoBehaviour
     {
         public Dalgona[] list_control_dalgona;
-        public Transform cam_pos;
-        public Camera cam;
+        public GameObject camBox;
+        public DalgonaCam camMain;
         public Transform box_cover;
         public Transform cover_pos_to_move;
         public Dalgona dalgonaChosen;
@@ -20,6 +20,7 @@ namespace Hung.Gameplay.Dalgona
         void Start()
         {
             dalgonaChosen = list_control_dalgona[Random.Range(0, list_control_dalgona.Length)];
+            camMain = Camera.main.GetComponent<DalgonaCam>();
         }
 
         public void show_dagona()
@@ -47,13 +48,17 @@ namespace Hung.Gameplay.Dalgona
         public void move_cam_move_cover()
         {
             sequence = DOTween.Sequence();
-
-            sequence.Append(cam.transform.DOMove(cam_pos.position, 1f).SetEase(ease))
-                    .Append(box_cover.DOMove(cover_pos_to_move.position, .6f).SetEase(ease))
-                    .OnComplete(delegate
-                    {
-                        UIDalgonaController.Instance.UIMenu.DisplayPanelMenu(true);
-                    });
+            
+            camBox.SetActive(true);
+            camMain.camTable.SetActive(false);
+            DOVirtual.DelayedCall(2f, delegate
+            {
+                box_cover.DOMove(cover_pos_to_move.position, .6f).SetEase(ease)
+                   .OnComplete(delegate
+                   {
+                       UIDalgonaController.Instance.UIMenu.DisplayPanelMenu(true);
+                   });
+            });
         }
     }
 }

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 8fd7165508b17b14b96fca99e5cdb87e
+guid: 97b10f57fb2e0554a971105f87076afa
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -7,7 +7,7 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: squid_sprunki_player_tex
+      name: squid_sprunki_player
     second: {fileID: 2100000, guid: eede6bb39c6226a40aff12e90645eb46, type: 2}
   materials:
     materialImportMode: 2

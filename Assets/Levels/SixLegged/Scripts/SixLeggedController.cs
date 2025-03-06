@@ -16,7 +16,7 @@ public class SixLeggedController : MonoBehaviour
     [SerializeField] float accleration;
     DOTweenPath path;
     public bool isLose = false;
-    float speed;
+    float speed,elapsedTime;
     int speedToHash;
 
     public enum MiniGame
@@ -48,6 +48,12 @@ public class SixLeggedController : MonoBehaviour
         if (canMove)
         {
             path.DOPlay();
+            elapsedTime += Time.deltaTime;
+            if (elapsedTime > 0.4f)
+            {
+                SoundManager.Instance.PlaySoundWalk();
+                elapsedTime = 0;
+            }
             speed += Time.deltaTime * accleration;
             if (speed > 1) speed = 1;
             foreach (var item in animators)
@@ -73,18 +79,21 @@ public class SixLeggedController : MonoBehaviour
         {
             if (!MemoryCard.Instance.isWin)
             {
+                UISixLeggedController.Instance.UIGamePlay.DisplayPanelGameplay(true);
                 canMove = false;
                 MemoryCard.Instance.StartGame();
                 minigame = MiniGame.Memory;
             }
             else if (!flyingStone.isWin)
             {
+                UISixLeggedController.Instance.UIGamePlay.DisplayPanelGameplay(true);
                 canMove = false;
                 flyingStone.StartGame();
                 minigame = MiniGame.FlyingStone;
             }
             else if (!ddakji.isWin)
             {
+                UISixLeggedController.Instance.UIGamePlay.DisplayPanelGameplay(true);
                 canMove = false;
                 ddakji.StartGame();
                 minigame = MiniGame.DDakji;
@@ -105,9 +114,11 @@ public class SixLeggedController : MonoBehaviour
         {
             foreach (var item in animators)
             {
-                item.Play("Win");
+                int randomDance = Random.Range(1, 4);
+                item.Play("Dance" + randomDance);
             }
         });
+        SoundManager.Instance.PlaySoundWin();
         DOVirtual.DelayedCall(5f, delegate
         {
             UISixLeggedController.Instance.UIWin.DisplayPanelWin(true);
@@ -118,17 +129,22 @@ public class SixLeggedController : MonoBehaviour
     {
         isLose = true;
         camWinLose.SetActive(true);
+        SoundManager.Instance.PlaySoundLose();
         DOVirtual.DelayedCall(timeMoveCam, delegate
         {
             foreach (var item in animators)
             {
                 ObjectPooler.instance.SetObject("bloodEffect", item.transform.position + new Vector3(0, 0.5f, 0));
-                int randomDie = Random.Range(1, 4);
+                int randomDie = Random.Range(2, 4);
                 item.Play("die" + randomDie);
+                transform.position += new Vector3(0, 0.02f, 0);
             }
+            SoundManager.Instance.PlaySoundGunShooting();
+            SoundManager.Instance.PlaySoundMaleHited();
         });
         DOVirtual.DelayedCall(5f, delegate
         {
+            UISixLeggedController.Instance.UIGamePlay.DisplayPanelGameplay(false);
             UISixLeggedController.Instance.UILose.DisplayPanelLose(true);
         });
     }

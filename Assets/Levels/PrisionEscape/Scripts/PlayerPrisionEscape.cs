@@ -29,6 +29,7 @@ public class PlayerPrisionEscape : MonoBehaviour
         lookAt = gameObject;
     }
 
+    float elapsedTime;
     private void Update()
     {
         if (PrisionEscapeController.instance.isWin || !PrisionEscapeController.instance.gameStarted || PrisionEscapeController.instance.isLose) return;
@@ -38,6 +39,16 @@ public class PlayerPrisionEscape : MonoBehaviour
         agent.Move(scaledMovement);
         transform.LookAt(lookAt.transform.position + scaledMovement);
         animator.SetFloat(speedToHash, GetSpeed());
+
+        if (scaledMovement.magnitude > 0)
+        {
+            elapsedTime += Time.deltaTime;
+            if (elapsedTime > 0.4f)
+            {
+                SoundManager.Instance.PlaySoundWalk();
+                elapsedTime = 0;
+            }
+        }
 
         if (target != null && !isDie)
         {
@@ -76,6 +87,7 @@ public class PlayerPrisionEscape : MonoBehaviour
     {
         agent.isStopped = true;
         animator.SetTrigger("Hit");
+        SoundManager.Instance.PlaySoundPunch();
         DOVirtual.DelayedCall(0.4f, delegate
         {
             PrisionEscapeController.instance.Lose();
@@ -102,6 +114,7 @@ public class PlayerPrisionEscape : MonoBehaviour
     public void Die()
     {
         animator.Play("die1");
+        SoundManager.Instance.PlaySoundMaleHited();
         ObjectPooler.instance.SetObject("bloodEffect", transform.position + new Vector3(0, 0.5f, 0));
     }
 

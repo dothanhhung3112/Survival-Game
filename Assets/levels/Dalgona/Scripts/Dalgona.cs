@@ -75,7 +75,6 @@ namespace Hung.Gameplay.Dalgona
 
             // check reached 
             check_reached_finish_part();
-
         }
 
         public void check_reached_finish_part()

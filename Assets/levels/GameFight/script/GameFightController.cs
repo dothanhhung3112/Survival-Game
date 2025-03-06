@@ -80,6 +80,7 @@ namespace Hung.Gameplay.GameFight
             effectWin.Play();
             player.Win();
             isWin = true;
+            SoundManager.Instance.PlaySoundWin();
             DOVirtual.DelayedCall(6f, delegate
             {
                 UIFightController.Instance.UIGamePlay.DisplayPanelGameplay(false);
@@ -89,9 +90,14 @@ namespace Hung.Gameplay.GameFight
 
         void Lose()
         {
+            player.Die();
             isLose = true;
-            UIFightController.Instance.UIGamePlay.DisplayPanelGameplay(false);
-            UIFightController.Instance.UILose.DisplayPanelLose(true);
+            SoundManager.Instance.PlaySoundLose();
+            DOVirtual.DelayedCall(4f, delegate
+            {
+                UIFightController.Instance.UIGamePlay.DisplayPanelGameplay(false);
+                UIFightController.Instance.UILose.DisplayPanelLose(true);
+            });
         }
 
         public void StartGame()

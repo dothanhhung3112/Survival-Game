@@ -62,12 +62,17 @@ public class Ddakji : MonoBehaviour
         {
             canAim = true;
             targetImage.gameObject.SetActive(true);
-            targetTween = targetImage.rectTransform.DOAnchorPosX(-410, 1f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InOutSine);
+            if (targetTween == null || !targetTween.IsActive())
+            {
+                targetTween = targetImage.rectTransform.DOAnchorPosX(-410, 1f)
+                    .SetLoops(-1, LoopType.Yoyo)
+                    .SetEase(Ease.InOutSine);
+            }
         }
         else
         {
             canAim = false;
-            targetTween.Kill();
+            targetTween.Kill(true);
             targetImage.rectTransform.anchoredPosition = new Vector2(410,0);
             targetImage.gameObject.SetActive(false);
         }
@@ -87,6 +92,8 @@ public class Ddakji : MonoBehaviour
             canForce = false;
             sliderTween.Kill();
             zoneTween.Kill();
+            zoneTween = null;
+            sliderTween = null;
             forceSlider.value = 0;
             forceZone.anchoredPosition = new Vector2(0,137);
             forceSlider.gameObject.SetActive(false);
@@ -121,7 +128,9 @@ public class Ddakji : MonoBehaviour
         yield return new WaitForSeconds(2f);
         if(isWin) yield break;
         paperRedRB.transform.position = paperRedPos.position;
+        paperRedRB.transform.rotation = Quaternion.identity;
         paperGreenRB.transform.position = paperGreenPos.position;
+        paperGreenRB.transform.rotation = Quaternion.identity;
         paperGreenRB.isKinematic = true;
         DisplayArrow(true);
     }
@@ -142,6 +151,7 @@ public class Ddakji : MonoBehaviour
     public void Win()
     {
         isWin = true;
+        UISixLeggedController.Instance.UIGamePlay.DisplayPanelGameplay(false);
         DOVirtual.DelayedCall(0.5f, delegate
         {
             camDdakji.SetActive(false);

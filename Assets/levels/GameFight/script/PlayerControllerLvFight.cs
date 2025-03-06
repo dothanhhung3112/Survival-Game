@@ -60,6 +60,7 @@ namespace Hung.Gameplay.GameFight
                     isHitting = true;
                     lookAt = other.gameObject;
                     animator.SetTrigger("Hit");
+                    SoundManager.Instance.PlaySoundSlash();
                     navMeshAgent.speed /= 2;
                     DOVirtual.DelayedCall(0.35f, delegate
                     {
@@ -75,6 +76,14 @@ namespace Hung.Gameplay.GameFight
             }
         }
 
+        public void Die()
+        {
+            SoundManager.Instance.PlaySoundGunShooting();
+            SoundManager.Instance.PlaySoundMaleHited();
+            animator.Play("die1");
+            ObjectPooler.instance.SetObject("bloodEffect", transform.position + new Vector3(0, 0.5f, 0));
+        }
+
         public void Win()
         {
             animator.SetFloat(speedToHash, 0);
@@ -84,7 +93,7 @@ namespace Hung.Gameplay.GameFight
                 knife.SetActive(false);
                 transform.DOLookAt(new Vector3(camPos.x, 0, camPos.z), 1f).OnComplete(delegate
                 {
-                    animator.SetTrigger("Win");
+                    animator.Play("Dance3");
                     isWinning = true;
                 });
             });

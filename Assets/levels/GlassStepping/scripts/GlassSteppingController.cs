@@ -183,13 +183,10 @@ namespace Hung.Gameplay.GlassStepping
             // run the game
             //game_run = true;
 
-
-
             // camera 
             cam_to_player_pos();
             // start steps 
             //get_next_step();
-
         }
 
         public void get_next_step()
@@ -206,7 +203,7 @@ namespace Hung.Gameplay.GlassStepping
             if (!cam_follow.is_active)
                 cam_follow.start_follow();
 
-            if (actual_step == 10)
+            if (actual_step == list_true_glasses.Count)
             {
                 active_finish = true;
                 finish_pos.SetActive(true);
@@ -433,6 +430,15 @@ namespace Hung.Gameplay.GlassStepping
             yield return new WaitForSeconds(4f);
             UIGlassSteppingController.Instance.UIGamePlay.DisplayPanelGameplay(false);
             UIGlassSteppingController.Instance.UILose.DisplayPanelLose(true);
+        }
+
+        private void OnCollisionEnter(Collision collision)
+        {
+            if (collision.transform.CompareTag("Obstacle"))
+            {
+                SoundManager.Instance.PlaySoundMaleHited();
+                anim.Play("idle_glass");
+            }
         }
     }
 }

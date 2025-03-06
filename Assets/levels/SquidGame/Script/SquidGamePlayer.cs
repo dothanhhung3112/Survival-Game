@@ -1,7 +1,6 @@
 ﻿using Cinemachine;
 using DG.Tweening;
 using Hung;
-using Hung.Gameplay.GreenRedLight;
 using System;
 using UnityEngine;
 using UnityEngine.UI;
@@ -39,12 +38,10 @@ public class SquidGamePlayer : MonoBehaviour
         if (Input.GetMouseButtonDown(0) && SquidGameController.Instance.canFight)
         {
             AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-
-            // Chỉ thực hiện đòn đánh nếu animation đã kết thúc
             if (stateInfo.IsName("CrossPunch0") && stateInfo.normalizedTime < 1.0f)
                 return;
-
             animator.Play("CrossPunch0");
+            SoundManager.Instance.PlaySoundPunch();
         }
 
         if (Input.GetMouseButtonDown(0))
@@ -61,16 +58,24 @@ public class SquidGamePlayer : MonoBehaviour
 
     public void StartMoving()
     {
-        animator.SetFloat("Speed", 1);
+        animator.SetFloat(speedToHash, 1);
         animator.speed = 1f;
     }
 
+    float elapsedTime;
     void FixedUpdate()
     {
         if (SquidGameController.Instance.isWin || SquidGameController.Instance.isLose) return;
         if (SquidGameController.Instance.gamerun && !SquidGameController.Instance.isWin && !stopMove)
         {
             rb.MovePosition(rb.position + new Vector3(0, 0, speedForward * Time.deltaTime));
+
+                elapsedTime += Time.deltaTime;
+                if (elapsedTime > 0.5f)
+                {
+                    SoundManager.Instance.PlaySoundWalk();
+                    elapsedTime = 0;
+                }
         }
 
         if (Input.GetMouseButton(0) && !stopMove && isDragging)
@@ -86,11 +91,6 @@ public class SquidGamePlayer : MonoBehaviour
         }
     }
 
-    public void kicking()
-    {
-        
-    }
-
     public void DecreaseEnemyHealth()
     {
         enemy.DecreaseHealth(0.3f);
@@ -101,7 +101,7 @@ public class SquidGamePlayer : MonoBehaviour
         if (SquidGameController.Instance.isWin || SquidGameController.Instance.isLose) return;
         if (collision.gameObject.tag == "food")
         {
-            //SoundManager.instance.Play("eatmeat");
+            SoundManager.Instance.PlaySoundEatMeat();
             Destroy(collision.gameObject);
             IncreaseHealth();
         }
@@ -121,7 +121,7 @@ public class SquidGamePlayer : MonoBehaviour
                 direction.y = 0;
                 rb.AddForce(direction.normalized * 100, ForceMode.Impulse);
             }
-
+            SoundManager.Instance.PlaySoundMaleHited();
             DecreaseHealth(0.05f);
         }
     }
@@ -142,7 +142,7 @@ public class SquidGamePlayer : MonoBehaviour
         transform.DOMove(new Vector3(endPos.position.x, transform.position.y, endPos.position.z), 1.5f).SetEase(Ease.Linear)
         .OnComplete(delegate
         {
-            animator.SetFloat("Speed", 0);
+            animator.SetFloat(speedToHash, 0);
             animator.speed = 1f;
             animator.Play("Idle");
             transform.DOLookAt(new Vector3(enemy.transform.position.x, transform.position.y, enemy.transform.position.z),0.5f);
@@ -161,7 +161,7 @@ public class SquidGamePlayer : MonoBehaviour
     {
         playerHealth -= damage;
         powerbar.fillAmount = playerHealth;
-        ObjectPooler.instance.SetObject("bloodEffect", transform.position + new Vector3(0, 0.5f, 0));
+        ObjectPooler.instance.SetObject("bloodEffect", transform.position + new Vector3(0, 0.8f, 0));
         if (playerHealth <= 0)
         {
             SquidGameController.Instance.Lose();
@@ -170,7 +170,9 @@ public class SquidGamePlayer : MonoBehaviour
 
     public void Die()
     {
+        rb.isKinematic = true;
         animator.Play("Die");
+        transform.position += new Vector3(0, 0.15f, 0);
     }
 
     public void Cheer()

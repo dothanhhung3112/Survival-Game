@@ -32,7 +32,7 @@ namespace Hung.UI
                         PiggyBankWin.Instance.StartSpawnMoney();
                         winPanel.SetActive(true);
                     });
-                    BridgeController.instance.ShowInterstitial("lose", e);
+                    BridgeController.instance.ShowInterstitial("win", e);
                 }
             }
             else

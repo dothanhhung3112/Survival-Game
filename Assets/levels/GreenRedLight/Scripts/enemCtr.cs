@@ -54,7 +54,7 @@ namespace Hung.Gameplay.GreenRedLight
 
                     if (headDoll.eulerAngles.y > 181f || headDoll.eulerAngles.y == 0)
                     {
-                        headDoll.eulerAngles = new Vector3(0, headDoll.eulerAngles.y - 75 * i * Time.deltaTime * 5f, 0);
+                        headDoll.eulerAngles = new Vector3(0, headDoll.eulerAngles.y - 75 * i * Time.deltaTime , 0);
                     }
                     if (!animcor && !pc.die && !pc.win)
                     {
@@ -64,7 +64,7 @@ namespace Hung.Gameplay.GreenRedLight
 
                 if (headDoll.eulerAngles.y < 350f && startturn)
                 {
-                    headDoll.eulerAngles = new Vector3(0, headDoll.eulerAngles.y + 75 * i * Time.deltaTime * 5f, 0);
+                    headDoll.eulerAngles = new Vector3(0, headDoll.eulerAngles.y + 75 * i * Time.deltaTime, 0);
                 }
 
                 if (headDoll.eulerAngles.y >= 349f && startturn)

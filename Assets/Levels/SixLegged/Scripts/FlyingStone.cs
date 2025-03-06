@@ -95,6 +95,7 @@ public class FlyingStone : MonoBehaviour
         isWin = true;
         DisplayArrow(false);
         stone.gameObject.SetActive(false);
+        UISixLeggedController.Instance.UIGamePlay.DisplayPanelGameplay(false);
         DOVirtual.DelayedCall(0.5f, delegate
         {
             camFlyingStone.SetActive(false);

@@ -25,7 +25,6 @@ public class UISixLeggedController : MonoBehaviour
     public void StartButton()
     {
         UIMenu.DisplayPanelMenu(false);
-        UIGamePlay.DisplayPanelGameplay(true);
         SixLeggedController.Instance.canMove = true;
     }
 }
