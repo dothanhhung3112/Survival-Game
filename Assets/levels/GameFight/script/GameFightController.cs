@@ -16,9 +16,9 @@ namespace Hung.Gameplay.GameFight
         #endregion
 
         [SerializeField] PlayerControllerLvFight player;
-        [SerializeField] List<EnemyControllerLvFight> enemys;
         [SerializeField] ParticleSystem effectWin;
         [SerializeField] float time;
+        public List<EnemyControllerLvFight> enemys;
         public bool isWin = false;
         public bool isLose = false;
         public bool canCountTime = false;
