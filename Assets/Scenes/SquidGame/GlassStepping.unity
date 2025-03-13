@@ -63314,7 +63314,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 7b66194739910c045a51b1af73e70ede, type: 2}
   - {fileID: 2100000, guid: 313eaa0c4c18742428bc5e608eda8232, type: 2}
   - {fileID: 2100000, guid: db9b2ef1244a9254db84a3d4e5a539d2, type: 2}
-  tm: 0.25
+  tm: 0.5
   cam: {fileID: 963194227}
   actual_step: 0
   game_run: 1

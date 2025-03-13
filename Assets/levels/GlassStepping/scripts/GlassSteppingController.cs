@@ -167,17 +167,21 @@ namespace Hung.Gameplay.GlassStepping
 
             // show all answer and hide them again
             //show
-            for (int i = 0; i < list_true_glasses.Count; i++)
+            int hintCount = 0;
+            while (hintCount < 2)
             {
-                list_true_glasses[i].material = mats[2];
-
-            }
-            yield return new WaitForSeconds(1f);
-            //hide
-            for (int i = 0; i < list_true_glasses.Count; i++)
-            {
-                list_true_glasses[i].material = mats[0];
-
+                hintCount++;
+                for (int i = 0; i < list_true_glasses.Count; i++)
+                {
+                    list_true_glasses[i].material = mats[2];
+                }
+                yield return new WaitForSeconds(0.5f);
+                //hide
+                for (int i = 0; i < list_true_glasses.Count; i++)
+                {
+                    list_true_glasses[i].material = mats[0];
+                }
+                yield return new WaitForSeconds(0.5f);
             }
 
             // run the game
