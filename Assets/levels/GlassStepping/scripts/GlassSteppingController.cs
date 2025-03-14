@@ -50,6 +50,7 @@ namespace Hung.Gameplay.GlassStepping
             anim = GetComponent<Animator>();
             mypos = transform.position;
             StartCoroutine(manage_glasses(tm));
+            SoundManager.Instance.PlayBGMusic4();
             UIGlassSteppingController.Instance.UIGamePlay.SetTimeText(total_time);
         }
 
@@ -108,6 +109,8 @@ namespace Hung.Gameplay.GlassStepping
         IEnumerator show_lose_panel()
         {
             break_all_glasses_and_player_fall_timeOut();
+            SoundManager.Instance.StopMusic();
+            SoundManager.Instance.PlaySoundLose();
             yield return new WaitForSeconds(3.5f);
             UIGlassSteppingController.Instance.UIGamePlay.DisplayPanelGameplay(false);
             UIGlassSteppingController.Instance.UILose.DisplayPanelLose(true);
@@ -421,6 +424,7 @@ namespace Hung.Gameplay.GlassStepping
 
         IEnumerator win_panel_wait()
         {
+            SoundManager.Instance.StopMusic();
             SoundManager.Instance.PlaySoundWin();
             canCountTime = false;
             yield return new WaitForSeconds(4f);
@@ -430,6 +434,7 @@ namespace Hung.Gameplay.GlassStepping
 
         IEnumerator lose_panel_wait()
         {
+            SoundManager.Instance.StopMusic();
             SoundManager.Instance.PlaySoundLose();
             yield return new WaitForSeconds(4f);
             UIGlassSteppingController.Instance.UIGamePlay.DisplayPanelGameplay(false);
@@ -441,7 +446,7 @@ namespace Hung.Gameplay.GlassStepping
             if (collision.transform.CompareTag("Obstacle"))
             {
                 SoundManager.Instance.PlaySoundMaleHited();
-                anim.Play("idle_glass");
+                anim.Play("FlyingBackDeath");
             }
         }
     }

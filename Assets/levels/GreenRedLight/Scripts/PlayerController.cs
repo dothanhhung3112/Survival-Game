@@ -57,6 +57,7 @@ namespace Hung.Gameplay.GreenRedLight {
 
 		void Update()
 		{
+
 			//joystick.
 			if (Input.GetKeyDown(KeyCode.A))
 			{
@@ -156,18 +157,21 @@ namespace Hung.Gameplay.GreenRedLight {
 
 		IEnumerator dieplayer()
 		{
-			SoundManager.Instance.PlaySoundLose();
+            SoundManager.Instance.PlaySoundLose();
 			yield return new WaitForSeconds(3f);
 			UIGreenRedLightController.Instance.UILose.DisplayPanelLose(true);
 		}
 
 		private void OnCollisionEnter(Collision collision)
 		{
-			if (collision.gameObject.tag == "win")
+            if (win || die) return;
+            if (collision.gameObject.tag == "win")
 			{
-				DOVirtual.DelayedCall(1f, delegate
+                win = true;
+				transform.DOMoveZ(transform.position.z + 1f, 1f);
+                animator.SetFloat(veclocityHash, 0);
+                DOVirtual.DelayedCall(1f, delegate
 				{
-					win = true;
 					StartCoroutine(WinPlayer());
 				});
 			}
@@ -175,10 +179,8 @@ namespace Hung.Gameplay.GreenRedLight {
 
 		IEnumerator WinPlayer()
 		{
-			
-			UIGreenRedLightController.Instance.canCountTime = false;
+            UIGreenRedLightController.Instance.canCountTime = false;
 			transform.eulerAngles = new Vector3(0, 180, 0);
-			//FindObjectOfType<UiManager>().wineffet.SetActive(true);
 			GetComponent<Animator>().Play("Win");
 			GetComponent<Animator>().speed = 1;
 			SoundManager.Instance.PlaySoundWin();

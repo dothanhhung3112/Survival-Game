@@ -12,6 +12,9 @@ namespace _Scripts.Extension
         public static QC instance;
         public GameObject UI;
         public bool isAllowKeyCode = false;
+        GameObject uiObject;
+        int curLevel;
+        bool isenableUI = true;
 
         [SerializeField] Transform parentDifLevel;
 
@@ -114,6 +117,17 @@ namespace _Scripts.Extension
                 Manager.Instance.levelLoseList.Clear();
                 PlayerPrefs.DeleteAll();
                 PlayerPrefs.Save();
+            }
+
+            if (curLevel != SceneManager.GetActiveScene().buildIndex) {
+                curLevel = SceneManager.GetActiveScene().buildIndex;
+                uiObject = GameObject.Find("UI");
+            }
+            
+            if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.U))
+            {
+                isenableUI = !isenableUI;
+                uiObject.SetActive(isenableUI);
             }
 
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.W))

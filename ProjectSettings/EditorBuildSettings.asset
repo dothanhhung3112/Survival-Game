@@ -6,8 +6,8 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SquidGame/Start.unity
-    guid: 472e210e5061c284ca194741516c2ecf
+    path: Assets/Scenes/Loading.unity
+    guid: 7cabbc628810813419608de8b5c4df42
   - enabled: 1
     path: Assets/Scenes/SquidGame/GreenRedLight.unity
     guid: bb81a5fa6bbc47f4f8a23fd604128b62

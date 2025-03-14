@@ -25,6 +25,7 @@ namespace Hung.Gameplay.Dalgona
 
         private void Start()
         {
+            SoundManager.Instance.PlayBGMusic4();
             UIDalgonaController.Instance.UIGamePlay.SetTimeText(total_time);
         }
 
@@ -83,6 +84,7 @@ namespace Hung.Gameplay.Dalgona
         IEnumerator show_lose_panel()
         {
             DalgonaCam cam_script = FindObjectOfType<DalgonaCam>();
+            SoundManager.Instance.StopMusic();
             cam_script.lose_move();
             yield return new WaitForSeconds(3.5f);
             UIDalgonaController.Instance.UIGamePlay.DisplayPanelGameplay(false);

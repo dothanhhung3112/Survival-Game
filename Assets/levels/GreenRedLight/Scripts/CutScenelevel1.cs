@@ -3,6 +3,7 @@ using DG.Tweening;
 using UnityEngine;
 using Hung.Tools;
 using Hung.UI;
+using ACEPlay.Bridge;
 
 namespace Hung.Gameplay.GreenRedLight
 {
@@ -22,6 +23,11 @@ namespace Hung.Gameplay.GreenRedLight
         [SerializeField] ParticleSystem vfxShooting;
 
         [SerializeField] GameObject playerArrow;
+
+        private void Start()
+        {
+            BridgeController.instance.ShowBanner();
+        }
 
         public void CutSceneLose()
         {

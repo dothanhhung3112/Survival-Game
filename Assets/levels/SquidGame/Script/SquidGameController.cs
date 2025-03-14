@@ -20,6 +20,11 @@ public class SquidGameController : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        SoundManager.Instance.PlayBGMusic5();
+    }
+
     public void Win()
     {
         if (isWin || isLose) return;
@@ -48,6 +53,7 @@ public class SquidGameController : MonoBehaviour
         UISquidGameController.Instance.UIGamePlay.DisplayPanelGameplay(false);
         enemy.Die();
         effectWin.Play();
+        SoundManager.Instance.StopMusic();
         SoundManager.Instance.PlaySoundWin();
         player.transform.DOLookAt(new Vector3(camEnd.transform.position.x, 0, camEnd.transform.position.z), 0.8f).OnComplete(delegate
         {
@@ -63,6 +69,7 @@ public class SquidGameController : MonoBehaviour
         player.Die();
         yield return new WaitForSeconds(0.5f);
         enemy.Cheer();
+        SoundManager.Instance.StopMusic();
         SoundManager.Instance.PlaySoundLose();
         yield return new WaitForSeconds(5f);
         UISquidGameController.Instance.UILose.DisplayPanelLose(true);

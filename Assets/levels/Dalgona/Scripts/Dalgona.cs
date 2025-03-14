@@ -164,6 +164,7 @@ namespace Hung.Gameplay.Dalgona
                 dalgona_parts[actual_part].SetActive(false);
                 dalgona_break_parts[actual_part].SetActive(true);
             }
+            SoundManager.Instance.StopMusic();
             SoundManager.Instance.PlaySoundLose();
             yield return new WaitForSeconds(3f);
             UIDalgonaController.Instance.UILose.DisplayPanelLose(true);
@@ -175,6 +176,7 @@ namespace Hung.Gameplay.Dalgona
             UIDalgonaController.Instance.UIGamePlay.DisplayPanelGameplay(false);
             DalgonaCam cam_script = FindObjectOfType<DalgonaCam>();
             cam_script.win_move();
+            SoundManager.Instance.StopMusic();
             SoundManager.Instance.PlaySoundWin();
             yield return new WaitForSeconds(3f);
             UIDalgonaController.Instance.UIWin.DisplayPanelWin(true);

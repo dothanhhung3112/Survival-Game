@@ -1,13 +1,22 @@
-using DG.Tweening;
 using Hung.Gameplay.GameFight;
 using UnityEngine;
 
 public class DetectorNearest : MonoBehaviour
 {
     [SerializeField] Transform target;
+    bool isTurnOff;
 
     void Update()
     {
+        if (GameFightController.Instance.isWin || GameFightController.Instance.isLose)
+        {
+            if (isTurnOff)
+            {
+                gameObject.SetActive(false);
+            }
+        }
+
+            if (GameFightController.Instance.isWin || GameFightController.Instance.isLose) return;
         transform.LookAt(NearestTarget());
     }
 

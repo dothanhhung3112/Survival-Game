@@ -31,6 +31,7 @@ namespace Hung.Gameplay.Marble
         {
             SwitchPlayerTurn();
             isPlayerTurn = false;
+            SoundManager.Instance.PlayBGMusic6();
             UIMarbleController.Instance.UIGamePlay.UpdateTextEnemyMarble(0);
             UIMarbleController.Instance.UIGamePlay.UpdateTextPlayerMarble(0);
         }
@@ -116,6 +117,7 @@ namespace Hung.Gameplay.Marble
         {
             isWin = true;
             UIMarbleController.Instance.UIGamePlay.DisplayPanelGameplay(false);
+            SoundManager.Instance.StopMusic();
             SoundManager.Instance.PlaySoundWin();
             yield return new WaitForSeconds(2f);
             camWin.SetActive(true);
@@ -131,6 +133,7 @@ namespace Hung.Gameplay.Marble
         {
             isLose = true;
             UIMarbleController.Instance.UIGamePlay.DisplayPanelGameplay(false);
+            SoundManager.Instance.StopMusic();
             SoundManager.Instance.PlaySoundLose();
             yield return new WaitForSeconds(2f);
             camLose.SetActive(true);

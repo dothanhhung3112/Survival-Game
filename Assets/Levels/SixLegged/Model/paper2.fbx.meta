@@ -3,12 +3,7 @@ guid: 8226600a43d620548a08a6e91116f0a1
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: squid_sprunki_player_tex
-    second: {fileID: 2100000, guid: eede6bb39c6226a40aff12e90645eb46, type: 2}
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0

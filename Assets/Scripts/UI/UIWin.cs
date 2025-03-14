@@ -1,4 +1,5 @@
 ﻿using ACEPlay.Bridge;
+using ACEPlay.Native;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -12,6 +13,7 @@ namespace Hung.UI
         {
             if (enable)
             {
+                NativeAds.instance.DisplayNativeAds(true);
                 BridgeController.instance.rewardedCountOnPlay++;
                 BridgeController.instance.ShowBannerCollapsible();
                 if (BridgeController.instance.rewardedCountOnPlay >= 3)
@@ -48,6 +50,7 @@ namespace Hung.UI
 
         public void OnClickButtonClaim()
         {
+            NativeAds.instance.DisplayNativeAds(false);
             Manager.Instance.LoadNextLevel(true);
         }
     }

@@ -53,6 +53,7 @@ namespace Hung.Gameplay.Dalgona
             camMain.camTable.SetActive(false);
             DOVirtual.DelayedCall(2f, delegate
             {
+                SoundManager.Instance.PlaySoundOpenBox();
                 box_cover.DOMove(cover_pos_to_move.position, .6f).SetEase(ease)
                    .OnComplete(delegate
                    {

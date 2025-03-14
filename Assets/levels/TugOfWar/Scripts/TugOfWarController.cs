@@ -25,6 +25,11 @@ namespace Hung.Gameplay.TugOfWar
             }
         }
 
+        private void Start()
+        {
+            SoundManager.Instance.PlayBGMusic4();
+        }
+
         void Update()
         {
             if (!runnedGame)
@@ -163,6 +168,7 @@ namespace Hung.Gameplay.TugOfWar
         IEnumerator wait_win()
         {
             confetti.Play();
+            SoundManager.Instance.StopMusic();
             SoundManager.Instance.PlaySoundWin();
             yield return new WaitForSeconds(4f);
             UITugOfWarController.Instance.UIGamePlay.DisplayPanelGameplay(false);
@@ -171,6 +177,7 @@ namespace Hung.Gameplay.TugOfWar
 
         IEnumerator wait_lose()
         {
+            SoundManager.Instance.StopMusic();
             SoundManager.Instance.PlaySoundLose();
             yield return new WaitForSeconds(4f);
             UITugOfWarController.Instance.UIGamePlay.DisplayPanelGameplay(false);

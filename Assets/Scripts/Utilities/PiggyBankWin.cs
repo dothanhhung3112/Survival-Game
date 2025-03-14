@@ -1,4 +1,5 @@
 using Cinemachine;
+using Hung;
 using System.Collections;
 using UnityEngine;
 
@@ -28,6 +29,7 @@ public class PiggyBankWin : MonoBehaviour
     {
         brain.m_DefaultBlend.m_Style = CinemachineBlendDefinition.Style.Cut;
         camPiggy.SetActive(true);
+        SoundManager.Instance.PlaySoundMoneyDrop();
         StartCoroutine(SpawnMoney(20));
     }
 

@@ -44,7 +44,7 @@ public class PrisionEscapeController : MonoBehaviour
     public void StartGame()
     {
         gameStarted = true;
-        SoundManager.Instance.PlayBGMusicPrisionEscape();
+        SoundManager.Instance.PlayBGMusic5();
     }
 
     public BotPrisionEscape GetRandomeBot()
@@ -93,10 +93,13 @@ public class PrisionEscapeController : MonoBehaviour
             yield return new WaitForSeconds(0.3f);
         }
         yield return new WaitForSeconds(2f);
+        DOVirtual.DelayedCall(0.5f,delegate
+        {
+            SoundManager.Instance.PlaySoundCar();
+        });
         leftDoor.DOPlay();
         rightDoor.DOPlay();
         yield return new WaitForSeconds(1f);
-        SoundManager.Instance.PlaySoundCar();
         carPath.DOPlay();
         yield return new WaitForSeconds(3f);
         UIPrisionEscapeController.Instance.UIWin.DisplayPanelWin(true);

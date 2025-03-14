@@ -23,7 +23,10 @@ namespace Hung
         private void Start()
         {
             LoadWinLoseList();
-            //SceneManager.LoadScene(CurrentLevel);
+            if (SceneManager.GetActiveScene().buildIndex == 0)
+            {
+                SceneManager.LoadScene(CurrentLevel);
+            }
         }
 
         #region PlayerData

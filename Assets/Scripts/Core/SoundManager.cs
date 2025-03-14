@@ -1,5 +1,5 @@
 using DG.Tweening;
-using UnityEditor;
+using Hung.Gameplay.GlassStepping;
 using UnityEngine;
 
 namespace Hung
@@ -12,10 +12,11 @@ namespace Hung
         [SerializeField] AudioSource musicSource;
 
         [Header("AudioClip")]
-        [SerializeField] AudioClip musicClip;
+        [SerializeField] AudioClip[] musicClip;
         [SerializeField] AudioClip winClip;
         [SerializeField] AudioClip loseClip;
         [SerializeField] AudioClip timeCountClip;
+        [SerializeField] AudioClip moneyDrop;
 
         [Header("GreenRedLight")]
         [SerializeField] AudioSource enemySound;
@@ -26,6 +27,7 @@ namespace Hung
         [SerializeField] AudioClip femaleHited;
 
         [Header("Dalgona")]
+        [SerializeField] AudioClip openBox;
         [SerializeField] AudioClip needleMove;
         [SerializeField] AudioClip candyBreak;
 
@@ -102,7 +104,7 @@ namespace Hung
             if (Manager.Instance.IsMuteSound) return;
 
             if (clip != null)
-                soundSource.pitch = pitch;
+            soundSource.pitch = pitch;
             soundSource.PlayOneShot(clip, volume);
         }
 
@@ -131,6 +133,11 @@ namespace Hung
         public void PlaySoundTimeCount()
         {
             PlaySound(timeCountClip);
+        }
+
+        public void PlaySoundMoneyDrop()
+        {
+            PlaySound(moneyDrop);
         }
 
         public void StopMusic()
@@ -173,6 +180,12 @@ namespace Hung
         #endregion
 
         #region Dalgona
+
+        public void PlaySoundOpenBox()
+        {
+            PlaySound(openBox);
+        }
+
         public void PlaySoundCandyBreak()
         {
             PlaySound(candyBreak);
@@ -217,6 +230,7 @@ namespace Hung
         #endregion
 
         #region SixLegged
+
         public void PlaySoundFlipCard()
         {
             PlaySound(flipCard);
@@ -282,5 +296,33 @@ namespace Hung
             PlaySound(marbleHitGround);
         }
         #endregion
+
+        public void PlayBGMusic4()
+        {
+            if (musicBG != null)
+            {
+                musicSource.clip = musicClip[0];
+                musicSource.Play();
+            }
+        }
+
+        public void PlayBGMusic5()
+        {
+            if (musicBG != null)
+            {
+                musicSource.clip = musicClip[1];
+                musicSource.Play();
+            }
+        }
+
+        public void PlayBGMusic6()
+        {
+            if (musicBG != null)
+            {
+                musicSource.clip = musicClip[2];
+                musicSource.Play();
+            }
+        }
+
     }
 }

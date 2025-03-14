@@ -28,6 +28,7 @@ namespace Hung.Gameplay.GameFight
         private void Start()
         {
             botSum = enemys.Count;
+            SoundManager.Instance.PlayBGMusic4();
             UIFightController.Instance.UIGamePlay.SetBotLeftText(botSum, botSum);
         }
 
@@ -80,6 +81,7 @@ namespace Hung.Gameplay.GameFight
             effectWin.Play();
             player.Win();
             isWin = true;
+            SoundManager.Instance.StopMusic();
             SoundManager.Instance.PlaySoundWin();
             DOVirtual.DelayedCall(6f, delegate
             {
@@ -92,6 +94,7 @@ namespace Hung.Gameplay.GameFight
         {
             player.Die();
             isLose = true;
+            SoundManager.Instance.StopMusic();
             SoundManager.Instance.PlaySoundLose();
             DOVirtual.DelayedCall(4f, delegate
             {

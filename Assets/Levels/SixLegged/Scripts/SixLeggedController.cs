@@ -34,6 +34,7 @@ public class SixLeggedController : MonoBehaviour
 
     private void Start()
     {
+        SoundManager.Instance.PlayBGMusic6();
         path = GetComponent<DOTweenPath>();
         speedToHash = Animator.StringToHash("Speed");
     }
@@ -110,6 +111,8 @@ public class SixLeggedController : MonoBehaviour
     {
         canMove = false;
         camWinLose.SetActive(true);
+        SoundManager.Instance.StopMusic();
+        SoundManager.Instance.PlaySoundWin();
         DOVirtual.DelayedCall(timeMoveCam, delegate
         {
             foreach (var item in animators)
@@ -118,7 +121,6 @@ public class SixLeggedController : MonoBehaviour
                 item.Play("Dance" + randomDance);
             }
         });
-        SoundManager.Instance.PlaySoundWin();
         DOVirtual.DelayedCall(5f, delegate
         {
             UISixLeggedController.Instance.UIWin.DisplayPanelWin(true);
@@ -129,6 +131,7 @@ public class SixLeggedController : MonoBehaviour
     {
         isLose = true;
         camWinLose.SetActive(true);
+        SoundManager.Instance.StopMusic();
         SoundManager.Instance.PlaySoundLose();
         DOVirtual.DelayedCall(timeMoveCam, delegate
         {
