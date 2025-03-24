@@ -24,11 +24,6 @@ namespace Hung.Gameplay.GreenRedLight
 
         [SerializeField] GameObject playerArrow;
 
-        private void Start()
-        {
-            BridgeController.instance.ShowBanner();
-        }
-
         public void CutSceneLose()
         {
             playerArrow.SetActive(false);

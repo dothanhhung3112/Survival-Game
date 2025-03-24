@@ -1,3 +1,4 @@
+using ACEPlay.Bridge;
 using DG.Tweening;
 using Hung;
 using UnityEngine;
@@ -5,6 +6,8 @@ using UnityEngine.UI;
 
 public class UISetting : MonoBehaviour
 {
+    public static UISetting Instance;
+
     [Header("Panel Setting")]
     [SerializeField] private GameObject pnlSetting;
     [SerializeField] private Transform popUpSetting;
@@ -30,6 +33,14 @@ public class UISetting : MonoBehaviour
     [Header("Sprite")]
     [SerializeField] private Sprite sprBgOn;
     [SerializeField] private Sprite sprBgOff;
+
+    private void Awake()
+    {
+        if(Instance == null)
+        {
+            Instance = this;
+        }
+    }
 
     public void DisplayPanelSetting(bool enable)
     {
@@ -65,20 +76,20 @@ public class UISetting : MonoBehaviour
                 textSoundOff.SetActive(false);
             }
 
-            //if (Manager.Instance.IsOffVibration)
-            //{
-            //    toggleVibrate.anchoredPosition = new Vector2(-60, 0f);
-            //    bgSetVibrate.sprite = sprBgOff;
-            //    textVibrateOn.SetActive(false);
-            //    textVibrateOff.SetActive(true);
-            //}
-            //else
-            //{
-            //    toggleVibrate.anchoredPosition = new Vector2(60, 0f);
-            //    bgSetVibrate.sprite = sprBgOn;
-            //    textVibrateOn.SetActive(true);
-            //    textVibrateOff.SetActive(false);
-            //}
+            if (Manager.Instance.IsOffVibration)
+            {
+                toggleVibrate.anchoredPosition = new Vector2(-60, 0f);
+                bgSetVibrate.sprite = sprBgOff;
+                textVibrateOn.SetActive(false);
+                textVibrateOff.SetActive(true);
+            }
+            else
+            {
+                toggleVibrate.anchoredPosition = new Vector2(60, 0f);
+                bgSetVibrate.sprite = sprBgOn;
+                textVibrateOn.SetActive(true);
+                textVibrateOff.SetActive(false);
+            }
 
             pnlSetting.SetActive(true);
             popUpSetting.DOPunchScale(Vector3.one * 0.03f, 0.2f, 20, 1).SetUpdate(true);
@@ -141,6 +152,21 @@ public class UISetting : MonoBehaviour
             textVibrateOn.SetActive(true);
             textVibrateOff.SetActive(false);
         }
+    }
+
+    public void OnClickButtonFaceBook()
+    {
+        BridgeController.instance.ShowFacebook(null);
+    }
+
+    public void OnClickButtonTikTok()
+    {
+        BridgeController.instance.ShowTikTok(null);
+    }
+
+    public void OnClickButtonYoutube()
+    {
+        BridgeController.instance.SubcribeYoutube(null);
     }
 
     public void OnClose()

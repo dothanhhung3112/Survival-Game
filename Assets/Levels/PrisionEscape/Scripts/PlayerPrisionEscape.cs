@@ -123,7 +123,8 @@ public class PlayerPrisionEscape : MonoBehaviour
         if (other.CompareTag("Bot"))
         {
             BotPrisionEscape bot = other.GetComponent<BotPrisionEscape>();
-            if (bot.isDie || PrisionEscapeController.instance.bots.Contains(bot)) return;
+            if (bot.isDie || PrisionEscapeController.instance.bots.Contains(bot) || bot.isPicked) return;
+            SoundManager.Instance.PlaySoundPickUp();
             bot.SetPlayer(this);
             bot.SetColorGray(false);
             PrisionEscapeController.instance.bots.Add(bot);

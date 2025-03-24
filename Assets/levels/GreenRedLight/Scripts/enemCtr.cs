@@ -85,7 +85,7 @@ namespace Hung.Gameplay.GreenRedLight
             {
                 int randomStartPos = Random.Range(0, startBulletPos.Length);
                 Bullet bullet = Instantiate(bulletPrefab, startBulletPos[randomStartPos]);
-                bullet.Launch(Random.Range(100,120), bot, bot.position);
+                bullet.Launch(Random.Range(100,120), bot, bot.position + new Vector3(0,0.5f,0));
             }
         }
 

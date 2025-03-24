@@ -16,7 +16,6 @@ namespace Hung.UI
             {
                 NativeAds.instance.DisplayNativeAds(true);
                 BridgeController.instance.rewardedCountOnPlay++;
-                BridgeController.instance.ShowBannerCollapsible();
                 if (BridgeController.instance.rewardedCountOnPlay >= 3)
                 {
                     if (BridgeController.instance.IsRewardReady())

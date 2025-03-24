@@ -51,6 +51,7 @@ namespace Hung
         [Header("PrisionEscape")]
         [SerializeField] AudioClip musicBG;
         [SerializeField] AudioClip alertSound;
+        [SerializeField] AudioClip pickUp;
         [SerializeField] AudioClip carSound;
         [SerializeField] AudioClip punchSound;
         [SerializeField] AudioClip laserSound;
@@ -155,6 +156,7 @@ namespace Hung
 
         public void PlaySoundEnemy(float pitch)
         {
+            if(Manager.Instance.IsMuteSound) return;
             enemySound.pitch = pitch;
             enemySound.Play();
         }
@@ -255,13 +257,9 @@ namespace Hung
         #endregion
 
         #region PrisionEscape
-        public void PlayBGMusicPrisionEscape()
+        public void PlaySoundPickUp()
         {
-            if (musicBG != null)
-            {
-                musicSource.clip = musicBG;
-                musicSource.Play();
-            }
+            PlaySound(pickUp);
         }
 
         public void PlaySoundAlert()
@@ -299,6 +297,7 @@ namespace Hung
 
         public void PlayBGMusic4()
         {
+            if (Manager.Instance.IsMuteMusic) musicSource.mute = true;
             if (musicBG != null)
             {
                 musicSource.clip = musicClip[0];
@@ -308,6 +307,7 @@ namespace Hung
 
         public void PlayBGMusic5()
         {
+            if (Manager.Instance.IsMuteMusic) musicSource.mute = true;
             if (musicBG != null)
             {
                 musicSource.clip = musicClip[1];
@@ -317,6 +317,10 @@ namespace Hung
 
         public void PlayBGMusic6()
         {
+            if (Manager.Instance.IsMuteMusic)
+            {
+                musicSource.mute = true;
+            }
             if (musicBG != null)
             {
                 musicSource.clip = musicClip[2];

@@ -39,6 +39,11 @@ public class PrisionEscapeController : MonoBehaviour
         time -= Time.deltaTime;
         int a = (int)time;
         UIPrisionEscapeController.Instance.UIGamePlay.SetTimeText(a);
+
+        if (a <= 0)
+        {
+            Lose();
+        }
     }
 
     public void StartGame()

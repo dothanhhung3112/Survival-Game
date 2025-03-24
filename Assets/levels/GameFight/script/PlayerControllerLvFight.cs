@@ -9,6 +9,7 @@ namespace Hung.Gameplay.GameFight
     {
         [SerializeField] SimpleJoystick joystick;
         [SerializeField] GameObject knife;
+        [SerializeField] GameObject director;
         GameObject lookAt;
         Animator animator;
         NavMeshAgent navMeshAgent;
@@ -86,6 +87,7 @@ namespace Hung.Gameplay.GameFight
 
         public void Win()
         {
+            director.SetActive(false);
             animator.SetFloat(speedToHash, 0);
             Vector3 camPos = Camera.main.transform.position;
             DOVirtual.DelayedCall(1f, delegate

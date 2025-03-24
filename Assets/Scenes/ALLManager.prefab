@@ -397,7 +397,6 @@ GameObject:
   - component: {fileID: 822878688346384760}
   - component: {fileID: 8146809954036523584}
   - component: {fileID: 203610669215501336}
-  - component: {fileID: 4230342551764151012}
   m_Layer: 0
   m_Name: ALLManager
   m_TagString: Untagged
@@ -534,18 +533,3 @@ MonoBehaviour:
   - https://www.microsoft.com
   rewardedCountOnPlay: 0
   availableItemsIAP: []
---- !u!114 &4230342551764151012
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6102578274710463382}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df5633e6c9955964faa126795865f561, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  UI: {fileID: 0}
-  isAllowKeyCode: 0
-  parentDifLevel: {fileID: 0}

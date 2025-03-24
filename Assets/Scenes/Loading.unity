@@ -284,6 +284,10 @@ MonoBehaviour:
     prefab: {fileID: 751302336174392794, guid: e89691cb458b8084d901f6c279afb0ce, type: 3}
     parent: {fileID: 1318967076}
     size: 3
+  - tag: money
+    prefab: {fileID: 751302336174392794, guid: e89691cb458b8084d901f6c279afb0ce, type: 3}
+    parent: {fileID: 1318967076}
+    size: 3
 --- !u!4 &1318967076
 Transform:
   m_ObjectHideFlags: 0
@@ -344,7 +348,7 @@ MonoBehaviour:
   gunShooting: {fileID: 8300000, guid: 44a894b79a1256c4b9729e7e43a00c7e, type: 3}
   maleHited: {fileID: 8300000, guid: 148f2c9cae9663a449c9415a40b6aa81, type: 3}
   femaleHited: {fileID: 8300000, guid: 7d42870c9723c95499b65549ff3ece6f, type: 3}
-  openBox: {fileID: 0}
+  openBox: {fileID: 8300000, guid: 5934991c345be3a4f8a4c1ed80e06d56, type: 3}
   needleMove: {fileID: 8300000, guid: 58ba73107dbded1408703f33d78eed01, type: 3}
   candyBreak: {fileID: 8300000, guid: 9e5922e0b71ee674c90ef0d4006ab9f3, type: 3}
   tugSound: {fileID: 8300000, guid: a6ae5a296b2f94e489c21cc92bdb12d9, type: 3}
@@ -358,6 +362,7 @@ MonoBehaviour:
   paperHit: {fileID: 8300000, guid: 4b58e1c76ac6c78488f38d3e95141be8, type: 3}
   musicBG: {fileID: 8300000, guid: fcf307811ba498342b55bcc2947bedea, type: 3}
   alertSound: {fileID: 8300000, guid: 85df301d6b6bdba48a20b10bcdfc2083, type: 3}
+  pickUp: {fileID: 8300000, guid: b57b89f38287b6c43a14e7703c675f2e, type: 3}
   carSound: {fileID: 8300000, guid: b1f4c88b9d866cb4b8536a6dd3018077, type: 3}
   punchSound: {fileID: 8300000, guid: ba6909164b111184981f254b5ee25697, type: 3}
   laserSound: {fileID: 8300000, guid: 6f628b5a4bdd1ff4496733f58b5bf9f6, type: 3}

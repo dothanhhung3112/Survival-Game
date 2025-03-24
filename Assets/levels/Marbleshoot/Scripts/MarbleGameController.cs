@@ -1,4 +1,5 @@
 using _Scripts.Extension;
+using DG.Tweening;
 using Hung.UI;
 using System.Collections;
 using UnityEngine;
@@ -16,6 +17,7 @@ namespace Hung.Gameplay.Marble
         [SerializeField] Marble marblePrefab;
         [SerializeField] Transform marblePos;
         [SerializeField] MarbleEnemy enemy;
+        [SerializeField] Animator pinkCharAnim;
         [SerializeField] GameObject camWin;
         [SerializeField] GameObject camLose;
         Marble curMarble;
@@ -119,10 +121,15 @@ namespace Hung.Gameplay.Marble
             UIMarbleController.Instance.UIGamePlay.DisplayPanelGameplay(false);
             SoundManager.Instance.StopMusic();
             SoundManager.Instance.PlaySoundWin();
-            yield return new WaitForSeconds(2f);
-            camWin.SetActive(true);
+            pinkCharAnim.transform.DOLookAt(enemy.transform.position, 1f);
             yield return new WaitForSeconds(1f);
-            enemy.Die();
+            camWin.SetActive(true);
+            yield return new WaitForSeconds(0.5f);
+            pinkCharAnim.Play("Shooting");
+            DOVirtual.DelayedCall(0.1f, delegate
+            {
+                enemy.Die();
+            });
             effectWin.Play();
             playerAnimator.Play("Win");
             yield return new WaitForSeconds(5f);

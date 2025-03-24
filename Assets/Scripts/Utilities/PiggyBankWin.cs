@@ -30,7 +30,7 @@ public class PiggyBankWin : MonoBehaviour
         brain.m_DefaultBlend.m_Style = CinemachineBlendDefinition.Style.Cut;
         camPiggy.SetActive(true);
         SoundManager.Instance.PlaySoundMoneyDrop();
-        StartCoroutine(SpawnMoney(20));
+        StartCoroutine(SpawnMoney(25));
     }
 
     public void ResetPiggy()
@@ -49,5 +49,6 @@ public class PiggyBankWin : MonoBehaviour
             money.transform.localRotation = Quaternion.Euler(new Vector3(90 + Random.Range(-20,20),0,0));
             yield return new WaitForSeconds(0.1f);
         }
+        SoundManager.Instance.StopSound();
     }
 }

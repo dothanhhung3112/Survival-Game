@@ -9,6 +9,7 @@ namespace Hung.UI
     public class UIMenu : MonoBehaviour
     {
         [SerializeField] GameObject menuPanel;
+        [SerializeField] TextMeshProUGUI moneyText;
         [SerializeField] TextMeshProUGUI textSeason;
         [SerializeField] Point prefab;
         [SerializeField] RectTransform progressBar;
@@ -25,6 +26,11 @@ namespace Hung.UI
             progressBar.sizeDelta = new Vector2(100 * minigameSum,progressBar.sizeDelta.y);
         }
 
+        private void Start()
+        {
+            BridgeController.instance.ShowBanner();
+        }
+
         public void DisplayPanelMenu(bool enable)
         {
             if (enable)
@@ -34,6 +40,8 @@ namespace Hung.UI
                     BridgeController.instance.PlayCount = Manager.Instance.Level;  
                 }
                 menuPanel.SetActive(true);
+
+                if (moneyText) moneyText.text = $"{Manager.Instance.Money}";
                 textSeason.text = $"SEASON {Manager.Instance.Season}";
                 SetPointsData();
             }
@@ -41,6 +49,11 @@ namespace Hung.UI
             {
                 menuPanel.SetActive(false);
             }
+        }
+
+        public void OnClickButtonSetting()
+        {
+            UISetting.Instance.DisplayPanelSetting(true);
         }
 
         void SetPointsData()

@@ -1,3 +1,4 @@
+using ACEPlay.Bridge;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -23,10 +24,10 @@ namespace Hung
         private void Start()
         {
             LoadWinLoseList();
-            if (SceneManager.GetActiveScene().buildIndex == 0)
-            {
-                SceneManager.LoadScene(CurrentLevel);
-            }
+            //if (SceneManager.GetActiveScene().buildIndex == 0)
+            //{
+            //    SceneManager.LoadScene(CurrentLevel);
+            //}
         }
 
         #region PlayerData
@@ -40,6 +41,12 @@ namespace Hung
         {
             get { return PlayerPrefs.GetInt("CurrentLevel", 1); }
             set { PlayerPrefs.SetInt("CurrentLevel", value); }
+        }
+
+        public int Money
+        {
+            get { return PlayerPrefs.GetInt("Money", 0); }
+            set { PlayerPrefs.SetInt("Money", value); }
         }
 
         public int Season

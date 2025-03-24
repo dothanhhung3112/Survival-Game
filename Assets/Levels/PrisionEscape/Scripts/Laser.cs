@@ -1,4 +1,5 @@
 using DG.Tweening;
+using Hung;
 using UnityEngine;
 
 namespace Hunter
@@ -40,7 +41,8 @@ namespace Hunter
         {
             if (other.CompareTag("Player") || other.CompareTag("Bot"))
             {
-                LaserOff();            
+                LaserOff();
+                SoundManager.Instance.PlaySoundMarbleHitGround();
             }
         }
     }

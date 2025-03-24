@@ -260,7 +260,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2975127084923427045}
   - component: {fileID: 4404489379791226221}
-  - component: {fileID: 940148031530704823}
   m_Layer: 0
   m_Name: WallLaser
   m_TagString: Laser
@@ -312,19 +311,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2.7003245, y: 1.211345, z: 0.13184011}
   m_Center: {x: 1.6411624, y: 1.1604156, z: 0.0096437335}
---- !u!114 &940148031530704823
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2975127084923427900}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8aec4b698b7cab94db16205298093c1c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  laserDamage: {fileID: 9147499571164967724}
 --- !u!1 &2975127084923428025
 GameObject:
   m_ObjectHideFlags: 0
@@ -4485,7 +4471,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8462212188252617806}
   - component: {fileID: 7405275295201515160}
-  - component: {fileID: 4567488096297471830}
   m_Layer: 0
   m_Name: ButtonLaser
   m_TagString: Untagged
@@ -4537,27 +4522,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &4567488096297471830
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8462212188252617036}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e12aa420c489cf141a1b54eb2352661e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  laserLines:
-  - {fileID: 2975127084923428821}
-  - {fileID: 2975127084923428132}
-  - {fileID: 2975127084923428822}
-  - {fileID: 2975127084923428187}
-  - {fileID: 2975127084923428186}
-  - {fileID: 2975127084923428133}
-  col: {fileID: 4404489379791226221}
-  button: {fileID: 8462212188252616992}
 --- !u!1 &8462212188252617056
 GameObject:
   m_ObjectHideFlags: 0
@@ -4763,10 +4727,5 @@ PrefabInstance:
 --- !u!4 &8944468980872181682 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4888738504777064, guid: ff3a50a8f8dc8574a884c2226e8e4475, type: 3}
-  m_PrefabInstance: {fileID: 8948790370256874202}
-  m_PrefabAsset: {fileID: 0}
---- !u!198 &9147499571164967724 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 198737865671940598, guid: ff3a50a8f8dc8574a884c2226e8e4475, type: 3}
   m_PrefabInstance: {fileID: 8948790370256874202}
   m_PrefabAsset: {fileID: 0}

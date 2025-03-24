@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 public class BotPrisionEscape : MonoBehaviour
 {
-    public bool isDie = false;
+    public bool isDie, isPicked;
     [SerializeField] PlayerPrisionEscape player;
     [SerializeField] DOTweenPath pathWin;
     Transform target;
@@ -45,6 +45,7 @@ public class BotPrisionEscape : MonoBehaviour
     public void SetPlayer(PlayerPrisionEscape playerPrisionEscape)
     {
         player = playerPrisionEscape;
+        isPicked = true;
         canFollow = true;
     }
 
@@ -134,7 +135,8 @@ public class BotPrisionEscape : MonoBehaviour
         if (other.CompareTag("Bot"))
         {
             BotPrisionEscape bot = other.GetComponent<BotPrisionEscape>();
-            if (bot.isDie || !canFollow || PrisionEscapeController.instance.bots.Contains(bot)) return;
+            if (bot.isDie || !canFollow || PrisionEscapeController.instance.bots.Contains(bot) || bot.isPicked) return;
+            SoundManager.Instance.PlaySoundPickUp();
             bot.SetPlayer(player);
             bot.SetColorGray(false);
             PrisionEscapeController.instance.bots.Add(bot);

@@ -37,7 +37,7 @@ namespace ACEPlay.Native
 
         public void DisplayNativeAds(bool enable)
         {
-            nativeAds.SetActive(false);
+            nativeAds.SetActive(enable);
         }
     }
 }
