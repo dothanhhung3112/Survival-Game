@@ -27,6 +27,7 @@ namespace Hung.UI
                 }
                 else
                 {
+                    NativeAds.instance.DisplayNativeAds(false);
                     UnityEvent e = new UnityEvent();
                     e.AddListener(() =>
                     {
@@ -48,7 +49,6 @@ namespace Hung.UI
 
         public void OnClickButtonNo()
         {
-            NativeAds.instance.DisplayNativeAds(false);
             Manager.Instance.LoadNextLevel(false);
         }
     }

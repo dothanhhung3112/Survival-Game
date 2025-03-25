@@ -18,11 +18,20 @@ public class PiggyBankWin : MonoBehaviour
         {
             Instance = this;
         }
+        brain = Camera.main.GetComponent<CinemachineBrain>();
     }
 
     private void Start()
     {
-        StartCoroutine(SpawnMoney(15));
+        StartCoroutine(SpawnMoney(50));
+    }
+
+    private void Update()
+    {
+        //if (Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    StartCoroutine(SpawnMoney(30));
+        //}
     }
 
     public void StartSpawnMoney()
@@ -30,7 +39,7 @@ public class PiggyBankWin : MonoBehaviour
         brain.m_DefaultBlend.m_Style = CinemachineBlendDefinition.Style.Cut;
         camPiggy.SetActive(true);
         SoundManager.Instance.PlaySoundMoneyDrop();
-        StartCoroutine(SpawnMoney(25));
+        StartCoroutine(SpawnMoney(30));
     }
 
     public void ResetPiggy()
@@ -46,8 +55,8 @@ public class PiggyBankWin : MonoBehaviour
             moneyAmount++;
             GameObject money = Instantiate(moneyPrefab, moneyParent);
             money.transform.localPosition = Vector3.zero;
-            money.transform.localRotation = Quaternion.Euler(new Vector3(90 + Random.Range(-20,20),0,0));
-            yield return new WaitForSeconds(0.1f);
+            money.transform.localRotation = Quaternion.Euler(new Vector3(90 + Random.Range(-20, 20), 0, 0));
+            yield return new WaitForSeconds(0.05f);
         }
         SoundManager.Instance.StopSound();
     }

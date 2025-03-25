@@ -57,9 +57,8 @@ namespace Hung.Gameplay.GreenRedLight {
 
 		void Update()
 		{
-
-			//joystick.
-			if (Input.GetKeyDown(KeyCode.A))
+            //joystick.
+            if (Input.GetKeyDown(KeyCode.A))
 			{
 				ActiveRagdoll();
 			}
@@ -74,7 +73,7 @@ namespace Hung.Gameplay.GreenRedLight {
 						die = true;
 						cutScene.CutSceneLose();
 					}
-
+					 
                     animator.Play("runPose");
 					SetRandomPoseWhileRunning(false);
 					Move();

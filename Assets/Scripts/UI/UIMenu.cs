@@ -1,4 +1,5 @@
 using ACEPlay.Bridge;
+using ACEPlay.Native;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -29,13 +30,15 @@ namespace Hung.UI
         private void Start()
         {
             BridgeController.instance.ShowBanner();
+            SetPointsData();
         }
 
         public void DisplayPanelMenu(bool enable)
         {
             if (enable)
             {
-                if(BridgeController.instance.PlayCount < Manager.Instance.Level)
+                NativeAds.instance.DisplayNativeAds(true);
+                if (BridgeController.instance.PlayCount < Manager.Instance.Level)
                 {
                     BridgeController.instance.PlayCount = Manager.Instance.Level;  
                 }
@@ -47,6 +50,7 @@ namespace Hung.UI
             }
             else
             {
+                NativeAds.instance.DisplayNativeAds(false);
                 menuPanel.SetActive(false);
             }
         }

@@ -42,6 +42,7 @@ namespace Hung.Gameplay.GreenRedLight {
 
         void Update() 
         {
+
             if (pc.GmRun && !die && !win && !pc.die)
             {
                 if (!ec.animcor)

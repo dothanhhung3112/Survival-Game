@@ -10,6 +10,7 @@ namespace Hung.UI
         public UILose UILose { get { return GetComponentInChildren<UILose>(); } }
         public UIGamePlay UIGamePlay { get { return GetComponentInChildren<UIGamePlay>(); } }
         public UIMenu UIMenu { get { return GetComponentInChildren<UIMenu>(); } }
+        public GameObject guid;
 
         private void Awake()
         {
@@ -21,11 +22,17 @@ namespace Hung.UI
 
         public void StartButton()
         {
+            UIMenu.DisplayPanelMenu(false);
+            UIGamePlay.DisplayPanelGameplay(true);
+            GlassSteppingController.instance.StartGame();
+        }
+
+        public void OnClickButtonGuid()
+        {
+            guid.SetActive(false);  
             GlassSteppingController.instance.game_run = true;
             GlassSteppingController.instance.start_game = true;
             GlassSteppingController.instance.canCountTime = true;
-            UIMenu.DisplayPanelMenu(false);
-            UIGamePlay.DisplayPanelGameplay(true);
         }
     }
 }

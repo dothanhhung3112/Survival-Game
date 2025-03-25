@@ -57,7 +57,7 @@ namespace Hung.Gameplay.Dalgona
                 box_cover.DOMove(cover_pos_to_move.position, .6f).SetEase(ease)
                    .OnComplete(delegate
                    {
-                       UIDalgonaController.Instance.UIMenu.DisplayPanelMenu(true);
+                       UIDalgonaController.Instance.guid.SetActive(true);
                    });
             });
         }

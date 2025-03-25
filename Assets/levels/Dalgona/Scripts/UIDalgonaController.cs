@@ -11,6 +11,8 @@ namespace Hung.UI
         public UIGamePlay UIGamePlay { get { return GetComponentInChildren<UIGamePlay>(); } }
         public UIMenu UIMenu { get { return GetComponentInChildren<UIMenu>(); } }
 
+        public GameObject guid;
+
         private void Awake()
         {
             if (Instance == null)
@@ -21,10 +23,15 @@ namespace Hung.UI
 
         public void StartButton()
         {
-                DalgonaController.Instance.canCountTime = true;
                 UIMenu.DisplayPanelMenu(false);
                 UIGamePlay.DisplayPanelGameplay(true);
-                DalgonaController.Instance.StartGame();
+        }
+
+        public void OnClickButtonGuid()
+        {
+            guid.SetActive(false);
+            DalgonaController.Instance.StartGame();
+            DalgonaController.Instance.canCountTime = true;
         }
     }
 }

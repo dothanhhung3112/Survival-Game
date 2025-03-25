@@ -32,6 +32,7 @@ namespace Hung.UI
                 }
                 else
                 {
+                    NativeAds.instance.DisplayNativeAds(false);
                     UnityEvent e = new UnityEvent();
                     e.AddListener(() =>
                     {
@@ -67,9 +68,8 @@ namespace Hung.UI
             int curMoney = Manager.Instance.Money;
             Manager.Instance.Money += 1000;
             MoneySpawner.Instance.SpawnCoin(curMoney, curMoney + 1000, moneyText);
-            DOVirtual.DelayedCall(1.5f,delegate
+            DOVirtual.DelayedCall(2f,delegate
             {
-                NativeAds.instance.DisplayNativeAds(false);
                 Manager.Instance.LoadNextLevel(true);
             });
         }

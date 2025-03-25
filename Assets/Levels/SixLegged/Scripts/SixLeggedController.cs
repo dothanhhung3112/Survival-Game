@@ -30,6 +30,10 @@ public class SixLeggedController : MonoBehaviour
         if (Instance == null) Instance = this;
 
         timeMoveCam = Camera.main.GetComponent<CinemachineBrain>().m_DefaultBlend.BlendTime;
+        foreach(var item in animators)
+        {
+            item.speed = Random.Range(0.9f,1.1f);
+        }
     }
 
     private void Start()

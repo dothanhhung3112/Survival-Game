@@ -49,7 +49,6 @@ namespace Hung.Gameplay.GlassStepping
             rb = GetComponent<Rigidbody>();
             anim = GetComponent<Animator>();
             mypos = transform.position;
-            StartCoroutine(manage_glasses(tm));
             SoundManager.Instance.PlayBGMusic4();
             UIGlassSteppingController.Instance.UIGamePlay.SetTimeText(total_time);
         }
@@ -104,6 +103,11 @@ namespace Hung.Gameplay.GlassStepping
                 //ray cast
                 choose_glass();
             }
+        }
+
+        public void StartGame()
+        {
+            StartCoroutine(manage_glasses(tm));
         }
 
         IEnumerator show_lose_panel()
@@ -204,7 +208,7 @@ namespace Hung.Gameplay.GlassStepping
             if (!show_start)
             {
                 show_start = true;
-                UIGlassSteppingController.Instance.UIMenu.DisplayPanelMenu(true);
+                UIGlassSteppingController.Instance.guid.SetActive(true);
             }
             //active follow cam
             if (!cam_follow.is_active)
