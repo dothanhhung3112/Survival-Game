@@ -1,8 +1,9 @@
-using ACEPlay.Bridge;
-using ACEPlay.Native;
+﻿using ACEPlay.Bridge;
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 namespace Hung.UI
@@ -12,9 +13,10 @@ namespace Hung.UI
         [SerializeField] GameObject menuPanel;
         [SerializeField] TextMeshProUGUI moneyText;
         [SerializeField] TextMeshProUGUI textSeason;
-        [SerializeField] Point prefab;
         [SerializeField] RectTransform progressBar;
+        [SerializeField] Point prefab;
         List<Point> points = new List<Point>();
+        public Action startGame;
 
         private void Awake()
         {
@@ -30,6 +32,7 @@ namespace Hung.UI
         private void Start()
         {
             BridgeController.instance.ShowBanner();
+            AdBreaks.instance.StartCountDownShowAdBreaks();
             SetPointsData();
         }
 
@@ -37,10 +40,11 @@ namespace Hung.UI
         {
             if (enable)
             {
-                NativeAds.instance.DisplayNativeAds(true);
-                if (BridgeController.instance.PlayCount < Manager.Instance.Level)
+                BridgeController.instance.ShowBannerCollapsible();
+                NativeAdsController.Instance?.DisplayNativeAdsDefault(true);
+                if (BridgeController.instance.currentLevel < Manager.Instance.Level)
                 {
-                    BridgeController.instance.PlayCount = Manager.Instance.Level;  
+                    BridgeController.instance.currentLevel = Manager.Instance.Level;  
                 }
                 menuPanel.SetActive(true);
 
@@ -50,14 +54,60 @@ namespace Hung.UI
             }
             else
             {
-                NativeAds.instance.DisplayNativeAds(false);
+                NativeAdsController.Instance?.DisplayNativeAdsDefault(false);
+                BridgeController.instance.HideBannerCollapsible();
                 menuPanel.SetActive(false);
             }
+        }
+
+        public void OnClickButtonStart()
+        {
+            BridgeController.instance.PlayCount++;
+            if (BridgeController.instance.IsShowAdsPlay)
+            {
+                UnityEvent e = new UnityEvent();
+                e.AddListener(() =>
+                {
+                    // luồng game sau khi tắt quảng cáo
+                    startGame?.Invoke();
+                    SoundManager.Instance.PlaySoundButtonClick();
+                    DisplayPanelMenu(false);
+                });
+                UnityEvent eDone = new UnityEvent();
+                eDone.AddListener(() =>
+                {
+                    BridgeController.instance.PlayCount = 0;
+                    AdBreaks.instance.timeElapsedAdBreak = 0;
+                });
+                BridgeController.instance.ShowInterstitial("startgame", e,eDone);
+            }
+            else
+            {
+                startGame?.Invoke();
+                SoundManager.Instance.PlaySoundButtonClick();
+                DisplayPanelMenu(false);
+            }
+        }
+
+        public void SetActionStartGame(Action startGameAction)
+        {
+            startGame = startGameAction;    
         }
 
         public void OnClickButtonSetting()
         {
             UISetting.Instance.DisplayPanelSetting(true);
+            SoundManager.Instance.PlaySoundButtonClick();
+        }
+
+        public void OnClickButtonShop()
+        {
+            
+        }
+
+        public void AddListenerButtonSupport(UnityAction action)
+        {
+            //buttonSupport?.AddListener(action);
         }
 
         void SetPointsData()

@@ -16,8 +16,6 @@ namespace _Scripts.Extension
         int curLevel;
         bool isenableUI = true;
 
-        [SerializeField] Transform parentDifLevel;
-
         private void Awake()
         {
             if (instance == null)
@@ -26,6 +24,7 @@ namespace _Scripts.Extension
                 DontDestroyOnLoad(this.gameObject);
             }
             else Destroy(this.gameObject);
+
         }
 
         private void Update()
@@ -128,11 +127,7 @@ namespace _Scripts.Extension
             {
                 isenableUI = !isenableUI;
                 uiObject.SetActive(isenableUI);
-            }
-
-            if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.W))
-            {
-
+                UI.SetActive(isenableUI);
             }
 
             if (!isAllowKeyCode && Input.GetKeyDown(KeyCode.LeftArrow)) //back

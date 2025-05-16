@@ -25,10 +25,12 @@ namespace Hung.UI
         {
             if (enable)
             {
+                NativeAdsController.Instance?.DisplayNativeAdsInGame(true);
                 gameplayPanel.SetActive(true);
             }
             else
             {
+                NativeAdsController.Instance?.DisplayNativeAdsInGame(false);
                 gameplayPanel.SetActive(false);
             }
         }
@@ -56,9 +58,16 @@ namespace Hung.UI
 
         public void UpdatePlayerMarbleUI(int playerMarble)
         {
-            for (int i = 0; i < (3 - playerMarble); i++)
+            for (int i = 0; i < 3; i++)
             {
-                imagePlayerMarbles[i].color = new Color32(150, 150, 150, 150);
+                if (i < (3 - playerMarble))
+                {
+                    imagePlayerMarbles[i].color = new Color32(150, 150, 150, 150);
+                }
+                else
+                {
+                    imagePlayerMarbles[i].color = new Color32(255, 255, 255, 255);
+                }
             }
         }
 

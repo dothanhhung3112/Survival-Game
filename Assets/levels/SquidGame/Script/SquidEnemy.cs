@@ -50,6 +50,11 @@ public class SquidEnemy : MonoBehaviour
         animator.Play("Die");
     }
 
+    public void ResetAnim(bool isFighting)
+    {
+        animator.Play(isFighting?"RightHook":"IdleRunning");
+    }
+
     public void Cheer()
     {
         animator.Play("Cheer");

@@ -1,6 +1,7 @@
 using DG.Tweening;
 using Hung.UI;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Hung.Gameplay.GameFight
@@ -9,10 +10,7 @@ namespace Hung.Gameplay.GameFight
     {
         #region singleton
         public static GameFightController Instance;
-        private void Awake()
-        {
-            if (Instance == null) Instance = this;
-        }
+        
         #endregion
 
         [SerializeField] PlayerControllerLvFight player;
@@ -24,6 +22,12 @@ namespace Hung.Gameplay.GameFight
         public bool canCountTime = false;
         float botSum;
         float timeSound;
+
+        private void Awake()
+        {
+            if (Instance == null) Instance = this;
+            enemys.AddRange(FindObjectsOfType<EnemyControllerLvFight>());
+        }
 
         private void Start()
         {
@@ -48,7 +52,8 @@ namespace Hung.Gameplay.GameFight
                 {
                     UIFightController.Instance.UIGamePlay.SetTimeText(a);
                 }
-                else
+                
+                if(a <= 0)
                 {
                     Lose();
                 }
@@ -92,8 +97,13 @@ namespace Hung.Gameplay.GameFight
 
         void Lose()
         {
-            player.Die();
             isLose = true;
+            if (!Manager.Instance.isRevived)
+            {
+                UIRevive.Instance.DisplayRevivePanel(true);
+                return;
+            }
+            player.Die();
             SoundManager.Instance.StopMusic();
             SoundManager.Instance.PlaySoundLose();
             DOVirtual.DelayedCall(4f, delegate
@@ -101,6 +111,13 @@ namespace Hung.Gameplay.GameFight
                 UIFightController.Instance.UIGamePlay.DisplayPanelGameplay(false);
                 UIFightController.Instance.UILose.DisplayPanelLose(true);
             });
+        }
+
+        public void Revive()
+        {
+            time += 20f;
+            player.RevivePlayer();
+            isLose = false;
         }
 
         public void StartGame()

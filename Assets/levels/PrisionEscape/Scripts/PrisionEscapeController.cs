@@ -10,7 +10,7 @@ public class PrisionEscapeController : MonoBehaviour
     public List<BotPrisionEscape> bots;
     public Material grayMat;
     public PlayerPrisionEscape player;
-    public bool isWin = false,gameStarted,isLose = false;
+    public bool isWin = false,gameStarted,isLose = false,canCounTime;
     public float time;
 
     [Header("EndCard")]
@@ -36,6 +36,7 @@ public class PrisionEscapeController : MonoBehaviour
     private void Update()
     {
         if (!gameStarted) return;
+        if(!canCounTime) return;
         time -= Time.deltaTime;
         int a = (int)time;
         UIPrisionEscapeController.Instance.UIGamePlay.SetTimeText(a);
@@ -48,6 +49,7 @@ public class PrisionEscapeController : MonoBehaviour
 
     public void StartGame()
     {
+        canCounTime = true;
         gameStarted = true;
         SoundManager.Instance.PlayBGMusic5();
     }
@@ -62,6 +64,7 @@ public class PrisionEscapeController : MonoBehaviour
     {
         if (isWin || isLose) return;
         isWin = true;
+        canCounTime = false;
         SoundManager.Instance.StopMusic();
         camWin.SetActive(true);
         SoundManager.Instance.PlaySoundWin();
@@ -80,6 +83,12 @@ public class PrisionEscapeController : MonoBehaviour
     IEnumerator Losing()
     {
         player.Die();
+        canCounTime = false;
+        if (!Manager.Instance.isRevived)
+        {
+            UIRevive.Instance.DisplayRevivePanel(true);
+            yield break;
+        }
         yield return new WaitForSeconds(5f);
         UIPrisionEscapeController.Instance.UIGamePlay.DisplayPanelGameplay(false);
         UIPrisionEscapeController.Instance.UILose.DisplayPanelLose(true);
@@ -108,5 +117,13 @@ public class PrisionEscapeController : MonoBehaviour
         carPath.DOPlay();
         yield return new WaitForSeconds(3f);
         UIPrisionEscapeController.Instance.UIWin.DisplayPanelWin(true);
+    }
+
+    public void Revive()
+    {
+        canCounTime = true;
+        isLose = false;
+        player.RevivePlayer();
+        time += 20f;
     }
 }

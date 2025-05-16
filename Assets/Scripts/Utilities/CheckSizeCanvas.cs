@@ -13,9 +13,13 @@ namespace _Scripts.Extension
             if (canvasScaler == null)
             {
                 canvasScaler = GetComponent<CanvasScaler>();
-
             }
-            canvasScaler.matchWidthOrHeight = cam.aspect < 0.55f ? 0 : 1;
+        }
+
+        private void Start()
+        {
+            float aspect = (float)Screen.width / (float)Screen.height;
+            canvasScaler.matchWidthOrHeight = aspect < 0.55f ? 0 : 1;
         }
     }
 }

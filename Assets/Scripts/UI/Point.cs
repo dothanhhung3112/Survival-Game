@@ -5,50 +5,47 @@ using UnityEngine.UI;
 public class Point : MonoBehaviour
 {
     public enum PointState { Lose, Win, Current, Lock }
-    [SerializeField] Image circle;
-    [SerializeField] GameObject lockIcon;
-    [SerializeField] GameObject loseIcon;
-    [SerializeField] GameObject winIcon;
+    [SerializeField] GameObject winPoint;
+    [SerializeField] GameObject losePoint;
+    [SerializeField] GameObject currentPoint;
+    [SerializeField] GameObject lockPoint;
     [SerializeField] TextMeshProUGUI levelText;
 
-    [SerializeField] Sprite normalSprite;
-    [SerializeField] Sprite currentSprite;
     public void SetData(PointState pointState,int level = 0)
     {
         ResetPointState();
         switch (pointState)
         {
             case PointState.Lose:
-                loseIcon.SetActive(true);
+                losePoint.SetActive(true);
                 break;
             case PointState.Win:
-                winIcon.SetActive(true);
+                winPoint.SetActive(true);
                 break;
             case PointState.Current:
-                circle.sprite = currentSprite;
+                currentPoint.SetActive(true);
                 levelText.gameObject.SetActive(true);
                 levelText.text = $"{level}";
                 break;
             case PointState.Lock:
-                lockIcon.SetActive(true); 
+                lockPoint.SetActive(true); 
                 break;
         }
     }
 
     void ResetPointState()
     {
-        circle.sprite = normalSprite;
+        if (lockPoint.activeSelf)
+            lockPoint.SetActive(false);
 
-        if (lockIcon.activeSelf) 
-        lockIcon.SetActive(false);
+        if(winPoint.activeSelf)
+            winPoint.SetActive(false);
 
-        if(loseIcon.activeSelf)
-            loseIcon.SetActive(false);
+        if (losePoint.activeSelf)
+            losePoint.SetActive(false);
 
-        if (winIcon.activeSelf)
-            winIcon.SetActive(false);
+        if (currentPoint.activeSelf)
+            currentPoint.SetActive(false);
 
-        if (levelText.gameObject.activeSelf)
-            levelText.gameObject.SetActive(false);
     }
 }

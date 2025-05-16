@@ -19,12 +19,21 @@ public class UISixLeggedController : MonoBehaviour
 
     private void Start()
     {
+        NativeAdsController.Instance.miniGame = NativeAdsController.MiniGame.SixLegged;
         UIMenu.DisplayPanelMenu(true);
-    }
+        UIMenu.SetActionStartGame(delegate
+        {
+            SixLeggedController.Instance.canMove = true;
+        });
 
-    public void StartButton()
-    {
-        UIMenu.DisplayPanelMenu(false);
-        SixLeggedController.Instance.canMove = true;
+        UIRevive.Instance.SetReviveAction(delegate
+        {
+            SixLeggedController.Instance.Revive();
+        });
+
+        UIRevive.Instance.SetOnCloseAction(delegate
+        {
+            UILose.DisplayPanelLose(true);
+        });
     }
 }

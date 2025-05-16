@@ -19,13 +19,23 @@ public class UIPrisionEscapeController : MonoBehaviour
 
     private void Start()
     {
+        NativeAdsController.Instance.miniGame = NativeAdsController.MiniGame.PrisionEscape;
         UIMenu.DisplayPanelMenu(true);
-    }
+        UIMenu.SetActionStartGame(delegate
+        {
+            UIGamePlay.DisplayPanelGameplay(true);
+            PrisionEscapeController.instance.StartGame();
+        });
 
-    public void StartButton()
-    {
-        PrisionEscapeController.instance.StartGame();
-        UIMenu.DisplayPanelMenu(false);
-        UIGamePlay.DisplayPanelGameplay(true);
+        UIRevive.Instance.SetReviveAction(delegate
+        {
+            UIGamePlay.DisplayPanelGameplay(true);
+            PrisionEscapeController.instance.Revive();
+        });
+
+        UIRevive.Instance.SetOnCloseAction(delegate
+        {
+            UILose.DisplayPanelLose(true);
+        });
     }
 }

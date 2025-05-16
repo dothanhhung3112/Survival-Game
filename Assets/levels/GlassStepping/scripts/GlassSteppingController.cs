@@ -10,16 +10,16 @@ namespace Hung.Gameplay.GlassStepping
     {
         public static GlassSteppingController instance;
 
-        public Glass[] list_glasses;
+        public Glass[] listGlass;
         public LayerMask glass_layer, finish_layer;
-        public List<MeshRenderer> list_true_glasses;
+        public List<MeshRenderer> listTrueGlass;
         public Material[] mats;
         public float tm;
         public Camera cam;
-        public int actual_step;
-        public bool game_run, active_finish, show_start, start_game;
-        public float power_jump, duration, fall_power;
-        public float total_time, max_time, timer;
+        public int currentStep;
+        public bool gameRun, activeFinish, showGuid;
+        public float powerJump, duration, fallPower;
+        public float totalTime, max_time, timer;
         public bool canCountTime = false;
         public Vector3 mypos;
 
@@ -28,12 +28,9 @@ namespace Hung.Gameplay.GlassStepping
         public GameObject finish_pos;
 
         //camera
-        public Transform my_cam, cam_pos_1, cam_pos_finish;
-        Sequence sequence;
-        public Ease ease;
-
-        GlassSteppingCam cam_follow;
+        public GameObject playCam, endCam;
         public ParticleSystem confetti;
+        Vector3 revivePos;
 
         private void Awake()
         {
@@ -41,134 +38,110 @@ namespace Hung.Gameplay.GlassStepping
             {
                 instance = this;
             }
+            rb = GetComponent<Rigidbody>();
+            anim = GetComponent<Animator>();
         }
 
         void Start()
         {
-            cam_follow = FindObjectOfType<GlassSteppingCam>();
-            rb = GetComponent<Rigidbody>();
-            anim = GetComponent<Animator>();
+            revivePos = transform.position;
             mypos = transform.position;
             SoundManager.Instance.PlayBGMusic4();
-            UIGlassSteppingController.Instance.UIGamePlay.SetTimeText(total_time);
+            UIGlassSteppingController.Instance.UIGamePlay.SetTimeText(totalTime);
         }
 
         void Update()
         {
-            if (!game_run || !start_game)
+            if (!gameRun || !canCountTime)
                 return;
 
-
-            if (canCountTime)
+            if (timer >= max_time)
             {
-                if (timer >= max_time)
-                {
-                    total_time -= 1f;
-                    UIGlassSteppingController.Instance.UIGamePlay.SetTimeText(total_time);
-                    timer = 0f;
-                }
-                else
-                {
-                    timer += Time.deltaTime;
-                }
-
-                if (total_time <= 0)
-                {
-                    total_time = 0f;
-                    UIGlassSteppingController.Instance.UIGamePlay.SetTimeText(total_time);
-                    canCountTime = false;
-
-                    StartCoroutine(show_lose_panel());
-                }
+                totalTime -= 1f;
+                UIGlassSteppingController.Instance.UIGamePlay.SetTimeText(totalTime);
+                timer = 0f;
+            }
+            else
+            {
+                timer += Time.deltaTime;
             }
 
-            if (Input.GetKeyUp(KeyCode.Z))
+            if (totalTime <= 0)
             {
-                //transform.position = mypos;
-                on_final();
-            }
-
-            if (Input.GetKeyUp(KeyCode.G))
-            {
-                StartCoroutine(manage_glasses(tm));
-            }
-
-            if (Input.GetKeyUp(KeyCode.K))
-            {
-                get_next_step();
+                totalTime = 0f;
+                UIGlassSteppingController.Instance.UIGamePlay.SetTimeText(totalTime);
+                canCountTime = false;
+                StartCoroutine(ShowLose());
             }
 
             if (Input.GetMouseButtonDown(0))
             {
                 //ray cast
-                choose_glass();
+                ChooseGlass();
             }
         }
 
         public void StartGame()
         {
-            StartCoroutine(manage_glasses(tm));
+            StartCoroutine(ShowTrueGlass(tm));
         }
 
-        IEnumerator show_lose_panel()
+        IEnumerator ShowLose()
         {
-            break_all_glasses_and_player_fall_timeOut();
+            //break_all_glasses_and_player_fall_timeOut();
+            if (!Manager.Instance.isRevived)
+            {
+                UIRevive.Instance.DisplayRevivePanel(true);
+                yield break;
+            }
             SoundManager.Instance.StopMusic();
             SoundManager.Instance.PlaySoundLose();
             yield return new WaitForSeconds(3.5f);
             UIGlassSteppingController.Instance.UIGamePlay.DisplayPanelGameplay(false);
-            UIGlassSteppingController.Instance.UILose.DisplayPanelLose(true);
         }
 
-        IEnumerator manage_glasses(float tm)
+        IEnumerator ShowTrueGlass(float tm)
         {
-            actual_step = 0;
-            list_true_glasses.Clear();
+            currentStep = 0;
+            listTrueGlass.Clear();
             // fill all glasses
-            for (int i = 0; i < list_glasses.Length; i += 2)
+            for (int i = 0; i < listGlass.Length; i += 2)
             {
                 int rdm = Random.Range(0, 2);
-
                 if (rdm == 0)
                 {
-                    list_glasses[i].type = glass_type.true_glass;
-                    list_glasses[i + 1].type = glass_type.wrong_glass;
-
+                    listGlass[i].type = glass_type.true_glass;
+                    listGlass[i + 1].type = glass_type.wrong_glass;
                     // add to list true glasses
-                    MeshRenderer ms = list_glasses[i].GetComponent<MeshRenderer>();
-
-                    list_true_glasses.Add(ms);
-
+                    MeshRenderer ms = listGlass[i].GetComponent<MeshRenderer>();
+                    listTrueGlass.Add(ms);
                 }
                 else
                 {
                     if (rdm == 1)
                     {
-                        list_glasses[i].type = glass_type.wrong_glass;
-                        list_glasses[i + 1].type = glass_type.true_glass;
-
+                        listGlass[i].type = glass_type.wrong_glass;
+                        listGlass[i + 1].type = glass_type.true_glass;
                         // add to list true glasses
-                        MeshRenderer ms = list_glasses[i + 1].GetComponent<MeshRenderer>();
-
-                        list_true_glasses.Add(ms);
+                        MeshRenderer ms = listGlass[i + 1].GetComponent<MeshRenderer>();
+                        listTrueGlass.Add(ms);
                     }
                 }
             }
             // make hint by animation
-
-            for (int i = 0; i < list_true_glasses.Count; i++)
+            for (int i = 0; i < listTrueGlass.Count; i++)
             {
-                list_true_glasses[i].material = mats[2];
+                listTrueGlass[i].material = mats[2];
 
                 if (i != 0)
                 {
-                    list_true_glasses[i - 1].material = mats[0];
+                    listTrueGlass[i - 1].material = mats[0];
                 }
 
                 yield return new WaitForSeconds(tm);
-                if (i == list_true_glasses.Count - 1)
+                if (i == listTrueGlass.Count - 1)
                 {
-                    list_true_glasses[i].material = mats[0];
+                    listTrueGlass[i].material = mats[0];
                 }
             }
 
@@ -178,15 +151,15 @@ namespace Hung.Gameplay.GlassStepping
             while (hintCount < 2)
             {
                 hintCount++;
-                for (int i = 0; i < list_true_glasses.Count; i++)
+                for (int i = 0; i < listTrueGlass.Count; i++)
                 {
-                    list_true_glasses[i].material = mats[2];
+                    listTrueGlass[i].material = mats[2];
                 }
                 yield return new WaitForSeconds(0.5f);
                 //hide
-                for (int i = 0; i < list_true_glasses.Count; i++)
+                for (int i = 0; i < listTrueGlass.Count; i++)
                 {
-                    list_true_glasses[i].material = mats[0];
+                    listTrueGlass[i].material = mats[0];
                 }
                 yield return new WaitForSeconds(0.5f);
             }
@@ -195,64 +168,74 @@ namespace Hung.Gameplay.GlassStepping
             //game_run = true;
 
             // camera 
-            cam_to_player_pos();
+            playCam.SetActive(true);
+
+
             // start steps 
-            //get_next_step();
+            DOVirtual.DelayedCall(1f, delegate
+            {
+                GetNextStep();
+            });
         }
 
-        public void get_next_step()
+        public void GetNextStep()
         {
-            if (!game_run)
-                return;
-
-            if (!show_start)
+            if (!showGuid)
             {
-                show_start = true;
+                showGuid = true;
                 UIGlassSteppingController.Instance.guid.SetActive(true);
             }
-            //active follow cam
-            if (!cam_follow.is_active)
-                cam_follow.start_follow();
-
-            if (actual_step == list_true_glasses.Count)
+            if (currentStep == listTrueGlass.Count)
             {
-                active_finish = true;
+                activeFinish = true;
                 finish_pos.SetActive(true);
 
                 //reset all glasses material
-                for (int i = 0; i < list_glasses.Length; i++)
+                for (int i = 0; i < listGlass.Length; i++)
                 {
-                    list_glasses[i].GetComponent<MeshRenderer>().material = mats[0];
-                    list_glasses[i].is_active = false;
+                    listGlass[i].GetComponent<MeshRenderer>().material = mats[0];
+                    listGlass[i].is_active = false;
                 }
             }
             else
             {
                 // idle animation
                 anim.Play("idle_glass");
-
                 //reset all glasses material
-                for (int i = 0; i < list_glasses.Length; i++)
+                for (int i = 0; i < listGlass.Length; i++)
                 {
-                    list_glasses[i].GetComponent<MeshRenderer>().material = mats[0];
-                    list_glasses[i].is_active = false;
+                    listGlass[i].GetComponent<MeshRenderer>().material = mats[0];
+                    listGlass[i].is_active = false;
                 }
                 // change materials of next step
-                int step = actual_step * 2;
+                int step = currentStep * 2;
                 int cnt = 0;
-                for (int i = step; i < list_glasses.Length; i++)
+                for (int i = step; i < listGlass.Length; i++)
                 {
-                    list_glasses[i].GetComponent<MeshRenderer>().material = mats[1];
-                    list_glasses[i].is_active = true;
+                    listGlass[i].GetComponent<MeshRenderer>().material = mats[1];
+                    listGlass[i].is_active = true;
                     cnt++;
                     if (cnt >= 2)
                         break;
                 }
-                actual_step++;
+                currentStep++;
             }
         }
 
-        public void choose_glass()
+        public void Revive()
+        {
+            totalTime += 20f;
+            canCountTime = true;
+            rb.isKinematic = true;
+            transform.rotation = Quaternion.identity;
+            transform.position = revivePos;
+            gameRun = true;
+            anim.Play("idle");
+            currentStep--;
+            GetNextStep();
+        }
+
+        public void ChooseGlass()
         {
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
@@ -265,21 +248,18 @@ namespace Hung.Gameplay.GlassStepping
                 {
                     if (glass.type == glass_type.true_glass)
                     {
-                        //get_next_step();
                         //get jump position
                         Vector3 jump_pos = glass.pos_jumping.transform.position;
-
-                        jumping(jump_pos, true);
+                        revivePos = jump_pos;
+                        Jumping(jump_pos, true);
                     }
                     else if (glass.type == glass_type.wrong_glass)
                     {
                         //get jump position
                         Vector3 jump_pos = glass.pos_jumping.transform.position;
-                        jumping(jump_pos, false, glass);
-
+                        Jumping(jump_pos, false, glass);
                     }
                 }
-
             }
             else if (Physics.Raycast(ray, out hit, Mathf.Infinity, finish_layer))
             {
@@ -289,40 +269,36 @@ namespace Hung.Gameplay.GlassStepping
 
                 finish_pos.SetActive(false);
                 //jump
-                transform.DOJump(my_pos, power_jump, 1, duration).OnComplete(() => on_final());
-
-
-
+                transform.DOJump(my_pos, powerJump, 1, duration).OnComplete(() => ReachFinal());
             }
         }
 
-        public void jumping(Vector3 vec, bool bl = false, Glass glass_sc = null)
+        public void Jumping(Vector3 vec, bool isTrueGlass = false, Glass glass_sc = null)
         {
             // jump animation
             anim.Play("jump");
-
-            if (bl)
+            if (isTrueGlass)
             {
-                transform.DOJump(vec, power_jump, 1, duration).OnComplete(() => on_success());
+                transform.DOJump(vec, powerJump, 1, duration).OnComplete(() => GetNextStep());
             }
             else
             {
-                transform.DOJump(vec, power_jump, 1, duration).OnComplete(() => on_player_fall(glass_sc));
+                transform.DOJump(vec, powerJump, 1, duration).OnComplete(() => PlayerFalling(glass_sc));
             }
-
         }
 
-        public void on_player_fall(Glass glass_sc)
+        public void PlayerFalling(Glass glass_sc)
         {
-            StartCoroutine(lose_panel_wait());
+
+            StartCoroutine(ShowLosePanel());
             //inactive timer
             canCountTime = false;
 
             //reset all glasses material
-            for (int i = 0; i < list_glasses.Length; i++)
+            for (int i = 0; i < listGlass.Length; i++)
             {
-                list_glasses[i].GetComponent<MeshRenderer>().material = mats[0];
-                list_glasses[i].is_active = false;
+                listGlass[i].GetComponent<MeshRenderer>().material = mats[0];
+                listGlass[i].is_active = false;
             }
             SoundManager.Instance.PLaySoundGlassBreak();
             glass_sc.break_glass.SetActive(true);
@@ -331,70 +307,51 @@ namespace Hung.Gameplay.GlassStepping
 
             // game run
 
-            game_run = false;
+            gameRun = false;
 
             // fall animation
             anim.Play("fall");
 
             //addforce
             rb.isKinematic = false;
-            rb.AddForce(Vector3.down * fall_power, ForceMode.Impulse);
+            rb.AddForce(Vector3.down * fallPower, ForceMode.Impulse);
 
         }
 
-        public void on_final()
+        public void ReachFinal()
         {
             //play confetti
             confetti.Play();
-            game_run = false;
-            cam_follow.is_active = false;
+            gameRun = false;
             anim.Play("happy");
-
             Quaternion qt1 = Quaternion.Euler(0, -180, 0);
-
             Vector3 vt1 = qt1.eulerAngles;
-
-            transform.DORotate(vt1, .5f).SetEase(ease);
+            transform.DORotate(vt1, .5f).SetEase(Ease.Linear);
 
             //cam_pos_finish
+            endCam.SetActive(true);
+            DOVirtual.DelayedCall(1f, delegate
+            {
+                BreakAllGlassTrue();
+            });
 
-            Quaternion qt = cam_pos_finish.transform.rotation;
-            Vector3 vt = qt.eulerAngles;
-            sequence = DOTween.Sequence();
-            sequence.Append(my_cam.transform.DOMove(cam_pos_finish.position, .6f).SetEase(ease))
-                        .Append(my_cam.transform.DORotate(vt, .5f).SetEase(ease))
-                        .OnComplete(() => break_all_glasses_finish());
             // win panel 
-            StartCoroutine(win_panel_wait());
+            StartCoroutine(ShowWinPanel());
         }
 
-        public void cam_to_player_pos()
-        {
-            Quaternion qt = cam_pos_1.transform.rotation;
-            Vector3 vt = qt.eulerAngles;
-            sequence = DOTween.Sequence();
-            sequence.Append(my_cam.transform.DOMove(cam_pos_1.position, 1f).SetEase(ease))
-                        .Join(my_cam.transform.DORotate(vt, 1f).SetEase(ease))
-                        .OnComplete(() => get_next_step());
-        }
-
-        public void on_success()
-        {
-            get_next_step();
-        }
-
-
-        public void break_all_glasses_finish()
+        public void BreakAllGlassTrue()
         {
             Glass[] all_glasses = FindObjectsOfType<Glass>();
 
             for (int i = 0; i < all_glasses.Length; i++)
             {
-                all_glasses[i].break_glass.SetActive(true);
-                all_glasses[i].GetComponent<MeshRenderer>().enabled = false;
-                all_glasses[i].GetComponent<MeshCollider>().enabled = false;
+                if (all_glasses[i].type == glass_type.wrong_glass)
+                {
+                    all_glasses[i].break_glass.SetActive(true);
+                    all_glasses[i].GetComponent<MeshRenderer>().enabled = false;
+                    all_glasses[i].GetComponent<MeshCollider>().enabled = false;
+                }
             }
-
         }
 
         public void break_all_glasses_and_player_fall_timeOut()
@@ -402,10 +359,10 @@ namespace Hung.Gameplay.GlassStepping
             Glass[] all_glasses = FindObjectsOfType<Glass>();
 
             //reset all glasses material
-            for (int i = 0; i < list_glasses.Length; i++)
+            for (int i = 0; i < listGlass.Length; i++)
             {
-                list_glasses[i].GetComponent<MeshRenderer>().material = mats[0];
-                list_glasses[i].is_active = false;
+                listGlass[i].GetComponent<MeshRenderer>().material = mats[0];
+                listGlass[i].is_active = false;
             }
 
             //break all glasses
@@ -421,12 +378,12 @@ namespace Hung.Gameplay.GlassStepping
 
             //addforce to player 
             rb.isKinematic = false;
-            rb.AddForce(Vector3.down * fall_power, ForceMode.Impulse);
+            rb.AddForce(Vector3.down * fallPower, ForceMode.Impulse);
 
         }
 
 
-        IEnumerator win_panel_wait()
+        IEnumerator ShowWinPanel()
         {
             SoundManager.Instance.StopMusic();
             SoundManager.Instance.PlaySoundWin();
@@ -436,13 +393,20 @@ namespace Hung.Gameplay.GlassStepping
             UIGlassSteppingController.Instance.UIWin.DisplayPanelWin(true);
         }
 
-        IEnumerator lose_panel_wait()
+        IEnumerator ShowLosePanel()
         {
             SoundManager.Instance.StopMusic();
             SoundManager.Instance.PlaySoundLose();
             yield return new WaitForSeconds(4f);
             UIGlassSteppingController.Instance.UIGamePlay.DisplayPanelGameplay(false);
-            UIGlassSteppingController.Instance.UILose.DisplayPanelLose(true);
+            if (!Manager.Instance.isRevived)
+            {
+                UIRevive.Instance.DisplayRevivePanel(true);
+            }
+            else
+            {
+                UIGlassSteppingController.Instance.UILose.DisplayPanelLose(true);
+            }
         }
 
         private void OnCollisionEnter(Collision collision)

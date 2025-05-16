@@ -20,18 +20,31 @@ namespace Hung.UI
             }
         }
 
-        public void StartButton()
+        private void Start()
         {
-            UIMenu.DisplayPanelMenu(false);
-            UIGamePlay.DisplayPanelGameplay(true);
-            GlassSteppingController.instance.StartGame();
+            NativeAdsController.Instance.miniGame = NativeAdsController.MiniGame.GlassStepping;
+            UIMenu.SetActionStartGame(delegate
+            {
+                UIGamePlay.DisplayPanelGameplay(true);
+                GlassSteppingController.instance.StartGame();
+            });
+
+            UIRevive.Instance.SetReviveAction(delegate
+            {
+                UIGamePlay.DisplayPanelGameplay(true);
+                GlassSteppingController.instance.Revive();
+            });
+
+            UIRevive.Instance.SetOnCloseAction(delegate
+            {
+                UILose.DisplayPanelLose(true);
+            });
         }
 
         public void OnClickButtonGuid()
         {
             guid.SetActive(false);  
-            GlassSteppingController.instance.game_run = true;
-            GlassSteppingController.instance.start_game = true;
+            GlassSteppingController.instance.gameRun = true;
             GlassSteppingController.instance.canCountTime = true;
         }
     }

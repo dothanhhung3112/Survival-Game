@@ -3,9 +3,7 @@ using UnityEngine;
 using CnControls;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using Hung.UI;
-using UnityEngine.AI;
 using DG.Tweening;
 
 namespace Hung.Gameplay.GreenRedLight {
@@ -18,12 +16,13 @@ namespace Hung.Gameplay.GreenRedLight {
 		public SimpleJoystick joystick;
 		public float moveSpeed;
 		public static bool canMove;
-		public bool GmRun, die, chwya, win;
+		public bool GmRun, die, win;
 
 		[Header("Animation")]
 		[SerializeField] CutScenelevel1 cutScene;
 		Animator animator;
-		float velocity = 0f;
+        public enemCtr ec;
+        float velocity = 0f;
 		public float acceleration = 0.2f;
 		int veclocityHash;
 		int blendHash;
@@ -40,16 +39,14 @@ namespace Hung.Gameplay.GreenRedLight {
 		// Use this for initialization
 		void Start()
 		{
-
 			// Store some values
-			Application.targetFrameRate = 60;
 			canMove = true;
 
 			animator = GetComponent<Animator>();
 			veclocityHash = Animator.StringToHash("velocity");
 			blendHash = Animator.StringToHash("Blend");
-			
-			listRB.AddRange(gameObject.GetComponentsInChildren<Rigidbody>().Where(x => x.gameObject != this.gameObject));
+            ec = FindAnyObjectByType<enemCtr>();
+            listRB.AddRange(gameObject.GetComponentsInChildren<Rigidbody>().Where(x => x.gameObject != this.gameObject));
 			listCD.AddRange(gameObject.GetComponentsInChildren<Collider>().Where(x => x.gameObject != this.gameObject));
 			listCJ.AddRange(gameObject.GetComponentsInChildren<CharacterJoint>());
 			DisActiveRagdoll();
@@ -57,17 +54,11 @@ namespace Hung.Gameplay.GreenRedLight {
 
 		void Update()
 		{
-            //joystick.
-            if (Input.GetKeyDown(KeyCode.A))
-			{
-				ActiveRagdoll();
-			}
-
-			if (GmRun && !die && !win)
+            if (GmRun && !die && !win)
 			{
 				if (joystick.HorizintalAxis.Value != 0 || joystick.VerticalAxis.Value != 0)
 				{
-					if (FindObjectOfType<enemCtr>().animcor)
+					if (ec.animcor)
 					{
 						GetComponent<HighlightPlus.HighlightEffect>().highlighted = true;
 						die = true;
@@ -141,25 +132,39 @@ namespace Hung.Gameplay.GreenRedLight {
             transform.Translate(scaledMovement, Space.World);
         }
 
-		public void PlayerDie(Vector3 direction)
+		public void PlayerDie(Vector3 direction,Vector3 hitPoint)
 		{
-			chwya = true;
 			UIGreenRedLightController.Instance.canCountTime = false;
-			GetComponent<BoxCollider>().isTrigger = true;
 			SoundManager.Instance.PlaySoundMaleHited();
-			GameObject gm = ObjectPooler.instance.SetObject("bloodEffect", listRB[9].position);
-			animator.enabled = false;
-			ActiveRagdoll();
-			listRB[9].AddForce(direction * 4f, ForceMode.Impulse);
-			StartCoroutine(dieplayer());
+			GameObject gm = ObjectPooler.instance.SetObject("bloodEffect", hitPoint);
+			animator.Play("die1");
+            //animator.enabled = false;
+            //ActiveRagdoll();
+            //listRB[9].AddForce(direction * 4f, ForceMode.Impulse);
+            StartCoroutine(dieplayer());
 		}
 
-		IEnumerator dieplayer()
+        public void Revive()
+        {
+            die = false;
+			ec.StartSingAgain();
+            joystick.HorizintalAxis.Value = 0;
+			joystick.VerticalAxis.Value = 0;
+			GetComponent<HighlightPlus.HighlightEffect>().highlighted = false;
+            animator.Play("runPose");
+        }
+
+		public void PowerUp(bool isIngame)
+		{
+			moveSpeed += isIngame ? moveSpeed : moveSpeed * 2;
+		}
+
+        IEnumerator dieplayer()
 		{
             SoundManager.Instance.PlaySoundLose();
-			yield return new WaitForSeconds(3f);
+			yield return new WaitForSeconds(5f);
 			UIGreenRedLightController.Instance.UILose.DisplayPanelLose(true);
-		}
+        }
 
 		private void OnCollisionEnter(Collision collision)
 		{
@@ -192,8 +197,12 @@ namespace Hung.Gameplay.GreenRedLight {
 		{
 			foreach (var item in listCJ)
 			{
-				listActiveJoin.Add(item.AddComponent<ActiveJoin>());
-			}
+                if (!item.TryGetComponent(out ActiveJoin activeJoin))
+                {
+                    activeJoin = item.gameObject.AddComponent<ActiveJoin>();
+                }
+                listActiveJoin.Add(activeJoin);
+            }
 			foreach (var item in listRB)
 			{
 				item.isKinematic = true;
@@ -210,7 +219,7 @@ namespace Hung.Gameplay.GreenRedLight {
 
 		void ActiveRagdoll()
 		{
-			foreach (var item in listRB)
+            foreach (var item in listRB)
 			{
 				item.isKinematic = false;
 			}

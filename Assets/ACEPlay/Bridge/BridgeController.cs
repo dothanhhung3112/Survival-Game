@@ -75,12 +75,12 @@ namespace ACEPlay.Bridge
         }
         public bool CanShowInterIngame // có show quảng cáo trong lúc chơi game không
         {
-            get { return PlayerPrefs.GetInt("CanShowInterIngame", 0) == 1; }
+            get { return PlayerPrefs.GetInt("CanShowInterIngame", 0) == 0; }
             set { PlayerPrefs.SetInt("CanShowInterIngame", value ? 1 : 0); }
         }
         public float TimeShowInterIngame // thời gian delay mỗi lần show quảng cáo ingame
         {
-            get { return PlayerPrefs.GetFloat("TimeShowAdsIngame", 40f); }
+            get { return PlayerPrefs.GetFloat("TimeShowAdsIngame", 20); }
             set { PlayerPrefs.SetFloat("TimeShowAdsIngame", value); }
         }
 

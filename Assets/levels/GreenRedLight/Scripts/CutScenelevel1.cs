@@ -3,7 +3,7 @@ using DG.Tweening;
 using UnityEngine;
 using Hung.Tools;
 using Hung.UI;
-using ACEPlay.Bridge;
+using System.Collections;
 
 namespace Hung.Gameplay.GreenRedLight
 {
@@ -20,36 +20,53 @@ namespace Hung.Gameplay.GreenRedLight
         [Header("EnemyAnim")]
         [SerializeField] Animator enemyAnimator;
         [SerializeField] CinemachineVirtualCamera enemyCam;
+        [SerializeField] CinemachineVirtualCamera playerCam;
         [SerializeField] ParticleSystem vfxShooting;
-
         [SerializeField] GameObject playerArrow;
+
+        private void Start()
+        {
+            UIRevive.Instance.SetOnCloseAction(delegate
+            {
+                StartCoroutine(EndingCard());
+            });
+        }
 
         public void CutSceneLose()
         {
             playerArrow.SetActive(false);
+            UIGreenRedLightController.Instance.canCountTime = false;
             UIGreenRedLightController.Instance.UIGamePlay.DisplayPanelGameplay(false);
             enemyAnimator.Play("Shooting");
-            DOVirtual.DelayedCall(0.8f, delegate
-            {
-                MoveCamToEnemy();
-                enemyAnimator.transform.LookAt(hitTransform.position);
-            });
-
-            DOVirtual.DelayedCall(1f, delegate
-            {
-                enemyAnimator.speed = 0.5f;
-                DOVirtual.DelayedCall(0.3f, delegate
-                {
-                    SoundManager.Instance.PlaySoundGunShooting();
-                    vfxShooting.Play();
-                    Shoot();
-                });
-            });
+            if (CanShowRevivePanel()) return;
+            StartCoroutine(EndingCard());
         }
 
-        public void MoveCamToEnemy()
+        IEnumerator EndingCard()
         {
+            yield return new WaitForSeconds(0.8f);
             enemyCam.gameObject.SetActive(true);
+            enemyAnimator.transform.LookAt(hitTransform.position);
+            yield return new WaitForSeconds(0.2f);
+            enemyAnimator.speed = 0.5f;
+            yield return new WaitForSeconds(0.3f);
+            SoundManager.Instance.PlaySoundGunShooting();
+            vfxShooting.Play();
+            Shoot();
+            enemyCam.gameObject.SetActive(false);
+        }
+
+        bool CanShowRevivePanel()
+        {
+            if (!Manager.Instance.isRevived)
+            {
+                DOVirtual.DelayedCall(0.6f, delegate
+                {
+                    UIRevive.Instance.DisplayRevivePanel(true);
+                });
+                return true;
+            }
+            return false;
         }
 
         public void Shoot()

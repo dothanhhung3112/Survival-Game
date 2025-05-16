@@ -1,8 +1,6 @@
 using ACEPlay.Bridge;
-using ACEPlay.Native;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.UIElements;
 
 namespace Hung.UI
 {
@@ -14,8 +12,10 @@ namespace Hung.UI
         {
             if (enable)
             {
-                NativeAds.instance.DisplayNativeAds(true);
+                BridgeController.instance.PlayCount++;
+                NativeAdsController.Instance?.DisplayNativeAdsLose(true);
                 BridgeController.instance.rewardedCountOnPlay++;
+                losePanel.SetActive(true);
                 if (BridgeController.instance.rewardedCountOnPlay >= 3)
                 {
                     if (BridgeController.instance.IsRewardReady())
@@ -23,33 +23,33 @@ namespace Hung.UI
                         BridgeController.instance.rewardedCountOnPlay = 0;
                         BridgeController.instance.ShowRewarded("reward", null);
                     }
-                    losePanel.SetActive(true);
                 }
                 else
                 {
-                    NativeAds.instance.DisplayNativeAds(false);
-                    UnityEvent e = new UnityEvent();
-                    e.AddListener(() =>
+                    UnityEvent eDone = new UnityEvent();
+                    eDone.AddListener(() =>
                     {
-                        losePanel.SetActive(true);
+                        BridgeController.instance.PlayCount = 0;
+                        AdBreaks.instance.timeElapsedAdBreak = 0;
                     });
-                    BridgeController.instance.ShowInterstitial("lose", e);
+                    BridgeController.instance.ShowInterstitial("lose", null, eDone);
                 }
+                BridgeController.instance.ShowBannerCollapsible();
             }
             else
             {
+                NativeAdsController.Instance?.DisplayNativeAdsLose(false);
+                BridgeController.instance.HideBannerCollapsible();
                 losePanel.SetActive(false);
             }
         }
 
-        public void OnCLickButtonWatchAdRetry()
-        {
-
-        }
-
         public void OnClickButtonNo()
         {
+            Manager.Instance.isRevived = true;
+            DisplayPanelLose(false);
             Manager.Instance.LoadNextLevel(false);
+            SoundManager.Instance.PlaySoundButtonClick();
         }
     }
 }

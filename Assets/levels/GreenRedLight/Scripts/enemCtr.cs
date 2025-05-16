@@ -13,10 +13,11 @@ namespace Hung.Gameplay.GreenRedLight
         [SerializeField] Bullet bulletPrefab;
         [SerializeField] Transform headDoll;
         public float mytimer;
-        public bool onetime, firsttime, endcount, startturn, animcor;
+        public bool firsttime, endcount, startturn, animcor;
         public int i;
         public float a = 1;
         float timestage;
+        Coroutine singAgain;
         
         void Start()
         {
@@ -58,7 +59,7 @@ namespace Hung.Gameplay.GreenRedLight
                     }
                     if (!animcor && !pc.die && !pc.win)
                     {
-                        StartCoroutine(SingAgain());
+                        singAgain = StartCoroutine(SingAgain());
                     }
                 }
 
@@ -88,6 +89,21 @@ namespace Hung.Gameplay.GreenRedLight
                 bullet.Launch(Random.Range(100,120), bot, bot.position + new Vector3(0,0.5f,0));
             }
         }
+
+        public void StartSingAgain()
+        {
+            if(singAgain != null)
+            StopCoroutine(singAgain);
+
+            headDoll.eulerAngles = new Vector3(0, 0, 0);
+            timestage = mytimer = 4.7f / a;
+            startturn = false;
+            firsttime = false;
+            endcount = false;
+            animcor = false;
+            UIGreenRedLightController.Instance.UIGamePlay.TurnOnGreenImage();
+        }
+
 
         IEnumerator SingAgain()
         {

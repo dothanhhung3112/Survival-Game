@@ -1,4 +1,3 @@
-using ACEPlay.Bridge;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -9,8 +8,10 @@ namespace Hung
     public class Manager : MonoBehaviour
     {
         public static Manager Instance;
-        public List<int> levelLoseList = new List<int>();
-        public List<int> levelWinList = new List<int>();
+        public SceneSO sceneSO;
+        [HideInInspector] public HashSet<int> levelLoseList = new HashSet<int>();
+        [HideInInspector] public HashSet<int> levelWinList = new HashSet<int>();
+        public bool isRevived = false;
         private void Awake()
         {
             if (Instance == null)
@@ -23,11 +24,8 @@ namespace Hung
 
         private void Start()
         {
+            Application.targetFrameRate = 60;
             LoadWinLoseList();
-            //if (SceneManager.GetActiveScene().buildIndex == 0)
-            //{
-            //    SceneManager.LoadScene(CurrentLevel);
-            //}
         }
 
         #region PlayerData
@@ -126,8 +124,22 @@ namespace Hung
 
         public void LoadNextLevel(bool isWin)
         {
-            if(isWin) levelWinList.Add(CurrentLevel);
-            else levelLoseList.Add(CurrentLevel);
+            if (isWin)
+            {
+                if (!levelWinList.Contains(CurrentLevel))
+                {
+                    LevelWins = levelWinList.Count > 0 ? string.Join(";", levelWinList) : "";
+                    levelWinList.Add(CurrentLevel);
+                }
+            }
+            else
+            {
+                if (!levelLoseList.Contains(CurrentLevel))
+                {
+                    levelLoseList.Add(CurrentLevel);
+                    LevelLoses = levelLoseList.Count > 0 ? string.Join(";", levelLoseList) : "";
+                }
+            }
 
             CurrentLevel++;
             Level++;
@@ -135,14 +147,15 @@ namespace Hung
             {
                 ChangeSeason();
             }
-            SceneManager.LoadScene(CurrentLevel);
+            SceneLoader.Instance.LoadSceneByIndex(CurrentLevel);
+            Manager.Instance.isRevived = false;
         }
 
         public void ChangeSeason()
         {
-            LevelLoses = null;
-            LevelWins = null;
-            levelWinList.Clear();
+            LevelLoses = "";
+            LevelWins = "";
+            levelWinList.Clear();                                                                                                                           
             levelLoseList.Clear();
             CurrentLevel = 1;
             Season++;
@@ -152,19 +165,13 @@ namespace Hung
         {
             if (!string.IsNullOrEmpty(LevelWins))
             {
-                levelWinList = LevelWins.Split(';').Select(int.Parse).ToList();
+                levelWinList = LevelWins.Split(';').Select(int.Parse).ToHashSet();
             }
 
             if (!string.IsNullOrEmpty(LevelLoses))
             {
-                levelLoseList = LevelLoses.Split(';').Select(int.Parse).ToList();
+                levelLoseList = LevelLoses.Split(';').Select(int.Parse).ToHashSet();
             }
-        }
-
-        private void OnDestroy()
-        {
-            LevelLoses = string.Join(";", levelLoseList.ToArray());
-            LevelWins = string.Join(";", levelWinList.ToArray());
         }
     }
 }

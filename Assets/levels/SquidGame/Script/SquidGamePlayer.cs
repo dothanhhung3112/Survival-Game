@@ -2,6 +2,7 @@
 using DG.Tweening;
 using Hung;
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,27 +10,22 @@ public class SquidGamePlayer : MonoBehaviour
 {
     [SerializeField] Transform endPos;
     [SerializeField] SquidEnemy enemy;
-    [SerializeField] CinemachineVirtualCamera camPlayer;
+    [SerializeField] GameObject shieldObject;
     public float speed, speedForward;
     public Image powerbar;
-    bool die, win, stopMove, isDragging;
-    Vector3 presspos, actualpos, tmp;
+    bool stopMove, isDragging;
+    Vector3 presspos, actualpos;
     float playerHealth = 0;
     Rigidbody rb;
     Animator animator;
-    float velocity;
     int speedToHash;
+    bool haveShield;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         speedToHash = Animator.StringToHash("Speed");
-    }
-
-    void Start()
-    {
-        Application.targetFrameRate = 60;
     }
 
     private void Update()
@@ -105,7 +101,7 @@ public class SquidGamePlayer : MonoBehaviour
             Destroy(collision.gameObject);
             IncreaseHealth();
         }
-        if (collision.gameObject.tag == "Obstacle")
+        if (collision.gameObject.tag == "Obstacle" && !haveShield)
         {
             Vector3 hitPoint = collision.contacts[0].point;
             Vector3 centerPoint = collision.transform.position;
@@ -166,6 +162,39 @@ public class SquidGamePlayer : MonoBehaviour
         {
             SquidGameController.Instance.Lose();
         }
+    }
+
+    public void RevivePLayer()
+    {
+        if (!stopMove)
+        {
+            rb.isKinematic = false;
+            animator.Play("IdleRunning");
+            enemy.ResetAnim(false);
+            StartCoroutine(ActiveShield3Sec());
+        }
+        else
+        {
+            rb.isKinematic = false;
+            animator.Play("Idle");
+            playerHealth += 0.5f;
+            powerbar.fillAmount = playerHealth;
+            enemy.ResetAnim(true);
+        }
+    }
+
+    IEnumerator ActiveShield3Sec()
+    {
+        haveShield = true;
+        shieldObject.SetActive(true);
+        float time = 0;
+        while(time < 3)
+        {
+            time += Time.deltaTime;
+            yield return null;
+        }
+        haveShield = false;
+        shieldObject.SetActive(false);
     }
 
     public void Die()

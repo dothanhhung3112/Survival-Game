@@ -1,4 +1,5 @@
-﻿using Hung.UI;
+﻿using DG.Tweening;
+using Hung.UI;
 using System.Collections;
 using UnityEngine;
 
@@ -7,14 +8,16 @@ namespace Hung.Gameplay.Dalgona
     public class DalgonaController : MonoBehaviour
     {
         public static DalgonaController Instance;
-        public bool active;
+        public GameObject camLose, camWin, camTable;
         public ParticleSystem effectDalgona;
-        public bool canCountTime = false;
-        public DalgonaCam dalgonaCam;
-        public LayerMask box_layer;
         public Dalgona dalgonaChosen;
         public BoxDalgona boxDalgona;
-        public float total_time, max_time, timer;
+        public Animator animPlayer, animEnemy;
+        public bool canCountTime = false;
+        public bool active,isWin,isLose;
+        public float timeLeft;
+        public LayerMask box_layer;
+
         private void Awake()
         {
             if (Instance == null)
@@ -26,40 +29,38 @@ namespace Hung.Gameplay.Dalgona
         private void Start()
         {
             SoundManager.Instance.PlayBGMusic4();
-            UIDalgonaController.Instance.UIGamePlay.SetTimeText(total_time);
+            UIDalgonaController.Instance.UIGamePlay.SetTimeText(timeLeft);
         }
 
         void Update()
         {
             if (canCountTime)
             {
-                if (timer >= max_time)
+                timeLeft -= Time.deltaTime;
+                int a = (int)timeLeft;
+                if (a >= 0)
                 {
-                    total_time -= 1f;
-                    UIDalgonaController.Instance.UIGamePlay.SetTimeText(total_time);
-                    timer = 0f;
+                    UIDalgonaController.Instance.UIGamePlay.SetTimeText(a);
                 }
-                else
+
+                if (timeLeft <= 0)
                 {
-                    timer += Time.deltaTime;
-                }
-                if (total_time <= 0)
-                {
-                    total_time = 0f;
-                    UIDalgonaController.Instance.UIGamePlay.SetTimeText(total_time);
+                    timeLeft = 0f;
+                    UIDalgonaController.Instance.UIGamePlay.SetTimeText(a);
                     canCountTime = false;
-                    StartCoroutine(show_lose_panel());
+                    dalgonaChosen.active = false;
+                    StartCoroutine(ShowLosePanel());
                 }
             }
 
             if (!active) return;
             if (Input.GetMouseButtonDown(0))
             {
-                choose_box();
+                ChooseBox();
             }
         }
 
-        void choose_box()
+        void ChooseBox()
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
@@ -76,16 +77,65 @@ namespace Hung.Gameplay.Dalgona
             }
         }
 
+        public void Revive()
+        {
+            isLose = false;
+            timeLeft += 10f;
+            dalgonaChosen.active = true;
+            canCountTime = true;
+            UIDalgonaController.Instance.UIGamePlay.DisplayPanelGameplay(true);
+        }
+
         public void StartGame()
         {
             dalgonaChosen.active = true;
         }
 
-        IEnumerator show_lose_panel()
+        public void ShootingPlayer()
         {
-            DalgonaCam cam_script = FindObjectOfType<DalgonaCam>();
+            animEnemy.Play("Shooting");
+            SoundManager.Instance.PlaySoundGunShooting();
+            DOVirtual.DelayedCall(0.2f, delegate
+            {
+                animPlayer.Play("Die");
+                GameObject blood = ObjectPooler.instance.SetObject("bloodEffect", animPlayer.transform.position + new Vector3(0, 55, 0));
+                animPlayer.transform.localPosition += new Vector3(0, 8, 0);
+                blood.transform.localScale *= 50f;
+                SoundManager.Instance.PlaySoundMaleHited();
+            });
+        }
+
+        public void StatingEndCard()
+        {        
+            camLose.SetActive(true);
+            DOVirtual.DelayedCall(2f, delegate
+            {
+                ShootingPlayer();
+            });
+        }
+
+        public void Winning()
+        {
+            animPlayer.transform.DORotate(new Vector3(0, -180, 0),1f);
+            camWin.SetActive(true);
+            DOVirtual.DelayedCall(2f, delegate
+            {
+                boxDalgona.camBox.SetActive(false);
+                animPlayer.Play("happy");
+            });
+        }
+
+        IEnumerator ShowLosePanel()
+        {
+            if (isWin) yield break;
+            DalgonaController.Instance.canCountTime = false;
+            if (!Manager.Instance.isRevived)
+            {
+                UIRevive.Instance.DisplayRevivePanel(true);
+                yield break;
+            }
+            StatingEndCard();
             SoundManager.Instance.StopMusic();
-            cam_script.lose_move();
             yield return new WaitForSeconds(3.5f);
             UIDalgonaController.Instance.UIGamePlay.DisplayPanelGameplay(false);
             UIDalgonaController.Instance.UILose.DisplayPanelLose(true);

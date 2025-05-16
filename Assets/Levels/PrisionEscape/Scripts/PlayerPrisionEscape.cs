@@ -2,6 +2,7 @@ using CnControls;
 using DG.Tweening;
 using Hung;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -9,23 +10,23 @@ public class PlayerPrisionEscape : MonoBehaviour
 {
     [SerializeField] SimpleJoystick joystick;
     [SerializeField] List<Transform> botPos;
-    DOTweenPath pathWin;
     GameObject lookAt;
     Animator animator;
     NavMeshAgent agent;
-    SkinnedMeshRenderer meshRenderer;
     Transform target;
     int speedToHash;
     bool isDie;
     public Vector3 scaledMovement;
 
-    private void Start()
+    private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
         speedToHash = Animator.StringToHash("Speed");
-        meshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
-        pathWin = GetComponent<DOTweenPath>();
+    }
+
+    private void Start()
+    {
         lookAt = gameObject;
     }
 
@@ -94,14 +95,12 @@ public class PlayerPrisionEscape : MonoBehaviour
         });
     }
 
-    public void SetColorGray()
+    public void RevivePlayer()
     {
-        Material[] mat = meshRenderer.materials;
-        for (int i = 0; i < mat.Length; i++)
-        {
-            mat[i] = PrisionEscapeController.instance.grayMat;
-        }
-        meshRenderer.materials = mat;
+        agent.ResetPath();
+        agent.isStopped = false;
+        isDie = false;
+        animator.Play("RunFight");
     }
 
     public void MoveToCar(Vector3[] path)
@@ -114,6 +113,7 @@ public class PlayerPrisionEscape : MonoBehaviour
     public void Die()
     {
         animator.Play("die1");
+        target = null;
         SoundManager.Instance.PlaySoundMaleHited();
         ObjectPooler.instance.SetObject("bloodEffect", transform.position + new Vector3(0, 0.5f, 0));
     }

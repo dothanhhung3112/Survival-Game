@@ -21,10 +21,24 @@ namespace Hung.UI
             }
         }
 
-        public void StartButton()
+        private void Start()
         {
-                UIMenu.DisplayPanelMenu(false);
+            NativeAdsController.Instance.miniGame = NativeAdsController.MiniGame.Dalgona;
+            UIMenu.DisplayPanelMenu(true);
+            UIMenu.SetActionStartGame(delegate
+            {
                 UIGamePlay.DisplayPanelGameplay(true);
+            });
+
+            UIRevive.Instance.SetReviveAction(delegate
+            {
+                DalgonaController.Instance.Revive();
+            });
+
+            UIRevive.Instance.SetOnCloseAction(delegate
+            {
+                UILose.DisplayPanelLose(true);
+            });
         }
 
         public void OnClickButtonGuid()

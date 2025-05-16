@@ -16,7 +16,7 @@ public class SixLeggedController : MonoBehaviour
     [SerializeField] float accleration;
     DOTweenPath path;
     public bool isLose = false;
-    float speed,elapsedTime;
+    float speed, elapsedTime;
     int speedToHash;
 
     public enum MiniGame
@@ -30,9 +30,9 @@ public class SixLeggedController : MonoBehaviour
         if (Instance == null) Instance = this;
 
         timeMoveCam = Camera.main.GetComponent<CinemachineBrain>().m_DefaultBlend.BlendTime;
-        foreach(var item in animators)
+        foreach (var item in animators)
         {
-            item.speed = Random.Range(0.9f,1.1f);
+            item.speed = Random.Range(0.9f, 1.1f);
         }
     }
 
@@ -78,27 +78,46 @@ public class SixLeggedController : MonoBehaviour
         }
     }
 
+    public void Revive()
+    {
+        isLose = false;
+        camWinLose.SetActive(false);
+        foreach (var item in animators)
+        {
+            item.Play("RunFight");
+        }
+        switch (minigame)
+        {
+            case MiniGame.Memory:
+                MemoryCard.Instance.ReviveMemoryCard();
+                break;
+            case MiniGame.DDakji:
+                ddakji.Revive();
+                break;
+            case MiniGame.FlyingStone:
+                flyingStone.Revive();
+                break;
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Point"))
         {
             if (!MemoryCard.Instance.isWin)
             {
-                UISixLeggedController.Instance.UIGamePlay.DisplayPanelGameplay(true);
                 canMove = false;
                 MemoryCard.Instance.StartGame();
                 minigame = MiniGame.Memory;
             }
             else if (!flyingStone.isWin)
             {
-                UISixLeggedController.Instance.UIGamePlay.DisplayPanelGameplay(true);
                 canMove = false;
                 flyingStone.StartGame();
                 minigame = MiniGame.FlyingStone;
             }
             else if (!ddakji.isWin)
             {
-                UISixLeggedController.Instance.UIGamePlay.DisplayPanelGameplay(true);
                 canMove = false;
                 ddakji.StartGame();
                 minigame = MiniGame.DDakji;
@@ -114,6 +133,7 @@ public class SixLeggedController : MonoBehaviour
     public void Win()
     {
         canMove = false;
+        UISixLeggedController.Instance.UIGamePlay.DisplayPanelGameplay(false);
         camWinLose.SetActive(true);
         SoundManager.Instance.StopMusic();
         SoundManager.Instance.PlaySoundWin();
@@ -125,7 +145,7 @@ public class SixLeggedController : MonoBehaviour
                 item.Play("Dance" + randomDance);
             }
         });
-        DOVirtual.DelayedCall(5f, delegate
+        DOVirtual.DelayedCall(4f, delegate
         {
             UISixLeggedController.Instance.UIWin.DisplayPanelWin(true);
         });
@@ -134,6 +154,12 @@ public class SixLeggedController : MonoBehaviour
     public void Lose()
     {
         isLose = true;
+        UISixLeggedController.Instance.UIGamePlay.DisplayPanelGameplay(false);
+        if (!Manager.Instance.isRevived)
+        {
+            UIRevive.Instance.DisplayRevivePanel(true);
+            return;
+        }
         camWinLose.SetActive(true);
         SoundManager.Instance.StopMusic();
         SoundManager.Instance.PlaySoundLose();
@@ -149,7 +175,7 @@ public class SixLeggedController : MonoBehaviour
             SoundManager.Instance.PlaySoundGunShooting();
             SoundManager.Instance.PlaySoundMaleHited();
         });
-        DOVirtual.DelayedCall(5f, delegate
+        DOVirtual.DelayedCall(4f, delegate
         {
             UISixLeggedController.Instance.UIGamePlay.DisplayPanelGameplay(false);
             UISixLeggedController.Instance.UILose.DisplayPanelLose(true);

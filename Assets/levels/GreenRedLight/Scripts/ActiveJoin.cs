@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Hung.Gameplay.GreenRedLight
 {
@@ -33,6 +33,7 @@ namespace Hung.Gameplay.GreenRedLight
             _breakForce = characterJoint.breakForce;
             _breakTorque = characterJoint.breakTorque;
             _enableCollision = characterJoint.enableCollision;
+
             Destroy(characterJoint);
         }
 

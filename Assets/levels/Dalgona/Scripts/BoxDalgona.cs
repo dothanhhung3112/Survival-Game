@@ -8,7 +8,6 @@ namespace Hung.Gameplay.Dalgona
     {
         public Dalgona[] list_control_dalgona;
         public GameObject camBox;
-        public DalgonaCam camMain;
         public Transform box_cover;
         public Transform cover_pos_to_move;
         public Dalgona dalgonaChosen;
@@ -20,7 +19,6 @@ namespace Hung.Gameplay.Dalgona
         void Start()
         {
             dalgonaChosen = list_control_dalgona[Random.Range(0, list_control_dalgona.Length)];
-            camMain = Camera.main.GetComponent<DalgonaCam>();
         }
 
         public void show_dagona()
@@ -50,7 +48,7 @@ namespace Hung.Gameplay.Dalgona
             sequence = DOTween.Sequence();
             
             camBox.SetActive(true);
-            camMain.camTable.SetActive(false);
+            DalgonaController.Instance.camTable.SetActive(false);
             DOVirtual.DelayedCall(2f, delegate
             {
                 SoundManager.Instance.PlaySoundOpenBox();

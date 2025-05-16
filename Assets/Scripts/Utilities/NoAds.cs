@@ -1,5 +1,6 @@
 ﻿using ACEPlay.Bridge;
 using DG.Tweening;
+using Hung;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -18,11 +19,6 @@ public class NoAds : MonoBehaviour
     [SerializeField] TextMeshProUGUI textTimeLeft;
     float rewardCount;
 
-    public bool IsBuyedRemoveAds
-    {
-        get { return PlayerPrefs.GetInt("IsBuyedRemoveAds", 0) == 0 ? false : true; }
-        set { PlayerPrefs.SetInt("IsBuyedRemoveAds", value ? 1 : 0); }
-    }
 
     private void Awake()
     {
@@ -32,12 +28,13 @@ public class NoAds : MonoBehaviour
         }
     }
 
-    private void Update()
+    private void Start()
     {
-        if (!IsBuyedRemoveAds)
+        if (BridgeController.instance.CheckOwnerNonConsumable(Application.identifier + "_removeads"))
         {
-            //openRemoveAdsButton.SetActive(BridgeController.instance.IsBannerShowing);
+            BridgeController.instance.CanShowAds = false;
         }
+        BridgeController.instance.onBannerState += DisplayOpenRemoveAdsButton;
     }
 
     public void DisplayNoAdsDialog(bool enable)
@@ -47,16 +44,30 @@ public class NoAds : MonoBehaviour
             Time.timeScale = 0;
             panelNoads.SetActive(enable);
             popUp.DOPunchScale(Vector3.one * 0.03f, 0.2f, 20, 1).SetUpdate(true);
-        }
+            BridgeController.instance.ShowBannerCollapsible();
+        } 
         else
         {
             Time.timeScale = 1;
             panelNoads.SetActive(false);
+            BridgeController.instance.HideBannerCollapsible();
         }
+        openRemoveAdsButton.SetActive(!enable);
+    }
+
+    void DisplayOpenRemoveAdsButton(bool IsBannerShowing)
+    {
+        openRemoveAdsButton.SetActive(IsBannerShowing);
+    }
+
+    private void OnDestroy()
+    {
+        BridgeController.instance.onBannerState -= DisplayOpenRemoveAdsButton;
     }
 
     public void OnClickButtonNoadsFive()
     {
+        SoundManager.Instance.PlaySoundButtonClick();
         UnityEvent e = new UnityEvent();
         e.AddListener(delegate
         {
@@ -73,39 +84,59 @@ public class NoAds : MonoBehaviour
 
     public void OnClickButtonNoads()
     {
+        SoundManager.Instance.PlaySoundButtonClick();
         UnityStringEvent e = new UnityStringEvent();
         e.AddListener((result) =>
         {
             // phần thưởng trong gói mà user đã mua
-            IsBuyedRemoveAds = true;
             BridgeController.instance.CanShowAds = false;
         });
         BridgeController.instance.PurchaseProduct(Application.identifier + "_removeads", e);
     }
 
+    public void OnClickButtonOpenNoads()
+    {
+        DisplayNoAdsDialog(true);
+    }
+
     public void OnClickButtonClose()
     {
-        DisplayNoAdsDialog(false);
+        SoundManager.Instance.PlaySoundButtonClick();
+        BridgeController.instance.PlayCount++;
+        UnityEvent e = new UnityEvent();
+        e.AddListener(() =>
+        {
+            // luồng game sau khi tắt quảng cáo
+            DisplayNoAdsDialog(false);
+        });
+        UnityEvent eDone = new UnityEvent();
+        eDone.AddListener(() =>
+        {
+            BridgeController.instance.PlayCount = 0;
+            AdBreaks.instance.timeElapsedAdBreak = 0;
+        });
+        BridgeController.instance.ShowInterstitial("noads_close", e,eDone);
     }
 
     IEnumerator TimeNoAdsCounting()
     {
         RemoveAdsFiveButton.SetActive(false);
         textTimeLeft.gameObject.SetActive(true);
-        BridgeController.instance.CanShowInterIngame = false;
+        BridgeController.instance.CanShowAds = false;
+        BridgeController.instance.HideBanner();
         float time = 300f;
         while (time > 0)
         {
             time -= Time.unscaledDeltaTime;
             int minute = (int)time / 60;
             int second = (int)time % 60;
-            string formattedTime = string.Format("{0:D2}:{1:D2}", minute, second);
+            string formattedTime = string.Format("{0}:{1:D2}", minute, second);
             textTimeLeft.text = $"NoAds: {formattedTime}/5";
             yield return null;
         }
         RemoveAdsFiveButton.SetActive(true);
         textTimeLeft.gameObject.SetActive(false);
-
-        BridgeController.instance.CanShowInterIngame = true;
+        BridgeController.instance.CanShowAds = true;
+        BridgeController.instance.ShowBanner();
     }
 }

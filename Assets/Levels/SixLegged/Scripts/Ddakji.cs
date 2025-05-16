@@ -31,6 +31,7 @@ public class Ddakji : MonoBehaviour
         UISixLeggedController.Instance.UIGamePlay.SetTimeText(a);
         if (a <= 0)
         {
+            canCountTime = false;
             SixLeggedController.Instance.Lose();
         }
         Vector3 screenPos = RectTransformUtility.WorldToScreenPoint(camUI, targetImage.rectTransform.position);
@@ -61,6 +62,11 @@ public class Ddakji : MonoBehaviour
         if (enable)
         {
             canAim = true;
+
+            //reset arrow
+            targetTween.Kill(true);
+            targetImage.rectTransform.anchoredPosition = new Vector2(410, 0);
+
             targetImage.gameObject.SetActive(true);
             if (targetTween == null || !targetTween.IsActive())
             {
@@ -72,8 +78,7 @@ public class Ddakji : MonoBehaviour
         else
         {
             canAim = false;
-            targetTween.Kill(true);
-            targetImage.rectTransform.anchoredPosition = new Vector2(410,0);
+            
             targetImage.gameObject.SetActive(false);
         }
     }
@@ -82,6 +87,14 @@ public class Ddakji : MonoBehaviour
     {
         if (enable)
         {
+            //reset force bar
+            sliderTween.Kill();
+            zoneTween.Kill();
+            zoneTween = null;
+            sliderTween = null;
+            forceSlider.value = 0;
+            forceZone.anchoredPosition = new Vector2(0, 137);
+
             canForce = true;
             forceSlider.gameObject.SetActive(true);
             sliderTween = forceSlider.DOValue(1, 1.5f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.Linear);
@@ -90,12 +103,6 @@ public class Ddakji : MonoBehaviour
         else
         {
             canForce = false;
-            sliderTween.Kill();
-            zoneTween.Kill();
-            zoneTween = null;
-            sliderTween = null;
-            forceSlider.value = 0;
-            forceZone.anchoredPosition = new Vector2(0,137);
             forceSlider.gameObject.SetActive(false);
         }
     }
@@ -135,6 +142,26 @@ public class Ddakji : MonoBehaviour
         DisplayArrow(true);
     }
 
+    public void Revive()
+    {
+        targetTween.Kill(true);
+        zoneTween.Kill(true);
+        sliderTween.Kill(true);
+        DisplayArrow(false);
+        DisplayForceBar(false);
+        time += 20;
+        paperRedRB.transform.position = paperRedPos.position;
+        paperRedRB.transform.rotation = Quaternion.identity;
+        paperGreenRB.transform.position = paperGreenPos.position;
+        paperGreenRB.transform.rotation = Quaternion.identity;
+        paperGreenRB.isKinematic = true;
+        canAim = false;
+        canForce = false;
+        isAimRight = false;
+        isTrueForce = false;
+        StartGame();
+    }
+
     public void MakePaperBounce()
     {
         if (isTrueForce && isAimRight)
@@ -171,6 +198,7 @@ public class Ddakji : MonoBehaviour
         {
             canCountTime = true;
             DisplayArrow(true);
+            UISixLeggedController.Instance.UIGamePlay.DisplayPanelGameplay(true);
             paperGreenRB.gameObject.SetActive(true);
         });
     }

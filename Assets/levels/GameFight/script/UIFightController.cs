@@ -19,14 +19,22 @@ namespace Hung.UI
 
         private void Start()
         {
+            NativeAdsController.Instance.miniGame = NativeAdsController.MiniGame.GameFight;
             UIMenu.DisplayPanelMenu(true);
-        }
+            UIMenu.SetActionStartGame(delegate
+            {
+                UIGamePlay.DisplayPanelGameplay(true);
+                GameFightController.Instance.StartGame();
+            });
 
-        public void StartButton()
-        {
-            GameFightController.Instance.StartGame();
-            UIMenu.DisplayPanelMenu(false);
-            UIGamePlay.DisplayPanelGameplay(true);
+            UIRevive.Instance.SetReviveAction(delegate{
+                UIGamePlay.DisplayPanelGameplay(true);
+                GameFightController.Instance.Revive();
+            });
+
+            UIRevive.Instance.SetOnCloseAction(delegate {
+                UILose.DisplayPanelLose(true);
+            });
         }
     }
 }

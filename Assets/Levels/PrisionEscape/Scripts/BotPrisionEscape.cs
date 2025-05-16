@@ -7,7 +7,6 @@ public class BotPrisionEscape : MonoBehaviour
 {
     public bool isDie, isPicked;
     [SerializeField] PlayerPrisionEscape player;
-    [SerializeField] DOTweenPath pathWin;
     Transform target;
     NavMeshAgent agent;
     Animator animator;
@@ -20,7 +19,6 @@ public class BotPrisionEscape : MonoBehaviour
         animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
         meshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
-        pathWin = GetComponent<DOTweenPath>();
     }
 
     private void Start()

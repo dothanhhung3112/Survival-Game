@@ -56,7 +56,7 @@ public class PiggyBankWin : MonoBehaviour
             GameObject money = Instantiate(moneyPrefab, moneyParent);
             money.transform.localPosition = Vector3.zero;
             money.transform.localRotation = Quaternion.Euler(new Vector3(90 + Random.Range(-20, 20), 0, 0));
-            yield return new WaitForSeconds(0.05f);
+            yield return new WaitForSeconds(0.1f);
         }
         SoundManager.Instance.StopSound();
     }

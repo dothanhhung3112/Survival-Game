@@ -44,6 +44,7 @@ public class MemoryCard : MonoBehaviour
         UISixLeggedController.Instance.UIGamePlay.SetTimeText(a);
         if (a <= 0)
         {
+            canCountTime = false;
             SixLeggedController.Instance.Lose();
         }
     }
@@ -54,6 +55,7 @@ public class MemoryCard : MonoBehaviour
         DOVirtual.DelayedCall(SixLeggedController.Instance.timeMoveCam, delegate
         {
             canCountTime = true;
+            UISixLeggedController.Instance.UIGamePlay.DisplayPanelGameplay(true);
         });
     }
 
@@ -68,6 +70,13 @@ public class MemoryCard : MonoBehaviour
             secondCard = card;
             CheckPair();
         }
+    }
+
+    public void ReviveMemoryCard()
+    {
+        time += 20f;
+        pairMatched = 0;
+        StartGame();
     }
 
     void CheckPair()

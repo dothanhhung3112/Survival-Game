@@ -9,7 +9,7 @@ namespace Hung.Gameplay.TugOfWar
     {
         public static TugOfWarController Instance;
         public float ropeBackSpeed, ropeForwardSpeed;
-        public List<GameObject> players, enemies;
+        public List<GameObject> players, enemies;  
         [HideInInspector] public bool canPull, runnedGame;
         [SerializeField] float maxDisPlayer, maxDistanceEnemy;
         [SerializeField] Animator knifeAnim;
@@ -23,6 +23,8 @@ namespace Hung.Gameplay.TugOfWar
             {
                 Instance = this;
             }
+            players.AddRange(GameObject.FindGameObjectsWithTag("lvl3_pl"));
+            enemies.AddRange(GameObject.FindGameObjectsWithTag("lvl3_enm"));
         }
 
         private void Start()
@@ -58,8 +60,6 @@ namespace Hung.Gameplay.TugOfWar
                     //win panel
                     tmp.z = maxDisPlayer;
                     transform.position = tmp;
-
-                    print("win");
                     return;
                 }
                 transform.position = tmp;
@@ -80,8 +80,6 @@ namespace Hung.Gameplay.TugOfWar
                     //lose panel
                     tmp.z = maxDistanceEnemy;
                     transform.position = tmp;
-
-                    print("lose");
                     return;
                 }
                 transform.position = tmp;
@@ -121,12 +119,9 @@ namespace Hung.Gameplay.TugOfWar
                 {
 
                     Vector3 shoot = new Vector3(0f, Random.Range(3, 6), 3f);
-
                     lst[i].GetComponent<TugOfWarCharacter>().canFall = true;
-
                     lst[i].GetComponent<Rigidbody>().isKinematic = false;
                     lst[i].GetComponent<Rigidbody>().AddForce(shoot * 9, ForceMode.Impulse);
-
                 }
                 for (int i = 0; i < enemies.Count; i++)
                 {
@@ -137,9 +132,7 @@ namespace Hung.Gameplay.TugOfWar
             {
                 for (int i = 0; i < lst.Count; i++)
                 {
-
                     Vector3 shoot = new Vector3(0f, Random.Range(3, 6), -3f);
-
                     if (lst[i] != null)
                     {
                         lst[i].GetComponent<TugOfWarCharacter>().canFall = true;
@@ -147,25 +140,23 @@ namespace Hung.Gameplay.TugOfWar
                         lst[i].GetComponent<Rigidbody>().AddForce(shoot * 9, ForceMode.Impulse);
                     }
                 }
-
                 for (int i = 0; i < players.Count; i++)
                 {
                     players[i].GetComponent<TugOfWarCharacter>().anim.Play("happy");
                 }
             }
 
-
             if (lst == players)
             {
-                StartCoroutine(wait_lose());
+                StartCoroutine(ShowingLose());
             }
             else if (lst == enemies)
             {
-                StartCoroutine(wait_win());
+                StartCoroutine(ShowingWin());
             }
         }
 
-        IEnumerator wait_win()
+        IEnumerator ShowingWin()
         {
             confetti.Play();
             SoundManager.Instance.StopMusic();
@@ -175,8 +166,13 @@ namespace Hung.Gameplay.TugOfWar
             UITugOfWarController.Instance.UIWin.DisplayPanelWin(true);
         }
 
-        IEnumerator wait_lose()
+        IEnumerator ShowingLose()
         {
+            if (!Manager.Instance.isRevived)
+            {
+                UIRevive.Instance.DisplayRevivePanel(true);
+                yield break;
+            }
             SoundManager.Instance.StopMusic();
             SoundManager.Instance.PlaySoundLose();
             yield return new WaitForSeconds(4f);

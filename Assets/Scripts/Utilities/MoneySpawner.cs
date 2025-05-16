@@ -1,4 +1,5 @@
 using DG.Tweening;
+using Hung;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -40,6 +41,7 @@ public class MoneySpawner : MonoBehaviour
             var delay = i * coinPerDelay;
             CoinMove(delay, coinStart.transform.position, text.transform.position);
         }
+        SoundManager.Instance.PlaySoundMoney();
         text.DOCounter(textStart, textEnd, 0.4f, false).SetEase(Ease.InOutSine).SetDelay(0.6f);
     }
 

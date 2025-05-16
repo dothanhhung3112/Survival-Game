@@ -85,6 +85,11 @@ namespace Hung.Gameplay.GameFight
             ObjectPooler.instance.SetObject("bloodEffect", transform.position + new Vector3(0, 0.5f, 0));
         }
 
+        public void RevivePlayer()
+        {
+            animator.Play("RunFight");
+        }
+
         public void Win()
         {
             director.SetActive(false);

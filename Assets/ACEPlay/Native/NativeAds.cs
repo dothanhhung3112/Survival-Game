@@ -1,6 +1,3 @@
-using ACEPlay.Bridge;
-using System;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -25,6 +22,7 @@ namespace ACEPlay.Native
         [SerializeField] private TextMeshProUGUI txtTitle;
         [SerializeField] private TextMeshProUGUI txtDescription;
         [SerializeField] private TextMeshProUGUI txtButton;
+
 
         private void Awake()
         {

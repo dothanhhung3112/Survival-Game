@@ -12,7 +12,6 @@ namespace Hung.UI
         public UIMenu UIMenu { get { return GetComponentInChildren<UIMenu>(); } }
         public float time = 65;
         [HideInInspector] public bool canCountTime;
-
         float timeSound;
 
         private void Awake()
@@ -25,7 +24,22 @@ namespace Hung.UI
 
         private void Start()
         {
+            NativeAdsController.Instance.miniGame = NativeAdsController.MiniGame.GreenRedLight;
             UIMenu.DisplayPanelMenu(true);
+            UIMenu.SetActionStartGame(delegate
+            {
+                UIGamePlay.DisplayPanelGameplay(true);
+                canCountTime = true;
+                FindObjectOfType<PlayerController>().GmRun = true;
+            });
+
+            UIRevive.Instance.SetReviveAction(delegate
+            {
+                time += 10;
+                canCountTime = true;
+                UIGamePlay.DisplayPanelGameplay(true);
+                GreenRedLightController.Instance.player.Revive();
+            });
         }
 
         private void Update()
@@ -45,14 +59,6 @@ namespace Hung.UI
                     UIGamePlay.SetTimeText(a);
                 }
             }
-        }
-
-        public void StartButton()
-        {
-            UIMenu.DisplayPanelMenu(false);
-            UIGamePlay.DisplayPanelGameplay(true);
-            canCountTime = true;
-            FindObjectOfType<PlayerController>().GmRun = true;
         }
     }
 }

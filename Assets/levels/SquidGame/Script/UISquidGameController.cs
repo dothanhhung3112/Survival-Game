@@ -19,13 +19,23 @@ public class UISquidGameController : MonoBehaviour
 
     private void Start()
     {
+        NativeAdsController.Instance.miniGame = NativeAdsController.MiniGame.SquidGame;
         UIMenu.DisplayPanelMenu(true);
-    }
+        UIMenu.SetActionStartGame(delegate
+        {
+            UIGamePlay.DisplayPanelGameplay(true);
+            SquidGameController.Instance.StartGame();
+        });
 
-    public void StartButton()
-    {
-        SquidGameController.Instance.StartGame();
-        UIMenu.DisplayPanelMenu(false);
-        UIGamePlay.DisplayPanelGameplay(true);
+        UIRevive.Instance.SetReviveAction(delegate
+        {
+            UIGamePlay.DisplayPanelGameplay(true);
+            SquidGameController.Instance.Revive();
+        });
+
+        UIRevive.Instance.SetOnCloseAction(delegate
+        {
+            UILose.DisplayPanelLose(true);
+        });
     }
 }

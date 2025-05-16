@@ -45,7 +45,7 @@ namespace Hung.Tools
                 {
                     isEnemyShot = true;
                     gameObject.SetActive(false);
-                    player.PlayerDie(direction);
+                    player.PlayerDie(direction,hitTransform.position);
                 }
             }
         }
@@ -53,13 +53,6 @@ namespace Hung.Tools
         private void Rotate()
         {
             visualTransform.Rotate(Vector3.forward, 1200 * Time.deltaTime, Space.Self);
-        }
-
-        private void ShootEnemy(Transform hitTransform, EnemyController enemy)
-        {
-            isEnemyShot = true;
-            Rigidbody shotRB = hitTransform.GetComponent<Rigidbody>();
-            enemy.OnEnemyShot(transform.forward, shotRB);
         }
 
         public float GetBulletSpeed()

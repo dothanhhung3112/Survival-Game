@@ -1,5 +1,4 @@
 ﻿using ACEPlay.Bridge;
-using ACEPlay.Native;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -17,9 +16,13 @@ namespace Hung.UI
         {
             if (enable)
             {
-                NativeAds.instance.DisplayNativeAds(true);
-                moneyText.text = $"{Manager.Instance.Money}";
                 BridgeController.instance.rewardedCountOnPlay++;
+                BridgeController.instance.PlayCount++;
+                AdBreaks.instance.StopCountDownShowAdBreaks();
+                NativeAdsController.Instance?.DisplayNativeAdsDefault(true);
+
+                moneyText.text = $"{Manager.Instance.Money}";
+                winPanel.SetActive(true);
                 if (BridgeController.instance.rewardedCountOnPlay >= 3)
                 {
                     if (BridgeController.instance.IsRewardReady())
@@ -28,22 +31,28 @@ namespace Hung.UI
                         BridgeController.instance.ShowRewarded("reward", null);
                     }
                     PiggyBankWin.Instance.StartSpawnMoney();
-                    winPanel.SetActive(true);
                 }
                 else
                 {
-                    NativeAds.instance.DisplayNativeAds(false);
                     UnityEvent e = new UnityEvent();
                     e.AddListener(() =>
                     {
                         PiggyBankWin.Instance.StartSpawnMoney();
-                        winPanel.SetActive(true);
                     });
-                    BridgeController.instance.ShowInterstitial("win", e);
+                    UnityEvent eDone = new UnityEvent();
+                    eDone.AddListener(() =>
+                    {
+                        BridgeController.instance.PlayCount = 0;
+                        AdBreaks.instance.timeElapsedAdBreak = 0;
+                    });
+                    BridgeController.instance.ShowInterstitial("win", e, eDone);
                 }
+                BridgeController.instance.ShowBannerCollapsible();
             }
             else
             {
+                NativeAdsController.Instance?.DisplayNativeAdsDefault(false);
+                BridgeController.instance.HideBannerCollapsible();
                 winPanel.SetActive(false);
             }
         }
@@ -66,12 +75,14 @@ namespace Hung.UI
         {
             buttonClaim.SetActive(false);
             int curMoney = Manager.Instance.Money;
-            Manager.Instance.Money += 1000;
-            MoneySpawner.Instance.SpawnCoin(curMoney, curMoney + 1000, moneyText);
+            Manager.Instance.Money += 300;
+            MoneySpawner.Instance.SpawnCoin(curMoney, curMoney + 300, moneyText);
             DOVirtual.DelayedCall(2f,delegate
             {
+                DisplayPanelWin(false);
                 Manager.Instance.LoadNextLevel(true);
             });
+            SoundManager.Instance.PlaySoundButtonClick();
         }
     }
 }

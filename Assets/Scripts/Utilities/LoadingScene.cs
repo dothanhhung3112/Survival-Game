@@ -13,14 +13,9 @@ namespace Duc
         [SerializeField] private TextMeshProUGUI txtProgress;
         [SerializeField] private Slider progress;
 
-        private void Awake()
-        {
-
-        }
-
         private void Start()
         {
-            LoadLevel(Manager.Instance.CurrentLevel);
+            SceneLoader.Instance.LoadSceneByIndex(Manager.Instance.CurrentLevel);
         }
 
         public void LoadLevel(int scene)
@@ -50,27 +45,27 @@ namespace Duc
 
         IEnumerator LoadAsyncGame(int scene)
         {
-            //if (txtProgress != null) txtProgress.text = "0%";
-            //if (progress != null) progress.value = 0f;
+            if (txtProgress != null) txtProgress.text = "0%";
+            if (progress != null) progress.value = 0f;
 
-            //yield return new WaitForSeconds(0.3f);
-            //int fakeStep = UnityEngine.Random.Range(0, 10000) % 20 + 60;
-            //yield return new WaitForSeconds(3.2f - 0.04f * fakeStep);
-            //for (int i = 0; i < fakeStep; i++)
-            //{
-            //    yield return new WaitForSeconds(0.03f);
-            //    if (txtProgress != null) txtProgress.text = "" + i + "%";
-            //    if (progress != null) progress.value = i * 0.01f;
-            //}
-            //yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.3f);
+            int fakeStep = UnityEngine.Random.Range(0, 10000) % 20 + 60;
+            yield return new WaitForSeconds(3.2f - 0.04f * fakeStep);
+            for (int i = 0; i < fakeStep; i++)
+            {
+                yield return new WaitForSeconds(0.03f);
+                if (txtProgress != null) txtProgress.text = "" + i + "%";
+                if (progress != null) progress.value = i * 0.01f;
+            }
+            yield return new WaitForSeconds(0.5f);
             AsyncOperation async = SceneManager.LoadSceneAsync(scene);
-            //while (!async.isDone)
-            //{
-            //    int process = Mathf.RoundToInt(60 * (async.progress / 0.9f)) + fakeStep;
-            //    if (txtProgress != null) txtProgress.text = Mathf.Min(100, process) + "%";
-            //    if (progress != null) progress.value = Mathf.Min(1, process / 100f);
+            while (!async.isDone)
+            {
+                int process = Mathf.RoundToInt(60 * (async.progress / 0.9f)) + fakeStep;
+                if (txtProgress != null) txtProgress.text = Mathf.Min(100, process) + "%";
+                if (progress != null) progress.value = Mathf.Min(1, process / 100f);
                 yield return null;
-            //}
+            }
         }
     }
 }

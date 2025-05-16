@@ -1,8 +1,6 @@
-using Hung.Gameplay.GreenRedLight;
-using Hung.UI;
-using Hung;
 using UnityEngine;
 using Hung.Gameplay.TugOfWar;
+using Hung.Gameplay.Dalgona;
 
 namespace Hung.UI
 {
@@ -13,6 +11,7 @@ namespace Hung.UI
         public UILose UILose { get { return GetComponentInChildren<UILose>(); } }
         public UIGamePlay UIGamePlay { get { return GetComponentInChildren<UIGamePlay>(); } }
         public UIMenu UIMenu { get { return GetComponentInChildren<UIMenu>(); } }
+        public bool isRevive = false;
         private void Awake()
         {
             if (Instance == null)
@@ -23,14 +22,34 @@ namespace Hung.UI
 
         private void Start()
         {
-            UIMenu.DisplayPanelMenu(true);
-        }
+            NativeAdsController.Instance.miniGame = NativeAdsController.MiniGame.TugOfWar;
+            UIMenu.SetActionStartGame(delegate
+            {
+                UIGamePlay.DisplayPanelGameplay(true);
+                TugOfWarController.Instance.runnedGame = true;
+            });
 
-        public void StartButton()
-        {
-            TugOfWarController.Instance.runnedGame = true;
-            UIGamePlay.DisplayPanelGameplay(true);
-            UIMenu.DisplayPanelMenu(false);
+            if(Manager.Instance.isRevived)
+            {
+                UIMenu.DisplayPanelMenu(false);
+                UIGamePlay.DisplayPanelGameplay(true);
+                TugOfWarController.Instance.runnedGame = true;
+            }
+            else
+            {
+                UIMenu.DisplayPanelMenu(true);
+            }
+
+            UIRevive.Instance.SetReviveAction(delegate
+            {
+                SceneLoader.Instance.LoadSceneByIndex(4);
+
+            });
+
+            UIRevive.Instance.SetOnCloseAction(delegate
+            {
+                UILose.DisplayPanelLose(true);
+            });
         }
     }
 }

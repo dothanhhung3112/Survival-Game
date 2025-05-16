@@ -2,6 +2,8 @@ using _Scripts.Extension;
 using DG.Tweening;
 using Hung.UI;
 using System.Collections;
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 
 namespace Hung.Gameplay.Marble
@@ -18,6 +20,7 @@ namespace Hung.Gameplay.Marble
         [SerializeField] Transform marblePos;
         [SerializeField] MarbleEnemy enemy;
         [SerializeField] Animator pinkCharAnim;
+        [SerializeField] GameObject camStart;
         [SerializeField] GameObject camWin;
         [SerializeField] GameObject camLose;
         Marble curMarble;
@@ -63,6 +66,15 @@ namespace Hung.Gameplay.Marble
             }
         }
 
+        public void StartGame()
+        {
+            camStart.SetActive(false);
+            DOVirtual.DelayedCall(1f, delegate
+            {
+                isPlayerTurn = true;
+            });
+        }
+
         public void CheckEndGame()
         {
             if (isWin || isLose) return;
@@ -77,6 +89,19 @@ namespace Hung.Gameplay.Marble
                     StartCoroutine(Lose());
                 }
             }
+        }
+
+        public void Revive()
+        {
+            isLose = false;
+            playerAnimator.Play("RunFight");
+            playerMarble += 2;
+            UIMarbleController.Instance.UIGamePlay.UpdatePlayerMarbleUI(playerMarble);
+            camLose.SetActive(false);
+            DOVirtual.DelayedCall(1f, delegate
+            {
+                SwitchPlayerTurn();
+            });
         }
 
         public Marble SpawnMarble(Vector3 position)
@@ -110,6 +135,11 @@ namespace Hung.Gameplay.Marble
         IEnumerator SwitchEnemyTurn()
         {
             yield return new WaitForSeconds(3f);
+            if(enemyMarble <= 0)
+            {
+                SwitchPlayerTurn();
+                yield break;
+            }
             enemyMarble--;
             UIMarbleController.Instance.UIGamePlay.UpdateEnemyMarbleUI(enemyMarble);
             enemy.ThrowMarble();
@@ -142,6 +172,11 @@ namespace Hung.Gameplay.Marble
             UIMarbleController.Instance.UIGamePlay.DisplayPanelGameplay(false);
             SoundManager.Instance.StopMusic();
             SoundManager.Instance.PlaySoundLose();
+            if (!Manager.Instance.isRevived)
+            {
+                UIRevive.Instance.DisplayRevivePanel(true);
+                yield break;
+            }
             yield return new WaitForSeconds(2f);
             camLose.SetActive(true);
             yield return new WaitForSeconds(2f);

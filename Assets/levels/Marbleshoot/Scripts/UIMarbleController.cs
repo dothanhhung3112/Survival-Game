@@ -20,14 +20,24 @@ namespace Hung.UI
 
         private void Start()
         {
+            NativeAdsController.Instance.miniGame = NativeAdsController.MiniGame.MarbleShoot;
             UIMenu.DisplayPanelMenu(true);
-        }
+            UIMenu.SetActionStartGame(delegate
+            {
+                UIGamePlay.DisplayPanelGameplay(true);
+                MarbleGameController.Instance.StartGame();
+            });
 
-        public void StartButton()
-        {
-            MarbleGameController.Instance.isPlayerTurn = true;
-            UIMenu.DisplayPanelMenu(false);
-            UIGamePlay.DisplayPanelGameplay(true);
+            UIRevive.Instance.SetReviveAction(delegate
+            {
+                UIGamePlay.DisplayPanelGameplay(true);
+                MarbleGameController.Instance.Revive();
+            });
+
+            UIRevive.Instance.SetOnCloseAction(delegate
+            {
+                UILose.DisplayPanelLose(true);
+            });
         }
     }
 }

@@ -1,7 +1,8 @@
-using ACEPlay.Bridge;
+﻿using ACEPlay.Bridge;
 using DG.Tweening;
 using Hung;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class UISetting : MonoBehaviour
@@ -93,15 +94,18 @@ public class UISetting : MonoBehaviour
 
             pnlSetting.SetActive(true);
             popUpSetting.DOPunchScale(Vector3.one * 0.03f, 0.2f, 20, 1).SetUpdate(true);
+            BridgeController.instance.ShowBannerCollapsible();
         }
         else
         {
             pnlSetting.SetActive(false);
+            BridgeController.instance.HideBannerCollapsible();
         }
     }
 
     public void SetMusic()
     {
+        SoundManager.Instance.PlaySoundButtonClick();
         if (Manager.Instance.SetMusic())
         {
             toggleMusic.DOAnchorPosX(-60, 0.15f).SetEase(Ease.OutBack).SetUpdate(true);
@@ -120,6 +124,7 @@ public class UISetting : MonoBehaviour
 
     public void SetSound()
     {
+        SoundManager.Instance.PlaySoundButtonClick();
         if (Manager.Instance.SetSound())
         {
             toggleSound.DOAnchorPosX(-60, 0.15f).SetEase(Ease.OutBack).SetUpdate(true);
@@ -138,6 +143,7 @@ public class UISetting : MonoBehaviour
 
     public void SetVibrate()
     {
+        SoundManager.Instance.PlaySoundButtonClick();
         if (Manager.Instance.SetVibration())
         {
             toggleVibrate.DOAnchorPosX(-60, 0.15f).SetEase(Ease.OutBack).SetUpdate(true);
@@ -156,21 +162,38 @@ public class UISetting : MonoBehaviour
 
     public void OnClickButtonFaceBook()
     {
+        SoundManager.Instance.PlaySoundButtonClick();
         BridgeController.instance.ShowFacebook(null);
     }
 
     public void OnClickButtonTikTok()
     {
+        SoundManager.Instance.PlaySoundButtonClick();
         BridgeController.instance.ShowTikTok(null);
     }
 
     public void OnClickButtonYoutube()
     {
+        SoundManager.Instance.PlaySoundButtonClick();
         BridgeController.instance.SubcribeYoutube(null);
     }
 
     public void OnClose()
     {
-        DisplayPanelSetting(false);
+        SoundManager.Instance.PlaySoundButtonClick();
+        BridgeController.instance.PlayCount++;
+        UnityEvent e = new UnityEvent();
+        e.AddListener(() =>
+        {
+            // luồng game sau khi tắt quảng cáo
+            DisplayPanelSetting(false);
+        });
+        UnityEvent eDone = new UnityEvent();
+        eDone.AddListener(() =>
+        {
+            BridgeController.instance.PlayCount = 0;
+            AdBreaks.instance.timeElapsedAdBreak = 0;
+        });
+        BridgeController.instance.ShowInterstitial("setting_close", e,eDone);
     }
 }

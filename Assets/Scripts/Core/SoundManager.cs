@@ -16,7 +16,9 @@ namespace Hung
         [SerializeField] AudioClip winClip;
         [SerializeField] AudioClip loseClip;
         [SerializeField] AudioClip timeCountClip;
+        [SerializeField] AudioClip buttonClick;
         [SerializeField] AudioClip moneyDrop;
+        [SerializeField] AudioClip moneySound;
 
         [Header("GreenRedLight")]
         [SerializeField] AudioSource enemySound;
@@ -139,6 +141,16 @@ namespace Hung
         public void PlaySoundMoneyDrop()
         {
             PlaySound(moneyDrop);
+        }
+
+        public void PlaySoundMoney()
+        {
+            PlaySound(moneySound);
+        }
+
+        public void PlaySoundButtonClick()
+        {
+            PlaySound(buttonClick);
         }
 
         public void StopMusic()

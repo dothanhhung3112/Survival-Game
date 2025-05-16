@@ -1,5 +1,6 @@
 using DG.Tweening;
 using Hung;
+using Hung.UI;
 using System.Collections;
 using UnityEngine;
 
@@ -71,8 +72,19 @@ public class SquidGameController : MonoBehaviour
         enemy.Cheer();
         SoundManager.Instance.StopMusic();
         SoundManager.Instance.PlaySoundLose();
-        yield return new WaitForSeconds(5f);
+        if (!Manager.Instance.isRevived)
+        {
+            UIRevive.Instance.DisplayRevivePanel(true);
+            yield break;
+        }
+        yield return new WaitForSeconds(3f);
         UISquidGameController.Instance.UILose.DisplayPanelLose(true);
+    }
+
+    public void Revive()
+    {
+        isLose = false;
+        player.RevivePLayer();
     }
 
     public void StartGame()

@@ -9,9 +9,9 @@ namespace Hung.Gameplay.Dalgona
     {
         public DOTweenPath dot_path;
         public Animator anim;
-        public Transform[] list_dalgona_part_pos;
-        public GameObject dalgona_center;
-        public GameObject[] dalgona_parts, dalgona_break_parts, dalgona_center_break_parts;
+        public Transform[] dalgonaPartPos;
+        public GameObject dalgonaCenter;
+        public GameObject[] dalgonaParts, dalgonaBreakParts, dalgonaCenterBreakParts;
         public int actual_part;
         public Transform needle;
         ParticleSystem effect;
@@ -41,7 +41,7 @@ namespace Hung.Gameplay.Dalgona
                 elapsedTime = 1f;
                 dot_path.DOPlay();
                 effect.Play();
-                animate_needle("needle_zigzag_simple");
+                AnimateNeedle("needle_zigzag_simple");
             }
 
             if (Input.GetMouseButtonUp(0))
@@ -50,7 +50,7 @@ namespace Hung.Gameplay.Dalgona
                 SoundManager.Instance.StopSound();
                 dot_path.DOPause();
                 effect.Stop();
-                animate_needle("needle_idle");
+                AnimateNeedle("needle_idle");
 
                 //reset timer
                 timer = 0f;
@@ -70,54 +70,52 @@ namespace Hung.Gameplay.Dalgona
                     elapsedTime = 0;
                 }
                 // check click timeout
-                check_click_timeout();
+                CheckingClickTimeOut();
             }
 
             // check reached 
-            check_reached_finish_part();
+            CheckReachedFinish();
         }
 
-        public void check_reached_finish_part()
+        public void CheckReachedFinish()
         {
-            if (Vector3.Distance(needle.position, list_dalgona_part_pos[actual_part].position) <= .2f)
+            if (Vector3.Distance(needle.position, dalgonaPartPos[actual_part].position) <= .2f)
             {
                 SoundManager.Instance.PlaySoundCandyBreak();
-                if (actual_part >= list_dalgona_part_pos.Length - 1)
+                if (actual_part >= dalgonaPartPos.Length - 1)
                 {
                     active = false;
-                    dalgona_parts[actual_part].SetActive(false);
-                    dalgona_break_parts[actual_part].SetActive(true);
+                    dalgonaParts[actual_part].SetActive(false);
+                    dalgonaBreakParts[actual_part].SetActive(true);
 
                     //animate to idle
-                    animate_needle("needle_idle");
+                    AnimateNeedle("needle_idle");
 
                     //win panel
                     StartCoroutine(ShowWin());
                 }
                 else
                 {
-                    dalgona_parts[actual_part].SetActive(false);
-                    dalgona_break_parts[actual_part].SetActive(true);
+                    dalgonaParts[actual_part].SetActive(false);
+                    dalgonaBreakParts[actual_part].SetActive(true);
                     actual_part++;
                 }
             }
         }
 
-        void check_click_timeout()
+        void CheckingClickTimeOut()
         {
             if (timer >= max_time)
             {
                 active = false;
-                print("timeout");
-
                 // pause
                 dot_path.DOPause();
 
                 //animate to idle
-                animate_needle("needle_idle");
+                AnimateNeedle("needle_idle");
 
                 //lose panel
-                StartCoroutine(show_lose());
+                StartCoroutine(ShowLose());
 
             }
             else
@@ -127,7 +125,7 @@ namespace Hung.Gameplay.Dalgona
                 if (timer >= max_time - 1.5f)
                 {
                     //change animation 
-                    animate_needle("needle_zigzag_timeout");
+                    AnimateNeedle("needle_zigzag_timeout");
                     failure_vibrate();
                 }
                 else
@@ -138,7 +136,7 @@ namespace Hung.Gameplay.Dalgona
             }
         }
 
-        void animate_needle(string name)
+        void AnimateNeedle(string name)
         {
             if (name != actual_anim)
             {
@@ -147,22 +145,33 @@ namespace Hung.Gameplay.Dalgona
             }
         }
 
-        IEnumerator show_lose()
+        public void ReviveDalgona()
         {
+            active = true;
+            dalgonaCenter.SetActive(true);
+            for (int i = 0; i < dalgonaCenterBreakParts.Length; i++)
+            {
+                dalgonaCenterBreakParts[i].SetActive(false);
+            }
+        }
+
+        IEnumerator ShowLose()
+        {
+            if (DalgonaController.Instance.isLose || DalgonaController.Instance.isWin) yield break;
+            DalgonaController.Instance.isLose = true;
             DalgonaController.Instance.canCountTime = false;
             UIDalgonaController.Instance.UIGamePlay.DisplayPanelGameplay(false);
-            DalgonaCam cam_script = FindObjectOfType<DalgonaCam>();
-            cam_script.lose_move();
-            //hide dalgona center
-            dalgona_center.SetActive(false);
-            for (int i = 0; i < dalgona_center_break_parts.Length; i++)
+            if (!Manager.Instance.isRevived)
             {
-                dalgona_center_break_parts[i].SetActive(true);
+                UIRevive.Instance.DisplayRevivePanel(true);
+                yield break;
             }
-            if (actual_part < list_dalgona_part_pos.Length - 1)
+            DalgonaController.Instance.StatingEndCard();
+            //hide dalgona center
+            dalgonaCenter.SetActive(false);
+            for (int i = 0; i < dalgonaCenterBreakParts.Length; i++)
             {
-                dalgona_parts[actual_part].SetActive(false);
-                dalgona_break_parts[actual_part].SetActive(true);
+                dalgonaCenterBreakParts[i].SetActive(true);
             }
             SoundManager.Instance.StopMusic();
             SoundManager.Instance.PlaySoundLose();
@@ -172,10 +181,12 @@ namespace Hung.Gameplay.Dalgona
 
         IEnumerator ShowWin()
         {
+           
+            if (DalgonaController.Instance.isLose || DalgonaController.Instance.isWin) yield break;
+            DalgonaController.Instance.isWin = true;
             DalgonaController.Instance.canCountTime = false;
             UIDalgonaController.Instance.UIGamePlay.DisplayPanelGameplay(false);
-            DalgonaCam cam_script = FindObjectOfType<DalgonaCam>();
-            cam_script.win_move();
+            DalgonaController.Instance.Winning();
             SoundManager.Instance.StopMusic();
             SoundManager.Instance.PlaySoundWin();
             yield return new WaitForSeconds(3f);
